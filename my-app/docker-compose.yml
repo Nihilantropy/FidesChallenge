@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  react-native:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "19006:19006"   # Port for Expo
+      - "8081:8081"     # Port for Metro Bundler
+    environment:
+      - NODE_ENV=development
