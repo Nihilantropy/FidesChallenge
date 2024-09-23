@@ -1,0 +1,12 @@
+version: '3.8'  # Versione di Docker Compose
+
+services:
+  app:
+    image: node
+    ports:
+      - "19000:19000"  # Porta per Expo
+      - "19001:19001"  # Porta per il tunnel di Expo
+      - "19002:19002"  # Porta per il web
+    working_dir: /usr/src/app  # Directory di lavoro
+    volumes:
+      - .:/usr/src/app  # Monta la cartella del progetto
