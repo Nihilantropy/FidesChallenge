@@ -1,0 +1,38 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build output
+build
+dist
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# MacOS specific files
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Files created by Expo
+.expo/
+.expo-shared/
+
+# Ignore other unneeded files
+*.tgz
+*.zip
