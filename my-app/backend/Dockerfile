@@ -1,5 +1,5 @@
 # Specify the Node.js base image
-FROM node:22-alpine3.19
+FROM node:22-alpine3.19 AS development
 
 # set our node environment, either development or production
 # defaults to production, compose overrides this to development on build and run
