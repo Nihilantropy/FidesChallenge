@@ -2,11 +2,16 @@
     --background1: url("./../img/sfondo.jpg"); --background2: rgba(85, 32, 15, 0.650);
     --testo: white;
     --bordo: white;
+    --testi: 22px;--titoli: 30px;
 }
 * {color: var(--testo);}
 #body{width: 100vw;height: 100vh;top: 0;left: 0;background-image: var(--background1);background-repeat: no-repeat;background-size: cover;background-position: center;}
 #nav{position: fixed;top: 0;height: 80px;width: 100%;background: var(--background2);border-bottom: solid 3px var(--bordo);padding-left: 10px;}
+.fototendina{width: 30px;height: fit-content;}
 #footer{position: fixed;bottom: 0;height: 80px;width: 100%;background: var(--background2);border-top: solid 3px var(--bordo);padding-left: 10px;}
-#gen_box{background: var(--background2);border: solid 3px var(--bordo);padding: 10px;margin-top: 30px;}
-#gen_box{position: relative;top: 90px;width: 50%;}
+.base,#gen_box{background: var(--background2);border: solid 3px var(--bordo);padding: 10px;}
+#gen_box{position: relative;top: 100px;width: 50%;margin-top: 30px;}
 .sot{text-decoration: none;}
+#stacca{position: relative;top: 100px;}
+.testi{font-size: var(--testi);}
+.titoli{font-size: var(--titoli);}
