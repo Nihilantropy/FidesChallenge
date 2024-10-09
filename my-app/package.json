@@ -1,5 +1,5 @@
 {
-  "name": "leavventuredibibi",
+  "name": "my-app",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -10,13 +10,14 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
+    "@expo/webpack-config": "~19.0.1",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
-    "leavventuredibibi": "file:",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
