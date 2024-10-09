@@ -1,34 +1,65 @@
-version: "3.8"
-
 services:
-  db:
-    image: mysql:latest
-    container_name: mysql-db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mysql_user
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-
-  backend-service:
+  backend:
     build:
-      context: ./back-end
-    container_name: backend-service
-    restart: always
+      args:
+      - NODE_ENV=development
+      context: backend
+      target: development
+    command: npm run start-watch
+    environment:
+      - DATABASE_DB=example
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=/run/secrets/db-password
+      - DATABASE_HOST=db
+      - NODE_ENV=development
     ports:
-      - "5000:5000"
+      - 80:80
+      - 9229:9229
+      - 9230:9230
+    secrets:
+      - db-password
+    volumes:
+      - ./backend/src:/code/src:ro
+      - ./backend/package.json:/code/package.json
+      - ./backend/package-lock.json:/code/package-lock.json
+      - back-notused:/opt/app/node_modules
+    networks:
+      - public
+      - private
     depends_on:
       - db
+  db:
+    image: mysql:9.0.1
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - private
     environment:
-      DB_HOST: db
-      DB_USER: myuser
-      DB_PASSWORD: mypassword
-      DB_DATABASE: mysql_user
-
+      - MYSQL_DATABASE=example
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+  frontend:
+    build:
+      context: frontend
+      target: development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/code/src
+      - /code/node_modules
+    networks:
+      - public
+    depends_on:
+      - backend
+networks:
+  public:
+  private:
 volumes:
-  db_data:
+  back-notused:
+  db-data:
+secrets:
+  db-password:
+    file: db/password.txt
