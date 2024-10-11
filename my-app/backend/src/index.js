@@ -1,58 +1,48 @@
-const express = require("express");
-const mysql = require("mysql2");
-const app = express();
-const PORT = 5000;
+const app = require("./server");
+const { port } = require("./config");
 
-// Middleware to parse JSON requests
-app.use(express.json());
-
-// Create a connection to the MySQL database
-const db = mysql.createConnection({
-  host: "db", // Host name as specified in docker-compose (container name of the db service)
-  user: "myuser",
-  password: "mypassword",
-  database: "mysql_user"
+const server = app.listen(port, function() {
+  console.log("Webserver is ready");
 });
 
-// Establish MySQL connection
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed: ", err);
-    return;
-  }
-  console.log("Connected to MySQL database");
+//
+// need this in docker container to properly exit since node doesn't handle SIGINT/SIGTERM
+// this also won't work on using npm start since:
+// https://github.com/npm/npm/issues/4603
+// https://github.com/npm/npm/pull/10868
+// https://github.com/RisingStack/kubernetes-graceful-shutdown-example/blob/master/src/index.js
+// if you want to use npm then start with `docker run --init` to help, but I still don't think it's
+// a graceful shutdown of node process
+//
+
+// quit on ctrl-c when running docker in terminal
+process.on("SIGINT", function onSigint() {
+  console.info(
+    "Got SIGINT (aka ctrl-c in docker). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
 });
 
-// Define a test route
-app.get("/", (req, res) => {
-  res.send("Welcome to the Express & MySQL API!");
+// quit properly on docker stop
+process.on("SIGTERM", function onSigterm() {
+  console.info(
+    "Got SIGTERM (docker container stop). Graceful shutdown ",
+    new Date().toISOString()
+  );
+  shutdown();
 });
 
-// Endpoint to get all users
-app.get("/users", (req, res) => {
-  db.query("SELECT * FROM users", (err, results) => {
+// shut down server
+function shutdown() {
+  server.close(function onServerClosed(err) {
     if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json(results);
+      console.error(err);
+      process.exit(1);
     }
+    process.exit(0);
   });
-});
-
-// Endpoint to add a new user
-app.post("/users", (req, res) => {
-  const { first_name, last_name, nickname, email, password } = req.body;
-  const sql = `INSERT INTO users (first_name, last_name, nickname, email, password) VALUES (?, ?, ?, ?, ?)`;
-  db.query(sql, [first_name, last_name, nickname, email, password], (err, result) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.json({ id: result.insertId, ...req.body });
-    }
-  });
-});
-
-// Start the Express server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+}
+//
+// need above in docker container to properly exit
+//

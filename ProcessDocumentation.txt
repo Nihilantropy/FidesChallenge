@@ -2,4 +2,10 @@ create git repo
 
 create 4 branches - merged, claudio, mario, anghi
 
+based on react-express-mysql project (link in documentation)
 
+creating docker-compose.yml to build 3 microservices:
+
+1 - backend server
+2 - mysql2 Database
+3 - frontend

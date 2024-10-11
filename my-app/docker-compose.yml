@@ -1,4 +1,5 @@
 services:
+
   backend:
     build:
       args:
@@ -7,8 +8,8 @@ services:
       target: development
     command: npm run start-watch
     environment:
-      - DATABASE_DB=example
-      - DATABASE_USER=root
+      - DATABASE_DB=mysql
+      - DATABASE_USER=mysql_user
       - DATABASE_PASSWORD=/run/secrets/db-password
       - DATABASE_HOST=db
       - NODE_ENV=development
@@ -19,7 +20,7 @@ services:
     secrets:
       - db-password
     volumes:
-      - ./backend/src:/code/src:ro
+      - ./backend/src:/code/src:rw
       - ./backend/package.json:/code/package.json
       - ./backend/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
@@ -28,8 +29,9 @@ services:
       - private
     depends_on:
       - db
+
   db:
-    image: mysql:9.0.1
+    image: mysql:8.0.27
     command: '--default-authentication-plugin=mysql_native_password'
     restart: always
     secrets:
@@ -39,27 +41,37 @@ services:
     networks:
       - private
     environment:
-      - MYSQL_DATABASE=example
+      - MYSQL_DATABASE="mysql"
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+    healthcheck:
+      test: ["CMD", "mysql", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
   frontend:
     build:
       context: frontend
       target: development
     ports:
-      - 3000:3000
+      - 8081:8081
     volumes:
       - ./frontend/src:/code/src
       - /code/node_modules
     networks:
       - public
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 networks:
   public:
   private:
+
 volumes:
   back-notused:
   db-data:
+
 secrets:
   db-password:
     file: db/password.txt

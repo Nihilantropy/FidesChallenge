@@ -25,20 +25,5 @@ HEALTHCHECK --interval=30s \
 # copy in our source code last, as it changes the most
 COPY . /code
 
-
 # Start the application
-CMD ["node", "src/index.js"]
-
-FROM development as dev-envs
-RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
-EOF
-
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
-# install Docker tools (cli, buildx, compose)
-COPY --from=gloursdocker/docker / /
+CMD ["npm", "start"]
