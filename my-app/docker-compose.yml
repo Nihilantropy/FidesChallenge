@@ -20,7 +20,8 @@ services:
       - frontend-backend
       - backend-db
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   # Database (MySQL)
   db:

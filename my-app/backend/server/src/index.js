@@ -1,9 +1,37 @@
 const app = require("./server");
 const port = process.env.PORT || 3000;
 
-const server = app.listen(port, function() {
-  console.log("Webserver is ready");
-});
+const waitForDB = async (dbConfig) => {
+	const knex = require('knex')(dbConfig);
+	let connected = false;
+	
+	while (!connected) {
+	  try {
+		await knex.raw('SELECT 1');  // A simple query to check if the DB is ready
+		connected = true;
+		console.log('Connected to the database!');
+	  } catch (error) {
+		console.error('Database connection failed. Retrying in 2 seconds...');
+		await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+	  }
+	}
+	return knex; // Return the knex instance once connected
+  };
+  
+  // In your index.js, use the function before starting the server
+  (async () => {
+	const knexConfig = require('./knexfile').development;
+	await waitForDB(knexConfig); // Wait for the database to be ready
+	const app = require("./server");
+	const port = process.env.PORT || 3000;
+  
+	const server = app.listen(port, function() {
+	  console.log("Webserver is ready");
+	});
+  
+	// ... rest of your shutdown logic
+  })();
+  
 
 //
 // need this in docker container to properly exit since node doesn't handle SIGINT/SIGTERM
