@@ -1,77 +1,73 @@
 services:
-
-  backend:
+  # Backend Server
+  backend-server:
+    env_file:
+      - ./backend/server/.env
     build:
-      args:
-      - NODE_ENV=development
-      context: backend
-      target: development
+      context: ./backend/server
+      dockerfile: Dockerfile
     command: npm run start-watch
-    environment:
-      - DATABASE_DB=mysql
-      - DATABASE_USER=mysql_user
-      - DATABASE_PASSWORD=/run/secrets/db-password
-      - DATABASE_HOST=db
-      - NODE_ENV=development
     ports:
-      - 80:80
-      - 9229:9229
-      - 9230:9230
-    secrets:
-      - db-password
+      - "3000:3000"
+      - "9229:9229"
+      - "9230:9230"
     volumes:
-      - ./backend/src:/code/src:rw
-      - ./backend/package.json:/code/package.json
-      - ./backend/package-lock.json:/code/package-lock.json
+      - ./backend/server/src:/code/src:rw
+      - ./backend/server/package.json:/code/package.json
+      - ./backend/server/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
-      - public
-      - private
+      - frontend-backend
+      - backend-db
     depends_on:
       - db
 
+  # Database (MySQL)
   db:
-    image: mysql:8.0.27
-    command: '--default-authentication-plugin=mysql_native_password'
+    env_file:
+      - ./backend/db/.env
+    build:
+      context: ./backend/db
+      dockerfile: Dockerfile
     restart: always
-    secrets:
-      - db-password
     volumes:
       - db-data:/var/lib/mysql
+      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d
     networks:
-      - private
-    environment:
-      - MYSQL_DATABASE="mysql"
-      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+      - backend-db
+    ports:
+      - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysql", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
       start_period: 30s
       timeout: 5s
 
-  frontend:
+  # Frontend Client
+  frontend-client:
     build:
-      context: frontend
-      target: development
+      context: ./frontend/client
+      dockerfile: Dockerfile
     ports:
-      - 8081:8081
+      - "8081:8081"
     volumes:
-      - ./frontend/src:/code/src
+      - ./frontend/client/src:/code/src
       - /code/node_modules
     networks:
-      - public
+      - frontend-backend
     depends_on:
-      backend:
+      backend-server:
         condition: service_healthy
-networks:
-  public:
-  private:
 
+# Networks configuration
+networks:
+  frontend-backend:
+    driver: bridge
+  backend-db:
+    driver: bridge
+
+# Volumes
 volumes:
   back-notused:
   db-data:
-
-secrets:
-  db-password:
-    file: db/password.txt

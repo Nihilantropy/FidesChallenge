@@ -7,5 +7,11 @@ based on react-express-mysql project (link in documentation)
 creating docker-compose.yml to build 3 microservices:
 
 1 - backend server
-2 - mysql2 Database
-3 - frontend
+2 - mysql Database
+3 - frontend client
+
+Backend-side:
+	1 - setup mysql container using 'knex' and 'mysql2'
+	2 - setup server container using 'nodejs' and 'express'.
+	3 - create a connection to the db container (same network "backend-db") using knexfile and server
+	

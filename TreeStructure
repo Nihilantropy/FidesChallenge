@@ -1,16 +1,88 @@
-├── backend               # Backend service code
-│   ├── Dockerfile        # Docker configuration for building the backend service
-│   ├── README.md         # Project documentation
-│   ├── healthcheck.js    # Healthcheck logic for ensuring service readiness
-│   ├── package-lock.json # Node package lock file (dependencies version tracking)
-│   ├── package.json      # Node package configuration file (metadata, scripts, dependencies)
-│   ├── src               # Source code for the backend service
-│   │   ├── config.js     # Configuration settings (database, server port, etc.)
-│   │   ├── database.js   # Database connection using Knex.js
-│   │   ├── index.js      # Entry point for starting the backend server
-│   │   └── server.js     # Express server configuration and route definitions
-│   └── test              # Test folder (optional, used for testing your service)
-│       └── sample.js     # Sample test file for demonstration purposes
-├── db                    # Database-related files
-│   └── password.txt      # File storing database password (used in Docker secrets)
-├── docker-compose.yml    # Docker Compose configuration for multi-service setup
+.
+├── Documentation.txt
+├── ProcessDocumentation.txt
+├── README.md
+├── TODO
+├── TreeStructure
+├── WhatWeUse
+└── my-app
+    ├── backend
+    │   ├── db
+    │   │   ├── Dockerfile
+    │   │   ├── initdb.d
+    │   │   │   ├── 01_create_users_table.sql
+    │   │   │   ├── 02-init-roles.sql
+    │   │   │   └── 03-init-seed.sql
+    │   │   ├── package-lock.json
+    │   │   ├── package.json
+    │   │   └── src
+    │   │       ├── database.js
+    │   │       ├── healthcheck.js
+    │   │       ├── knexfile.js
+    │   │       └── migrations
+    │   │           └── 20241014143239_create_users_table.js
+    │   ├── server
+    │   │   ├── Dockerfile
+    │   │   ├── README.md
+    │   │   ├── package-lock.json
+    │   │   ├── package.json
+    │   │   ├── src
+    │   │   │   ├── database.js
+    │   │   │   ├── index.js
+    │   │   │   ├── knexfile.js
+    │   │   │   └── server.js
+    │   │   └── test
+    │   │       └── sample.js
+    │   └── src
+    ├── docker-compose.yml
+    └── frontend
+        └── client
+            ├── Dockerfile
+            ├── README.md
+            ├── app
+            │   ├── (tabs)
+            │   │   ├── _layout.tsx
+            │   │   ├── explore.tsx
+            │   │   └── index.tsx
+            │   ├── +html.tsx
+            │   ├── +not-found.tsx
+            │   └── _layout.tsx
+            ├── app.json
+            ├── assets
+            │   ├── fonts
+            │   │   └── SpaceMono-Regular.ttf
+            │   └── images
+            │       ├── adaptive-icon.png
+            │       ├── favicon.png
+            │       ├── icon.png
+            │       ├── partial-react-logo.png
+            │       ├── react-logo.png
+            │       ├── react-logo@2x.png
+            │       ├── react-logo@3x.png
+            │       └── splash.png
+            ├── babel.config.js
+            ├── components
+            │   ├── Collapsible.tsx
+            │   ├── ExternalLink.tsx
+            │   ├── HelloWave.tsx
+            │   ├── ParallaxScrollView.tsx
+            │   ├── ThemedText.tsx
+            │   ├── ThemedView.tsx
+            │   ├── __tests__
+            │   │   ├── ThemedText-test.tsx
+            │   │   └── __snapshots__
+            │   │       └── ThemedText-test.tsx.snap
+            │   └── navigation
+            │       └── TabBarIcon.tsx
+            ├── constants
+            │   └── Colors.ts
+            ├── hooks
+            │   ├── useColorScheme.ts
+            │   ├── useColorScheme.web.ts
+            │   └── useThemeColor.ts
+            ├── package-lock.json
+            ├── package.json
+            ├── scripts
+            │   └── reset-project.js
+            ├── src
+            └── tsconfig.json
