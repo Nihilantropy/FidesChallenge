@@ -1,0 +1,7 @@
+command-sheet:
+	- Docker:
+		docker ps
+		docker inspect <container id>
+		docker exec -it <container id> sh
+		ping <container name> (inside container)
+		

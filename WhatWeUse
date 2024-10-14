@@ -1,8 +1,0 @@
-Infrastructure:
-	Kubernetes, Docker
-
-Front-end:
-	Nodejs:20-alpine3.19, React-native
-
-Back-end:
-	Nodejs:20-alpine3.19, MySQL:8.0 (image), MySQL2:3.11.3, Express:4.21.1

@@ -29,7 +29,6 @@ const waitForDB = async (dbConfig) => {
 	  console.log("Webserver is ready");
 	});
   
-	// ... rest of your shutdown logic
   })();
   
 

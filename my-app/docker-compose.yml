@@ -17,8 +17,8 @@ services:
       - ./backend/server/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
-      - frontend-backend
-      - backend-db
+      - client-server
+      - server-db
     depends_on:
       db:
         condition: service_healthy
@@ -35,7 +35,7 @@ services:
       - db-data:/var/lib/mysql
       - ./backend/db/initdb.d:/docker-entrypoint-initdb.d
     networks:
-      - backend-db
+      - server-db
     ports:
       - "3306:3306"
     healthcheck:
@@ -47,25 +47,30 @@ services:
 
   # Frontend Client
   frontend-client:
+    env_file:
+      - ./frontend/client/myapp/.env
     build:
-      context: ./frontend/client
+      context: ./frontend/client/myapp
       dockerfile: Dockerfile
     ports:
       - "8081:8081"
+      - "19006:19006"
+      - "19001:19001"
+      - "19002:19002"
     volumes:
-      - ./frontend/client/src:/code/src
+      - ./frontend/client/myapp/src:/code/src
       - /code/node_modules
     networks:
-      - frontend-backend
+      - client-server
     depends_on:
       backend-server:
         condition: service_healthy
 
 # Networks configuration
 networks:
-  frontend-backend:
+  client-server:
     driver: bridge
-  backend-db:
+  server-db:
     driver: bridge
 
 # Volumes

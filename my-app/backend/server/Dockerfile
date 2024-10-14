@@ -18,6 +18,8 @@ COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
 RUN npm ci
 
+RUN apk --no-cache add curl
+
 # Healthcheck to ensure this service returns HTTP 200
 HEALTHCHECK --interval=30s CMD curl -f http://localhost:$PORT/healthz || exit 1
 
