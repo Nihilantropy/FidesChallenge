@@ -1,18 +1,17 @@
 import React from "react";
 import './../../assets/style/main.css';
 
-const HomeStory = () => {
+const HomeStory = ({ showPage }) => {
   return (
     <div id="stacca">
       <center>
-        <div class="base">
-          <h2 class="testi">
+        <div id="boxgen">
+          <h2 className="testi">
             Hai una storia che vuoi condividere?<br />
-            Raccontala a Sergio
+            <h2 className="link" onClick={() => showPage(3)}>Raccontala a Sergio</h2>
           </h2>
         </div>
-        <hr />
-        <div class="base">
+        <div id="boxgen">
           Ciclo che fara vedere tutte le storie
         </div>
       </center>
