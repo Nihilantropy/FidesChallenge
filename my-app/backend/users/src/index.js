@@ -1,4 +1,4 @@
-const app = require("./server");
+const app = require("./users");
 const port = process.env.PORT || 3000;
 
 const waitForDB = async (dbConfig) => {
@@ -22,7 +22,7 @@ const waitForDB = async (dbConfig) => {
   (async () => {
 	const knexConfig = require('./knexfile').development;
 	await waitForDB(knexConfig); // Wait for the database to be ready
-	const app = require("./server");
+	const app = require("./users");
 	const port = process.env.PORT || 3000;
   
 	const server = app.listen(port, function() {

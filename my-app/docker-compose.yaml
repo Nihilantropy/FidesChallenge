@@ -1,10 +1,11 @@
 services:
-  # Backend Server
-  backend-server:
+  # Backend users micro
+  backend-users:
+    container_name: users
     env_file:
-      - ./backend/server/.env
+      - ./backend/users/.env
     build:
-      context: ./backend/server
+      context: ./backend/users
       dockerfile: Dockerfile
     command: npm run start-watch
     ports:
@@ -12,9 +13,9 @@ services:
       - "9229:9229"
       - "9230:9230"
     volumes:
-      - ./backend/server/src:/code/src:rw
-      - ./backend/server/package.json:/code/package.json
-      - ./backend/server/package-lock.json:/code/package-lock.json
+      - ./backend/users/src:/code/src:rw
+      - ./backend/users/package.json:/code/package.json
+      - ./backend/users/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
       - client-server
@@ -23,8 +24,9 @@ services:
       db:
         condition: service_healthy
 
-  # Database (MySQL)
+  # Database (MySQL) micro
   db:
+    container_name: db
     env_file:
       - ./backend/db/.env
     build:
@@ -45,26 +47,27 @@ services:
       start_period: 30s
       timeout: 5s
 
-  # Frontend Client
-  frontend-client:
+  # Frontend expo micro
+  frontend-expo:
+    container_name: expo
     env_file:
       - ./frontend/client/myapp/.env
     build:
       context: ./frontend/client/myapp
       dockerfile: Dockerfile
+    networks:
+      - client-server
+    #network_mode: "host"
     ports:
-      - "8081:8081"
-      - "19006:19006"
+      - "19000:19000"
       - "19001:19001"
       - "19002:19002"
     volumes:
-      - ./frontend/client/myapp/src:/code/src
+      - ./frontend/client/myapp/:/opt/my-app/
       - /code/node_modules
-    networks:
-      - client-server
-    depends_on:
-      backend-server:
-        condition: service_healthy
+    #depends_on:
+    #  backend-server:
+    #    condition: service_healthy
 
 # Networks configuration
 networks:
