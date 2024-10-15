@@ -15,7 +15,7 @@ import Accesso from './pages/Utenti/Accesso';
 
 export default function App() {
   /* ====== ShowPage ====== */
-  const [visiblePage, setVisiblePage] = useState(2);
+  const [visiblePage, setVisiblePage] = useState(4);
   const showPage = (page) => {setVisiblePage(page);};
 
   /* ====== Check Login ====== */

@@ -6,10 +6,9 @@ const HomeStory = ({ showPage }) => {
     <div id="stacca">
       <center>
         <div id="boxgen">
-          <h2 className="testi">
-            Hai una storia che vuoi condividere?<br />
-            <h2 className="link" onClick={() => showPage(3)}>Raccontala a Sergio</h2>
-          </h2>
+          <h2 className="testi">Hai una storia che vuoi condividere?</h2>
+          <br />
+          <h2 className="link" onClick={() => showPage(3)}>Raccontala a Sergio</h2>
         </div>
         <div id="boxgen">
           Ciclo che fara vedere tutte le storie

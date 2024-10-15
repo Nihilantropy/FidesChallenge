@@ -1,11 +1,12 @@
 #root{
     --background1: url("./../img/sfondo.jpg"); --background2: rgba(85, 32, 15, 0.650); --backgroundpopup: rgba(85, 32, 15, 0.9);
     --backgroundnero: rgba(10, 10, 10, 0.7);
-    --testo: white;
+    --testo: white; --testiinput: black;
     --bordo: white;
     --testi: 23px;--titoli: 30px;
 }
 * {color: var(--testo);}
+input{color: var(--testiinput);}
 #body{width: 100vw;height: 100vh;top: 0;left: 0;background-image: var(--background1);background-repeat: no-repeat;background-size: cover;background-position: center;}
 #nav{position: fixed;top: 0;height: 80px;width: 100%;background: var(--background2);border-bottom: solid 3px var(--bordo);padding-left: 10px;}
 .fototendina{width: 30px;height: fit-content;}
@@ -14,10 +15,10 @@
 #primobox{position: relative;top: 100px;margin-top: 30px;width: 50%;}
 #boxgen{margin-top: 30px;width: 50%;}
 #stacca{position: relative;top: 100px;}
-.link,.testi{font-size: var(--testi);}
-.link{text-decoration: underline;cursor: pointer;}
+.elementinav.link,.testi{font-size: var(--testi);}
+.elementinav:hover,.link{text-decoration: underline;cursor: pointer;}
 .titoli{font-size: var(--titoli);}
 #fondonero{background: var(--backgroundnero);top: 0;left: 0;position: absolute;width: 100vw;height: 100vh;}
 #popup{background: var(--backgroundpopup);border: solid 3px var(--bordo);padding: 10px;position: relative;top: 20%;left: 25%;}
-.credenziali{font-size: var(--testi);}
-.bottoni{background: var(--background2);font-size: var(--testi);border: solid 3px var(--bordo);}
+.credenziali{font-size: var(--testi);padding: 5px;}
+.bottoni{background: var(--background2);font-size: var(--testi);border: solid 3px var(--bordo);cursor: pointer;}
