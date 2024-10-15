@@ -1,18 +1,23 @@
-import React from "react";
-import './../../assets/style/main.css';
+import React, { useEffect } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import styles from './../../assets/style/main.js';
 
 const NewStory = ({ showPage, gLoginTF, sShowPopupFB }) => {
-  if (gLoginTF() == false){showPage(2);sShowPopupFB(true);}
+  useEffect(() => {
+    if (!gLoginTF()){
+      showPage(2);
+      sShowPopupFB(true);
+    }
+  }, [gLoginTF, showPage, sShowPopupFB]);
   return (
-    <div id="stacca">
-      <center>
-        <div className="base">
-          <h2 className="testi">Racconta la tua storia</h2>
-          <br />
-          <h2 className="link" onClick={() => showPage(2)}>Annulla</h2>
-        </div>
-      </center>
-    </div>
+    <View style={styles.stacca}>
+      <View style={styles.box}>
+        <Text style={styles.testi}>Racconta la tua storia</Text>
+        <Pressable onPress={() => showPage(2)}>
+          <Text style={styles.link}>Annulla</Text>
+        </Pressable>
+      </View>
+    </View>
   );
-}
+};
 export default NewStory;

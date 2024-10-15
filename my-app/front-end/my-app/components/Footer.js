@@ -1,12 +1,15 @@
-import React from "react";
-import './../assets/style/main.css';
+import React from 'react';
+import { View, Text, Linking, Pressable } from 'react-native';
+import styles from './../assets/style/main.js';
 
 const Footer = () => {
   return (
-    <div id="footer">
-        <h2 className="testi">Progetto a cura di: Claudio Rea | Mario Cantelli | <a className='link' target="_blank" href="https://andreianghi.ddns.net">Andrei Anghi[Angly colui che regna]</a></h2>
-    </div>
+    <View style={styles.footer}>
+      <Text style={styles.testi}>
+        Progetto a cura di: Claudio Rea | Mario Cantelli |{' '}
+        <Pressable onPress={() => Linking.openURL('https://andreianghi.ddns.net')}><Text style={styles.link}>Andrei Anghi [Angly colui che regna]</Text></Pressable>
+      </Text>
+    </View>
   );
-}
-
+};
 export default Footer;

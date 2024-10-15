@@ -1,62 +1,45 @@
 import React, { useState } from "react";
-import './../../assets/style/main.css';
+import { View, Text, TextInput, Button, Pressable } from 'react-native';
+import styles from './../../assets/style/main.js';
 import './zz_LibUtenti.js';
 
-const Registati = ({ showPage, gShowPopupFB, sShowPopupFB }) => {
+const Registati = ({ showPage }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confpassword, setConfpassword] = useState('');
+    const [errorText, setErrorText] = useState('');
 
     function registati() {
-        if(email == '' || password == '' || confpassword == ''){
-            document.getElementById("errortext").innerHTML="Completa tutti i campi<br />prima di proseguire";
+        if (email === '' || password === '' || confpassword === '') {
+            setErrorText("Completa tutti i campi prima di proseguire");
             return;
         }
-        if(email == ''){
-            document.getElementById("errortext").innerHTML="Email non valida";
+        if (email === '') {
+            setErrorText("Email non valida");
             return;
         }
-        if(password != confpassword){
-            document.getElementById("errortext").innerHTML="Le password non sono uguali";
+        if (password !== confpassword) {
+            setErrorText("Le password non sono uguali");
             return;
         }
-        let passhas=password;
+        let passhas = password;
         console.log("invio fetch");
-        //fetch a Express
+        // fetch a Express (aggiungere la logica del fetch qui)
     }
     return (
-        <div id="stacca">
-            <center>
-                <table className="base">
-                    <tbody>
-                        <tr><td><h1>Registati a Sergio</h1></td></tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="email" className="testi">Email</label><br />
-                                <input autoComplete="email" id="email" spellCheck="false" className="credenziali" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr><td><br /></td></tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="password" className="testi">Password</label><br />
-                                <input autoComplete="password" id="password" spellCheck="false" className="credenziali" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="confpassword" className="testi">Conferma password</label><br />
-                                <input autoComplete="confpassword" id="confpassword" spellCheck="false" className="credenziali" type="password" placeholder="Conferma password" value={confpassword} onChange={(e) => setConfpassword(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr><td><h2 className="testi" id="errortext"></h2></td></tr>
-                        <tr><td><h2 className="link" onClick={() => showPage(4)}>Accedi, qui!</h2></td></tr>
-                        <tr><td><br /></td></tr>
-                        <tr><td><button className="bottoni" onClick={() => registati()}>Registrati</button></td></tr>
-                    </tbody>
-                </table>
-            </center>
-        </div>
+        <View style={styles.stacca}>
+            <View style={styles.box}>
+                <Text style={styles.titoli}>Registati a Sergio</Text>
+                <TextInput autoComplete="email" spellCheck={false} style={styles.credenziali} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)}/>
+                <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
+                <TextInput autoComplete="confpassword" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Conferma password" value={confpassword} onChangeText={(text) => setConfpassword(text)} />
+                {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
+                <Pressable onPress={() => showPage(4)}>
+                    <Text style={[{ margin: 20 }, styles.link]}>Accedi, qui!</Text>
+                </Pressable>
+                <Pressable style={styles.bottoni} onPress={registati}><Text style={styles.testi}>Registrati</Text></Pressable>
+            </View>
+        </View>
     );
 }
 export default Registati;

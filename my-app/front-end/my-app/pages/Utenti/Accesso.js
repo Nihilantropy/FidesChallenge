@@ -1,52 +1,39 @@
 import React, { useState } from "react";
-import './../../assets/style/main.css';
+import { View, Text, TextInput, Button, Pressable } from 'react-native';
+import styles from './../../assets/style/main.js';
 import './zz_LibUtenti.js';
 
-
-const Accesso = ({ showPage, gShowPopupFB, sShowPopupFB }) => {
+const Accesso = ({ showPage }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
-    function accedi() {
-        if(email == '' || password == ''){
-            document.getElementById("errortext").innerHTML="Completa tutti i campi<br />prima di proseguire";
+    const [errorText, setErrorText] = useState('');
+
+    function accesso() {
+        if (email === '' || password === '') {
+            setErrorText("Completa tutti i campi prima di proseguire");
             return;
         }
-        if(email == ''){
-            document.getElementById("errortext").innerHTML="Email non valida";
+        if (email === '') {
+            setErrorText("Email non valida");
             return;
         }
-        let passhas=password;
+        let passhas = password;
         console.log("invio fetch");
-        //fetch a Express
+        // fetch a Express (aggiungere la logica del fetch qui)
     }
     return (
-        <div id="stacca">
-            <center>
-                <table className="base">
-                    <tbody>
-                        <tr><td><h1 className="titoli">Accesso a Sergio</h1></td></tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="email" className="testi">Email</label><br />
-                                <input autoComplete="email" id="email" spellCheck="false" className="credenziali" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr><td><br /></td></tr>
-                        <tr>
-                            <td>
-                                <label htmlFor="password" className="testi">Password</label><br />
-                                <input autoComplete="password" id="password" spellCheck="false" className="credenziali" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr><td><h2 className="testi" id="errortext"></h2></td></tr>
-                        <tr><td><h2 className="link" onClick={() => showPage(5)}>Registrati, qui!</h2></td></tr>
-                        <tr><td><br /></td></tr>
-                        <tr><td><button className="bottoni" onClick={() => accedi()}>Accedi</button></td></tr>
-                    </tbody>
-                </table>
-            </center>
-        </div>
+        <View style={styles.stacca}>
+            <View style={styles.box}>
+                <Text style={styles.titoli}>Accesso a Sergio</Text>
+                <TextInput autoComplete="email" spellCheck={false} style={styles.credenziali} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)}/>
+                <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
+                {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
+                <Pressable onPress={() => showPage(5)}>
+                    <Text style={[{ margin: 20 }, styles.link]}>Registati, qui!</Text>
+                </Pressable>
+                <Pressable style={styles.bottoni} onPress={accesso}><Text style={styles.testi}>Accedi</Text></Pressable>
+            </View>
+        </View>
     );
 }
 export default Accesso;

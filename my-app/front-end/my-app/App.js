@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import './assets/style/main.css';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import styles from './assets/style/main.js';
 
-/* ====== Component ====== */
+/* ====== Componenti ====== */
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import PupupFunBlock from './components/PupupFunBlock';
 
-/* ====== Pages ====== */
+/* ====== Pagine ====== */
 import Home from './pages/Home';
 import HomeStory from './pages/Story/HomeStory';
 import NewStory from './pages/Story/NewStory';
@@ -14,22 +15,23 @@ import Registati from './pages/Utenti/Registati';
 import Accesso from './pages/Utenti/Accesso';
 
 export default function App() {
-  /* ====== ShowPage ====== */
-  const [visiblePage, setVisiblePage] = useState(4);
-  const showPage = (page) => {setVisiblePage(page);};
+  /* ====== Show Page ====== */
+  const [visiblePage, setVisiblePage] = useState(2);
+  const showPage = (page) => { setVisiblePage(page); };
+  const gshowPage = (page) => { return visiblePage; };
 
-  /* ====== Check Login ====== */
+  /* ====== Stato del login ====== */
   const [IsLoginIn, setLoginTF] = useState(false);
-  const sLoginTF = (page) => {setLoginTF(page);};
-  const gLoginTF = (page) => {return IsLoginIn;};
+  const sLoginTF = (page) => { setLoginTF(page); };
+  const gLoginTF = (page) => { return IsLoginIn; };
 
-  /* ====== Popup Funzionalita bloccate ====== */
+  /* ====== Popup Funzionalità bloccate ====== */
   const [ShowPopupFB, setShowPopupFB] = useState(false);
-  const sShowPopupFB = (page) => {setShowPopupFB(page);};
+  const sShowPopupFB = (page) => { setShowPopupFB(page); };
 
   return (
-    <div id="body">
-      <Navbar showPage={showPage} />
+    <View style={styles.body}>
+      <Navbar showPage={showPage} gshowPage={gshowPage} />
 
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
@@ -37,10 +39,11 @@ export default function App() {
       {visiblePage === 3 && <NewStory showPage={showPage} sShowPopupFB={sShowPopupFB} gLoginTF={gLoginTF} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sLoginTF={sLoginTF} />}
       {visiblePage === 5 && <Registati showPage={showPage} sLoginTF={sLoginTF} />}
+
       <Footer />
-      
+
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
-    </div>
+    </View>
   );
 }

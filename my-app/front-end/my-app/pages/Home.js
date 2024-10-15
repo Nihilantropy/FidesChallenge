@@ -1,16 +1,19 @@
 import React from "react";
-import './../assets/style/main.css';
+import { View, Text, Pressable } from 'react-native';
+import styles from './../assets/style/main.js';
 
 const Home = ({ showPage }) => {
   return (
-    <center>
-      <div id="primobox">
-        <h2 className="testi">Sergio è una piattaforma che permette di narrare e leggere storie da tutto il mondo</h2>
-        <br /><br /><br />
-        <h2 className="link" onClick={() => showPage(2)}>Inizia a leggere, qui</h2>
-      </div>
-    </center>
+    <View style={styles.stacca}>
+      <View style={styles.box}>
+        <Text style={styles.titoli}>
+          Sergio è una piattaforma che permette di narrare e leggere storie da tutto il mondo
+        </Text>
+        <Pressable onPress={() => showPage(3)}>
+          <Text style={styles.link}>Inizia a leggere, qui</Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
-
 export default Home;
