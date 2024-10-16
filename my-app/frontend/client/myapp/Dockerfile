@@ -16,12 +16,16 @@ ENV PATH /opt/my-app/.bin:$PATH
 COPY package.json package-lock.json ./
 
 RUN npm ci
+
 RUN npm i -g @expo/ngrok
 
 # Copy the project files
 COPY . /opt/my-app/
 
 EXPOSE 19000 19001 19002
+
+
+# RUN export PATH=$PATH:/opt/my-app/node_modules/.bin
 
 # Start the server
 CMD ["npm", "start"]

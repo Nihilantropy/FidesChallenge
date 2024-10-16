@@ -1,12 +1,24 @@
-// simple node web server that displays hello world
-// optimized for Docker image
+const express = require('express');
+const router = express.Router();
+const login = require('./user_funct/login');
+const createUser = require('./user_func/createUser');
+
+// Define the routes
+router.post('/login', login); // Handle login
+router.post('/create', createUser); // Handle user creation
+
+module.exports = router;
+
+
+
+
+
+
+
 
 const express = require("express");
-// this example uses express web framework so we know what longer build times
-// do and how Dockerfile layer ordering matters. If you mess up Dockerfile ordering
-// you'll see long build times on every code change + build. If done correctly,
-// code changes should be only a few seconds to build locally due to build cache.
-
+const axios = require('axios');
+const bodyParser = require('body-parser');
 const morgan = require("morgan");
 // morgan provides easy logging for express, and by default it logs to stdout
 // which is a best practice in Docker. Friends don't let friends code their apps to
@@ -41,7 +53,7 @@ app.post("/createUser", async (req, res, next) => {
 		email,
 		password,
 	  });
-	  res.status(201).json({ message: "User created successfully!" });
+	  res.status(200).json({ message: "User created successfully!" });
 	} catch (error) {
 	  next(error); // Handle errors
 	}
