@@ -8,14 +8,5 @@
 [-] Utenti
     [-] Login
     [-] Registrazione
-    [ ] Autenticazione con JVT
-
-
-file da rivedere:
-navbar
-popupfunblock
-homestory
-newstory
-home
-Login
-Registrati
+    [-] Autenticazione con JWT
+    [ ] Police password: min: 1 maiuscolo, 1 numero, 1 carattere 104

@@ -20,10 +20,10 @@ export default function App() {
   const showPage = (page) => { setVisiblePage(page); };
   const gshowPage = (page) => { return visiblePage; };
 
-  /* ====== Stato del login ====== */
-  const [IsLoginIn, setLoginTF] = useState(false);
-  const sLoginTF = (page) => { setLoginTF(page); };
-  const gLoginTF = (page) => { return IsLoginIn; };
+  /* ====== Autentificazione utente ====== */
+  const [WVTtoken, setWVTtoken] = useState('');
+  const sWVTtoken = (page) => { setWVTtoken(page); };
+  const gWVTtoken = (page) => { return WVTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
   const [ShowPopupFB, setShowPopupFB] = useState(false);
@@ -36,9 +36,9 @@ export default function App() {
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
       {visiblePage === 2 && <HomeStory showPage={showPage} />}
-      {visiblePage === 3 && <NewStory showPage={showPage} sShowPopupFB={sShowPopupFB} gLoginTF={gLoginTF} />}
-      {visiblePage === 4 && <Accesso showPage={showPage} sLoginTF={sLoginTF} />}
-      {visiblePage === 5 && <Registati showPage={showPage} sLoginTF={sLoginTF} />}
+      {visiblePage === 3 && <NewStory showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} />}
+      {visiblePage === 4 && <Accesso showPage={showPage} sWVTtoken={sWVTtoken} />}
+      {visiblePage === 5 && <Registati showPage={showPage} sWVTtoken={sWVTtoken} />}
 
       <Footer />
 

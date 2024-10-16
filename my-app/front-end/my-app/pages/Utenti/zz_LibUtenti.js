@@ -1,5 +1,8 @@
-// function has_password(password) {
-//     const bcrypt = require('bcrypt');
-//     const saltRounds = 10;
-//     bcrypt.hash(password, saltRounds, function(err, hash) {return password;});
-// }
+/* ====== HASHING PASSWORD ====== */
+const bcrypt = require('bcryptjs');
+const hashPassword = (password) => {
+    const saltRounds = 10;
+    const hash = bcrypt.hashSync(password, saltRounds);
+    return hash;
+};
+export default hashPassword;
