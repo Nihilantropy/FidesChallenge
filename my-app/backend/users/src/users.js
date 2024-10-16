@@ -20,25 +20,6 @@ app.use(express.json());
 
 app.use(morgan("common"));
 
-// Route to check MySQL version using Knex
-app.get("/", async (req, res, next) => {
-	try {
-	  // Knex query to get MySQL version
-	  const result = await db.raw("SELECT VERSION() as version");
-	  const version = result[0][0].version;
-	  res.json({ message: `Hello from MySQL ${version}` });
-	} catch (error) {
-	  next(error); // Handle any database errors
-	}
-});
-
-// Health check route
-app.get("/healthz", (req, res) => {
-	// Perform app logic here to determine if the app is truly healthy
-	// Return 200 if healthy
-	res.status(200).send("I am happy and healthy\n");
-});
-
 // Example route to get all users
 app.get("/users", async (req, res, next) => {
 	try {
@@ -50,7 +31,7 @@ app.get("/users", async (req, res, next) => {
 });
 
 // Example route to create a new user
-app.post("/users", async (req, res, next) => {
+app.post("/createUser", async (req, res, next) => {
 	try {
 	  const { first_name, last_name, username, email, password } = req.body;
 	  await db("users").insert({
@@ -70,6 +51,25 @@ app.post("/users", async (req, res, next) => {
 app.use((err, req, res, next) => {
 	console.error(err.stack);
 	res.status(500).json({ message: "Something went wrong!" });
+});
+
+// Route to check MySQL version using Knex
+app.get("/", async (req, res, next) => {
+	try {
+	  // Knex query to get MySQL version
+	  const result = await db.raw("SELECT VERSION() as version");
+	  const version = result[0][0].version;
+	  res.json({ message: `Hello from MySQL ${version}` });
+	} catch (error) {
+	  next(error); // Handle any database errors
+	}
+});
+
+// Health check route
+app.get("/healthz", (req, res) => {
+	// Perform app logic here to determine if the app is truly healthy
+	// Return 200 if healthy
+	res.status(200).send("I am happy and healthy\n");
 });
 
 module.exports = app;
