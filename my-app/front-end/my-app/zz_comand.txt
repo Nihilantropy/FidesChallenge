@@ -1,2 +1,0 @@
-//Nella rout del programma:
-npm run web //per avviere l'app
