@@ -4,8 +4,12 @@ Problem:
 		"npx expo start", and give back a qr code to see the app from the expo go mobile application.
 		This doesn't happen. The metro bundler starts at port 8081, but nothing else.
 		But, if i go inside the container and manually run "npx start expo" the app will use port 8082 to
-		run another service and will give the qr code, as it should.
-		Any suggestion?
+		run another service and will give the qr code, as it should, only inside the container.
+		Any suggestion on why that happen?
+	
+	2 - What is the best container network setup? Ex. Database and backend should be on the same network
+		but not on the same as the frontend? Should they be on totally separated networks (how would they communicate then)?
 
-	2 - How would if work if we wanted to build a container to run games built with a game engine such as godot or unity?
+	3 - How would it work if we wanted to build a container to run games built with a game engine such as godot or unity?
 		Is it possbible to connect the expo app to do that or the code must be written in javascript?
+		
