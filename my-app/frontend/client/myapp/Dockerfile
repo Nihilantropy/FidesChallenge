@@ -22,10 +22,10 @@ RUN npm i -g @expo/ngrok
 # Copy the project files
 COPY . /opt/my-app/
 
-EXPOSE 19000 19001 19002
+EXPOSE 8081 19000 19001 19002
 
 
 # RUN export PATH=$PATH:/opt/my-app/node_modules/.bin
 
 # Start the server
-CMD ["npm", "start"]
+CMD ["npx", "expo", "start", "--tunnel"]
