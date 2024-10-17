@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
+import Footer from './../../components/Footer';
 
 const NewStory = ({ showPage, gWVTtoken, sShowPopupFB }) => {
   useEffect(() => {
@@ -11,12 +12,15 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB }) => {
   }, [gWVTtoken, showPage, sShowPopupFB]);
   return (
     <View style={styles.stacca}>
-      <View style={styles.box}>
-        <Text style={styles.testi}>Racconta la tua storia</Text>
-        <Pressable onPress={() => showPage(2)}>
-          <Text style={styles.link}>Annulla</Text>
-        </Pressable>
-      </View>
+      <ScrollView>
+        <View style={styles.box}>
+          <Text style={styles.testi}>Racconta la tua storia</Text>
+          <Pressable onPress={() => showPage(2)}>
+            <Text style={styles.link}>Annulla</Text>
+          </Pressable>
+        </View>
+        <Footer />
+      </ScrollView>
     </View>
   );
 };

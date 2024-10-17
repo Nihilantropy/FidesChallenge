@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 import stylec from './../../assets/style/main.css';
+import Footer from './../../components/Footer';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -63,16 +64,19 @@ const Accesso = ({ showPage,sJWTtoken }) => {
     }
     return (
         <View style={styles.stacca}>
-            <View style={styles.box}>
-                <Text style={styles.titoli}>Accesso a Sergio</Text>
-                <TextInput autoComplete="email" spellCheck={false} placeholder="Email" style={styles.credenziali} value={email} onChangeText={(text) => setEmail(text)}/>
-                <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
-                {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
-                <Pressable onPress={() => showPage(5)}>
-                    <Text style={[{ margin: 20 }, styles.link]}>Registati, qui!</Text>
-                </Pressable>
-                <Pressable style={styles.bottoni} onPress={accesso}><Text style={styles.testi}>Accedi</Text></Pressable>
-            </View>
+            <ScrollView>
+                <View style={styles.box}>
+                    <Text style={styles.titoli}>Accesso a Sergio</Text>
+                    <TextInput autoComplete="email" spellCheck={false} placeholder="Email" style={styles.credenziali} value={email} onChangeText={(text) => setEmail(text)}/>
+                    <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
+                    {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
+                    <Pressable onPress={() => showPage(5)}>
+                        <Text style={[{ margin: 20 }, styles.link]}>Registati, qui!</Text>
+                    </Pressable>
+                    <Pressable style={styles.bottoni} onPress={accesso}><Text style={styles.testi}>Accedi</Text></Pressable>
+                </View>
+                <Footer />
+            </ScrollView>
         </View>
     );
 }

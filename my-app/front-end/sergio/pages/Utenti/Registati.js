@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Pressable } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 import stylec from './../../assets/style/main.css';
+import Footer from './../../components/Footer';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -82,20 +83,23 @@ const Registati = ({ showPage,sJWTtoken }) => {
     }
     return (
         <View style={styles.stacca}>
-            <View style={styles.box}>
-                <Text style={styles.titoli}>Registati a Sergio</Text>
-                <TextInput autoComplete="email" spellCheck={false} style={styles.credenziali} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)}/>
-                <TextInput autoComplete="nome" spellCheck={false} style={styles.credenziali} placeholder="Nome" value={nome} onChangeText={(text) => setNome(text)}/>
-                <TextInput autoComplete="cognome" spellCheck={false} style={styles.credenziali} placeholder="Cognome" value={cognome} onChangeText={(text) => setCognome(text)}/>
-                <TextInput autoComplete="nickname" spellCheck={false} style={styles.credenziali} placeholder="Nickname" value={nickname} onChangeText={(text) => setNickname(text)}/>
-                <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
-                <TextInput autoComplete="confpassword" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Conferma password" value={confpassword} onChangeText={(text) => setConfpassword(text)} />
-                {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
-                <Pressable onPress={() => showPage(4)}>
-                    <Text style={[{ margin: 20 }, styles.link]}>Accedi, qui!</Text>
-                </Pressable>
-                <Pressable style={styles.bottoni} onPress={registati}><Text style={styles.testi}>Registrati</Text></Pressable>
-            </View>
+            <ScrollView>
+                <View style={styles.box}>
+                    <Text style={styles.titoli}>Registati a Sergio</Text>
+                    <TextInput autoComplete="email" spellCheck={false} style={styles.credenziali} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)}/>
+                    <TextInput autoComplete="nome" spellCheck={false} style={styles.credenziali} placeholder="Nome" value={nome} onChangeText={(text) => setNome(text)}/>
+                    <TextInput autoComplete="cognome" spellCheck={false} style={styles.credenziali} placeholder="Cognome" value={cognome} onChangeText={(text) => setCognome(text)}/>
+                    <TextInput autoComplete="nickname" spellCheck={false} style={styles.credenziali} placeholder="Nickname" value={nickname} onChangeText={(text) => setNickname(text)}/>
+                    <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
+                    <TextInput autoComplete="confpassword" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Conferma password" value={confpassword} onChangeText={(text) => setConfpassword(text)} />
+                    {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
+                    <Pressable onPress={() => showPage(4)}>
+                        <Text style={[{ margin: 20 }, styles.link]}>Accedi, qui!</Text>
+                    </Pressable>
+                    <Pressable style={styles.bottoni} onPress={registati}><Text style={styles.testi}>Registrati</Text></Pressable>
+                </View>
+                <Footer />
+            </ScrollView>
         </View>
     );
 }
