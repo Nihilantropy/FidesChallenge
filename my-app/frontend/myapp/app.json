@@ -1,12 +1,7 @@
 {
   "expo": {
-<<<<<<<< HEAD:my-app/frontend/client/myapp/app.json
     "name": "myapp",
     "slug": "myapp",
-========
-    "name": "Sergio",
-    "slug": "Sergio",
->>>>>>>> 321bdfa67100aa041465eb779aa2470f55bd58a0:my-app/front-end/my-app/app.json
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/img/favicon.png",
