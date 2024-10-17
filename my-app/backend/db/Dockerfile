@@ -21,7 +21,9 @@ RUN chown -R mysql:root /var/lib/mysql/
 # Copy any custom SQL scripts or configurations (if needed)
 # This can be useful for setting up initial databases or seeding data
 # Place your .sql files in backend/db/initdb.d and they will be automatically loaded
-# COPY ./initdb.d /docker-entrypoint-initdb.d
+#COPY ./initdb.d /docker-entrypoint-initdb.d
+
+#RUN chmod -R 777 /docker-entrypoint-initdb.d
 
 # Set a custom configuration (optional)
 # If you need custom MySQL configurations, add them to backend/db/my.cnf

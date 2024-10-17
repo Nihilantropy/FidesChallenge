@@ -12,6 +12,16 @@ router.post('/create', async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
+  // Validate field lengths (maximum 50 characters)
+  const fields = { first_name, last_name, username, email, password };
+  for (const [key, value] of Object.entries(fields)) {
+    if (value.length > 50) {
+      return res.status(400).json({
+        message: `${key} cannot be longer than 50 characters`
+      });
+    }
+  }
+  
   // Email format validation using regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
@@ -24,6 +34,7 @@ router.post('/create', async (req, res) => {
     if (existingUsername) {
       return res.status(409).json({ message: 'Username already exists' });
     }
+
 
     // Check if the email already exists
     const existingEmail = await db('users').where({ email }).first();

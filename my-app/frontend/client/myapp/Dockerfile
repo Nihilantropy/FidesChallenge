@@ -15,7 +15,7 @@ ENV PATH /opt/my-app/.bin:$PATH
 
 COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN npm i
 
 RUN npm i -g @expo/ngrok
 
