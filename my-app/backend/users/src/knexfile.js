@@ -1,7 +1,7 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' }); // Load environment variables from .env file
 
-module.exports = {
+export default {
   development: {
     client: 'mysql2',
     connection: {

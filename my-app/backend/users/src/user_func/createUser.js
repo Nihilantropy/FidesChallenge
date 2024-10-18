@@ -1,74 +1,53 @@
-const express = require('express');
-const db = require('../database'); // Assuming knex is configured here
+import db from '../database.js'; // Ensure the path includes the .js extension
+import { ValidationError, ConflictError } from '../err/dist/CustomErrors.js'; // Ensure the path includes the .js extension
 
-const router = express.Router();
+async function createUser(userData) {
+	const { first_name, last_name, username, email, password } = userData;
 
-// POST /users/createUser route
-router.post('/create', async (req, res) => {
-  const { first_name, last_name, username, email, password } = req.body;
+	// Validate required fields
+	if (!first_name || !last_name || !username || !email || !password) {
+		throw new ValidationError('All fields are required');
+	}
 
-  // Basic edge case handling
-  if (!first_name || !last_name || !username || !email || !password) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
+	// Validate field lengths
+	const fields = { first_name, last_name, username, email, password };
+	for (const [key, value] of Object.entries(fields)) {
+		if (value.length > 20) {
+			throw new ValidationError(`${key} cannot be longer than 20 characters`);
+		}
+	}
 
-  // Validate field lengths (maximum 50 characters)
-  const fields = { first_name, last_name, username, email, password };
-  for (const [key, value] of Object.entries(fields)) {
-    if (value.length > 50) {
-      return res.status(400).json({
-        message: `${key} cannot be longer than 50 characters`
-      });
-    }
-  }
-  
-  // Email format validation using regex
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: 'Invalid email format' });
-  }
+	// Validate email format
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(email)) {
+		throw new ValidationError('Invalid email format');
+	}
 
-  try {
-    // Check if the username already exists
-    const existingUsername = await db('users').where({ username }).first();
-    if (existingUsername) {
-      return res.status(409).json({ message: 'Username already exists' });
-    }
+	// Check if the username already exists
+	const existingUsername = await db('users').where({ username }).first();
+	if (existingUsername) {
+		throw new ConflictError('Username already exists');
+	}
 
+	// Check if the email already exists
+	const existingEmail = await db('users').where({ email }).first();
+	if (existingEmail) {
+		throw new ConflictError('Email already in use');
+	}
 
-    // Check if the email already exists
-    const existingEmail = await db('users').where({ email }).first();
-    if (existingEmail) {
-      return res.status(409).json({ message: 'Email already in use' });
-    }
+	// Insert new user into the database
+	const newUser = { first_name, last_name, username, email, password };
+	const [userId] = await db('users').insert(newUser);
 
-    // Insert new user into the database
-    const newUser = {
-      first_name,
-      last_name,
-      username,
-      email,
-      password // Assuming this is already hashed
-    };
+	// Return the created user's details
+	return {
+		id: userId,
+		first_name,
+		last_name,
+		username,
+		email
+	};
+}
 
-    const [userId] = await db('users').insert(newUser);
-
-    // Return success with the newly created user’s ID
-    // TODO do not return user but return paseto token
-    return res.status(200).json({
-      message: 'User created successfully',
-      user: {
-        id: userId,
-        first_name,
-        last_name,
-        username,
-        email
-      }
-    });
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-module.exports = router;
+// Export the createUser function
+export default createUser;

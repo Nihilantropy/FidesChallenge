@@ -3,8 +3,9 @@
 	"version": "1.0.0",
 	"description": "Backend service using Express and MySQL",
 	"main": "src/index.js",
+	"type": "module",
 	"scripts": {
-		"start": "node src/index.js",
+		"start": "nodemon src/index.js",
 		"start-watch": "nodemon src/index.js --inspect=0.0.0.0:9229",
 		"start-wait-debuger": "nodemon src/index.js --inspect-brk=0.0.0.0:9229",
 		"test": "cross-env NODE_ENV=test PORT=8081 mocha --timeout 10000 --exit --inspect=0.0.0.0:9230",
@@ -27,6 +28,7 @@
 		"chai-http": "^5.1.1",
 		"cross-env": "^7.0.3",
 		"mocha": "^10.7.3",
-		"nodemon": "^3.1.7"
+		"nodemon": "^3.1.7",
+		"typescript": "^5.6.3"
 	}
 }

@@ -1,18 +1,20 @@
-const app = require("./users");
+import app from './app.js';
+import knexModule from 'knex';
+import knexConfig from './knexfile.js';
 const port = process.env.PORT || 3000;
 
 const waitForDB = async (dbConfig) => {
-	const knex = require('knex')(dbConfig);
+	const knex = knexModule(dbConfig);
 	let connected = false;
 	
 	while (!connected) {
 	  try {
-		await knex.raw('SELECT 1');  // A simple query to check if the DB is ready
-		connected = true;
-		console.log('Connected to the database!');
+			await knex.raw('SELECT 1');  // A simple query to check if the DB is ready
+			connected = true;
+			console.log('Connected to the database!');
 	  } catch (error) {
-		console.error('Database connection failed. Retrying in 2 seconds...');
-		await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+			console.error('Database connection failed. Retrying in 2 seconds...');
+			await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
 	  }
 	}
 	return knex; // Return the knex instance once connected
@@ -20,16 +22,11 @@ const waitForDB = async (dbConfig) => {
   
   // In your index.js, use the function before starting the server
   (async () => {
-	const knexConfig = require('./knexfile').development;
-	await waitForDB(knexConfig); // Wait for the database to be ready
-	const app = require("./app");
-	const port = process.env.PORT || 3000;
-  
+	const knex = await waitForDB(knexConfig.development); // Wait for the database to be ready
 	const server = app.listen(port, function() {
-	  console.log("Webserver is ready");
+		console.log('Webserver is ready');
 	});
-  
-  })();
+})();
   
 
 //

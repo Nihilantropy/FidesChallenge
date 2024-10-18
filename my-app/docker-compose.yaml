@@ -66,6 +66,9 @@ services:
     volumes:
       - ./frontend/client/myapp/:/opt/my-app/
       - /code/node_modules
+    environment:
+         - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 
+         - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.136.177
     #depends_on:
     #  backend-server:
     #    condition: service_healthy

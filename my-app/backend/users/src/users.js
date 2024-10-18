@@ -1,45 +1,64 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // Import user functionalities from separate modules
-const loginUser = require('./user_func/login');
-const createUser = require('./user_func/createUser');
-const getUserData = require('./user_func/getData');
+import loginUser from './user_func/login.js';
+import createUser from './user_func/createUser.js';
+import getUserData from './user_func/getData.js';
 
-// User login route
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const token = await loginUser(email, password);
-    if (token) {
-      res.status(200).json({ token });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred', error: error.message });
-  }
-});
+import { catchErrorTyped } from './err/dist/catchError.js';
+import { CustomError } from './err/dist/CustomErrors.js';
 
 // User creation route
 router.post('/create', async (req, res) => {
-  try {
-    const userData = req.body;
-    const newUser = await createUser(userData);
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred', error: error.message });
-  }
+	const userData = req.body;
+	const [err, newUser] = await catchErrorTyped(createUser(userData), [CustomError]);
+
+	// If there's an error, handle it
+	if (err) {
+		console.error(err.message);
+		return res.status(err.code).json({ message: err.message });
+	}
+
+	// Successfully created the user
+	console.log('User created:', newUser);
+	return res.status(201).json(newUser);
 });
 
-// Get all user data
+// User login route
+router.post('/login', async (req, res) => {
+	const { email, password } = req.body;
+	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
+
+	// Check for errors
+	if (err) {
+		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
+		return res.status(statusCode).json({ message: err.message });
+	}
+
+	// If the token is returned successfully
+	if (token) {
+		return res.status(200).json({ token });
+	}
+
+	// If no token is generated for other reasons
+	return res.status(500).json({ message: 'Invalid credentials' });
+
+});
+
+// Get user data route
 router.get('/data', async (req, res) => {
-  try {
-    const users = await getUserData();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: 'An error occurred', error: error.message });
-  }
-});
+	try {
+	  const [err, user] = await catchErrorTyped(getUserData(req, res), [CustomError]);
+  
+	  if (err) {
+		return res.status(err.code).json({ message: err.message });
+	  }
+  
+	  res.status(200).json(user);
+	} catch (error) {
+	  res.status(500).json({ message: 'An error occurred', error: error.message });
+	}
+  });
 
-module.exports = router;
+  export default router;
