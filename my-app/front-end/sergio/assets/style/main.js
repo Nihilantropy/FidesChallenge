@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { boxHeight } from './../../App';
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
 body: {flex: 1,width: '99.9%',backgroundColor: 'rgb(255, 240, 201)',overflowX: 'hidden'},
