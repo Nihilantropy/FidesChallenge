@@ -1,9 +1,10 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { boxHeight } from './../../App';
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
-body: {width: '99.9%',backgroundColor: 'rgb(255, 240, 201)',overflowX: 'hidden'},
+body: {flex: 1,width: '99.9%',backgroundColor: 'rgb(255, 240, 201)',overflowX: 'hidden'},
 navbar: {zIndex: 1,flexDirection: 'row',alignItems: 'center',justifyContent: 'space-between',position: 'absolute',top: 0,width: width,backgroundColor: 'rgba(85, 32, 15, 0.65)',borderBottomWidth: 3,borderBottomColor: 'white',padding: 20},
-footer: {marginTop: 50,width: '100%',backgroundColor: 'rgba(85, 32, 15, 0.65)',borderTopWidth: 3,borderTopColor: 'white',padding: 10,justifyContent: 'center'},
+footer: {marginTop: width > 600 ? '27%' : '62%',width: '100%',backgroundColor: 'rgba(85, 32, 15, 0.65)',borderTopWidth: 3,borderTopColor: 'white',padding: width > 600 ? 20 : 10,justifyContent: 'center'},
 titoli: {fontSize: width > 600 ? 30 : 20,color: 'white',fontWeight: 'bold'},
 testi: {fontSize: width > 600 ? 25 : 20,color: 'white'},
 fototendina: {width: 50,height: 50},
