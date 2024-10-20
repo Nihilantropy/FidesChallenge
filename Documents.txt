@@ -1,0 +1,163 @@
+Qui verrano messe i vari appunti di kube
+
+é un opne source container orchestration framework, ti aiuta
+a controllare molti container.
+
+proprietà:
+-sempre acessibile all'user, non va in down;
+-alte performance;
+-disaster recovery: cioè se ci sono dei problemi con l'app
+    lui ha un'opzione di recovery che ti permettere di non evere 
+    danni ne perdite di dati.
+
+componenti base:
+-pod: abstarction over container, cioè crea un envoirionment
+    sopra i container. Per facilitarti il lavoro sopra i container
+    andando a lavorare solo con l'envairoment.
+    -data-database;
+    -un'app per pod;
+    -la pod ti da un ip per pod, che comunicano tra di loro, ma 
+    queste muoiono troppo facilemente e quinidi dovremmo andare a 
+    modificare ogni volta manualmente questo ip. Quindi alle pod, per ovviare
+    a questo problema gli viene dato un ip statico chiamato service, permanente.
+    Sappiamo che dobbiamo appunto rendere l'app visibile e quindi pubblica.
+    -Le pod hanno un internal service ed un external service. Il punto di entrata 
+    delle richieste. è l'ingress che comunica con il service, mostrando il nome dell'app
+    al posto dell'ip e della porta aperta.
+
+-configmap: è una configurazione che ti permette di prendere delle componenti, compe 
+            ad esempio il nome del mio end point che può essere il database, e se
+            modificate non avere il bisogno di buttare giù l'app e ritirarla su.
+            Sono le external configuration.
+            Basta che cambi quello che ti interessa nella config map.
+
+-Secret: è come una config map ma con la differenza che ti contiene le credenziali, o
+        o informazioni che ti interessano tenere segrete, e te le cripta in base 64.
+
+componenti più avanzate:
+-Volumi: attacca dei volumi fisici alle pod, così da avere i dati in locale.
+        O remote storege che magari non fanno parte di Kube.
+        Pensiamolo come uno storege esterno, perchè kube non si prende cura dei dati persistenti.
+
+-Repliche:  questo per avitare di avere in doen l'app abbiamo delle repliche.
+            Letteralmente dei cloni della pod ma riesce a replicare l'app più che il database. 
+            Queste vengono definite nel DEPLOYMENT.
+
+-Deployment: una sotto specie di config map che utilizzi per comunicare con le pod.
+             Come detto sopra puoi specificare delle caratteristiche, come ad esempio
+             quante repliche fare della pod.
+
+-Statefulset:  questa componente tratta la parte della parte replicata del database. è la parte
+                che ci serve per la comunicazione con i volumi da parte dei nostri database
+                per noin avere delle inconsistenze. Si prende cura dei database per la scrittura
+                e lettura dai dati. 
+
+
+L'Architettura
+
+Le pod si dividono in master and slave.
+Nodi: dove lavorano le pod.
+Abbiamo il runtime del nodo e dobbiamo avere messo su ogni nodo Kubelet.
+-Kubelet interagisce sia con i container che runnano nel nodo sia con il nodo stesso.
+    Esso si prend ela configurazine per far runnare l'app dentro le pod e il nodo,
+    e per assegnare le risorse.
+KubeProxy: va anche lui installato in ogni nodo e server per ricevere le richieste.
+
+Tutta la parte dove aggiungi un nodo al cluster, re-schedule oppure restartare le pod 
+oppure monitorare le pod viene gestita dal master node.
+
+Master node:    Ha quatro processi che lavorano:
+                    -quando devi comunicare oppure interagire con un specifico nodo
+                    fai riferimento al mastern node attraverso l'API server usando il client;
+                    Fa anche da gatekeeper per le autenticazioni verso il cluster o dai nodi verso
+                    le richieste;
+                    -scheduler: dopo che l'API ha validato la tua richiesta, ad esempio
+                    quella di tirare su un altro nodo, starta la richiesta. Guarda la 
+                    richiesta fatta e attribuisce le risorse disponibili ai nodi e ti schedula.
+                    -Controllewr manager: ti vede quale nodo va giù e ti rischedula quando ritirarlo
+                    su. Il tutto facendo richiesta alla sheduler e verificando se possibile con il 
+                    kubelet per ristartarlo.
+                    -etcd: il brain del cluster. Tutte le modifiche vengono slavate qui. Tutte le 
+                    modifiche o le richeiste fatte, o le query fatte vengono salvate al suo interno.
+                    Al suo interno non vengono salvate i data dell'app ma solo la parte delle interazioni
+                    con questi 4 processi vengono salvati. 
+
+            Ovviamente anche il master node ha la sua replica.
+
+Poniamo un esempio:
+possiamo avere tranquillamente a lavoro 2 master node e 3 worker node.
+
+Il master node ha pià importanza ma richede meno risorse del worker node.
+Possiamo giustamente dare a tutto il cluster più risorse per renderlo più robusto.
+
+Minikube
+
+Viene utilizzato soprattutto per fare test sui nostri nodi.
+è un node cluster dove il master node e il worker node stanno tutti sullo stesso nodo.
+Lavoro su una virtual box sulla nostra macchina.
+
+Per interagire con il cluster esistente usiamo Kubectl.
+
+Kubectl
+
+è un tool che usiamo direttamente da linea di comando.
+lo usiamo per interagire con il cluster in stile API.
+è molto utile per interagire con qualsiasi tipo di kubernetes cluster.
+
+per mac:
+install hyperhit and minikube
+    brew update
+    brew install hyperkit
+    brew install minikube
+    kubectl
+    minikube
+
+create minikube cluster
+    minikube start --vm-driver=hyperkit
+    kubectl get nodes
+    minikube status
+    kubectl version
+
+delete cluster and restart in debug mode
+    minikube delete
+    minikube start --vm-driver=hyperkit --v=7 --alsologtostderr
+    minikube status
+
+kubectl commands
+    kubectl get nodes
+    kubectl get pod
+    kubectl get services
+    kubectl create deployment nginx-depl --image=nginx
+    kubectl get deployment
+    kubectl get replicaset
+    kubectl edit deployment nginx-depl
+
+debugging
+    kubectl logs {pod-name}
+    kubectl exec -it {pod-name} -- bin/bash
+
+create mongo deployment
+    kubectl create deployment mongo-depl --image=mongo
+    kubectl logs mongo-depl-{pod-name}
+    kubectl describe pod mongo-depl-{pod-name}
+
+delete deployment
+    kubectl delete deployment mongo-depl
+    kubectl delete deployment nginx-depl
+
+create or edit config file
+    vim nginx-deployment.yaml
+    kubectl apply -f nginx-deployment.yaml
+    kubectl get pod
+    kubectl get deployment
+
+delete with config
+    kubectl delete -f nginx-deployment.yaml
+    #Metrics
+kubectl top The kubectl top command returns current CPU and memory usage
+ for a cluster’s pods or nodes, or for a particular pod or node if specified.
+
+
+Quand odevi andare a creare le pod non le crei direattamente, ma vai a creare il 
+Deployment. Quando lo crei ha già il blueprint per creare la pod.
+Puoi editare le pod anceh direattamente da terminale ed è veramente potente come cosa.
