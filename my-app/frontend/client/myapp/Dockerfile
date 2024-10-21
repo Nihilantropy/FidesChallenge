@@ -17,6 +17,8 @@ COPY package.json package-lock.json ./
 
 RUN npm i
 
+RUN yarn add expo
+
 RUN npm i -g @expo/ngrok
 
 # Copy the project files

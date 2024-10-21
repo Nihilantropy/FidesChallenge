@@ -22,6 +22,7 @@ app.get('/', async (req, res, next) => {
 	try {
 		const result = await db.raw('SELECT VERSION() as version');
 		const version = result[0][0].version;
+		res.status(200);
 		res.json({ message: `Hello from MySQL ${version}` });
 	} catch (error) {
 		next(error); // Handle any database errors

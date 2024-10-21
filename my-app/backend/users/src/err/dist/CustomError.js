@@ -25,6 +25,11 @@ export class TokenCreationError extends CustomError {
         super(message, 500);
     }
 }
+export class TokenNotFound extends CustomError {
+    constructor(message = 'Error: no token provided') {
+        super(message, 401);
+    }
+}
 export class DBFetchQueryError extends CustomError {
     constructor(message = 'Database fetch query error') {
         super(message, 500);

@@ -1,11 +1,15 @@
 import express from 'express';
 const router = express.Router();
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 // Import user functionalities from separate modules
 import loginUser from './user_func/login.js';
-import authenticate from './user_func/authenticate.js';
 import createUser from './user_func/createUser.js';
-import getUserData from './user_func/getData.js';
+import getProfile from './user_func/getProfile.js';
+import { authenticate } from './middleware/auth.js';
 
 import { catchErrorTyped } from './err/dist/catchError.js';
 import { CustomError } from './err/dist/CustomError.js';
@@ -31,36 +35,39 @@ router.post('/login', async (req, res) => {
 	const { email, password } = req.body;
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
+	console.log(token);
 	// Check for errors
 	if (err) {
 		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
+		console.log(err.message);
 		return res.status(statusCode).json({ message: err.message });
 	}
 
 	// If the token is returned successfully
-	if (token) {
-		return res.status(200).json({ token });
-	}
+	console.log(token);
+	return res.status(200).json({ token });
 
 });
 
-// Get user data route
-router.get('/data', async (req, res) => {
-	try {
-	const [err, user] = await catchErrorTyped(getUserData(req, res), [CustomError]);
+// Protected Profile route
+router.get('/profile', async (req, res) => {
+    // Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
+    const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
-	if (err) {
-		return res.status(err.code).json({ message: err.message });
-	}
+    if (authErr) {
+        return res.status(authErr.code).json({ message: authErr.message });
+    }
 
-	res.status(200).json(user);
-	} catch (error) {
-	res.status(500).json({ message: 'An error occurred', error: error.message });
-	}
-});
+	console.log("Authentication passed!");
+    const userId = req.user.id; // Assuming user ID is attached to the request object by the authenticate middleware
+    const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
-router.get('/protected', authenticate, (req, res) => {
-	res.status(200).json({ message: 'You have accessed a protected route!', user: req.user });
+    if (err) {
+        return res.status(err.code).json({ message: err.message });
+    }
+
+	console.log(profile);
+    res.status(200).json(profile);
 });
 
 export default router;
