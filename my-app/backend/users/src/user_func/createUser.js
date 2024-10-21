@@ -1,5 +1,5 @@
 import db from '../database.js'; // Ensure the path includes the .js extension
-import { ValidationError, ConflictError } from '../err/dist/CustomErrors.js'; // Ensure the path includes the .js extension
+import { ValidationError, ConflictError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
 
 async function createUser(userData) {
 	const { first_name, last_name, username, email, password } = userData;

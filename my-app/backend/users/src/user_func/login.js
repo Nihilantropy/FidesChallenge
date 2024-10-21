@@ -2,7 +2,7 @@ import { V4 } from 'paseto'; // Using V4 version of Paseto for token creation
 import db from '../database.js'; // Assuming you have a configured knex instance
 import bcrypt from 'bcrypt'; // Assuming you're storing hashed passwords in the DB
 import crypto from 'crypto'; // To generate a key for Paseto
-import { InvalidCredentialsError } from '../err/dist/CustomErrors.js';
+import { InvalidCredentialsError } from '../err/dist/CustomError.js';
 
 // Generate a secret key for Paseto (usually you store this securely in your environment)
 const PASSPHRASE_SECRET = crypto.randomBytes(32);

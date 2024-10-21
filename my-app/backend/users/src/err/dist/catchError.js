@@ -1,4 +1,4 @@
-import { InternalServerError } from "./CustomErrors";
+import { InternalServerError } from "./CustomError";
 export function catchErrorTyped(promise, errorToCatch) {
     return promise
         .then((data) => {

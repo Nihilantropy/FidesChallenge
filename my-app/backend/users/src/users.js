@@ -7,7 +7,7 @@ import createUser from './user_func/createUser.js';
 import getUserData from './user_func/getData.js';
 
 import { catchErrorTyped } from './err/dist/catchError.js';
-import { CustomError } from './err/dist/CustomErrors.js';
+import { CustomError } from './err/dist/CustomError.js';
 
 // User creation route
 router.post('/create', async (req, res) => {
@@ -40,7 +40,6 @@ router.post('/login', async (req, res) => {
 	if (token) {
 		return res.status(200).json({ token });
 	}
-
 	// If no token is generated for other reasons
 	return res.status(500).json({ message: 'Invalid credentials' });
 
