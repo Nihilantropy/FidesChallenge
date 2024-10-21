@@ -3,6 +3,7 @@ const router = express.Router();
 
 // Import user functionalities from separate modules
 import loginUser from './user_func/login.js';
+import authenticate from './user_func/authenticate.js';
 import createUser from './user_func/createUser.js';
 import getUserData from './user_func/getData.js';
 
@@ -40,24 +41,26 @@ router.post('/login', async (req, res) => {
 	if (token) {
 		return res.status(200).json({ token });
 	}
-	// If no token is generated for other reasons
-	return res.status(500).json({ message: 'Invalid credentials' });
 
 });
 
 // Get user data route
 router.get('/data', async (req, res) => {
 	try {
-	  const [err, user] = await catchErrorTyped(getUserData(req, res), [CustomError]);
-  
-	  if (err) {
-		return res.status(err.code).json({ message: err.message });
-	  }
-  
-	  res.status(200).json(user);
-	} catch (error) {
-	  res.status(500).json({ message: 'An error occurred', error: error.message });
-	}
-  });
+	const [err, user] = await catchErrorTyped(getUserData(req, res), [CustomError]);
 
-  export default router;
+	if (err) {
+		return res.status(err.code).json({ message: err.message });
+	}
+
+	res.status(200).json(user);
+	} catch (error) {
+	res.status(500).json({ message: 'An error occurred', error: error.message });
+	}
+});
+
+router.get('/protected', authenticate, (req, res) => {
+	res.status(200).json({ message: 'You have accessed a protected route!', user: req.user });
+});
+
+export default router;

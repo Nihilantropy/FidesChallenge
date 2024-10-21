@@ -1,4 +1,3 @@
-import { InternalServerError } from "./CustomError";
 export function catchErrorTyped(promise, errorToCatch) {
     return promise
         .then((data) => {
@@ -12,6 +11,12 @@ export function catchErrorTyped(promise, errorToCatch) {
         if (isKnownError) {
             return [error, undefined];
         }
-        return [new InternalServerError(), undefined]; // Fallback to generic 500 error
+        // Return a default Internal Server Error object and cast it to type E
+        const fallbackError = {
+            code: 500,
+            message: 'Internal Server Error',
+            name: 'InternalServerError'
+        };
+        return [fallbackError, undefined]; // Fallback to generic 500 error
     });
 }
