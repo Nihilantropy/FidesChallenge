@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
-import Footer from './../../components/Footer';
 
 const NewStory = ({ showPage, gWVTtoken, sShowPopupFB }) => {
   useEffect(() => {
@@ -19,7 +18,6 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB }) => {
             <Text style={styles.link}>Annulla</Text>
           </Pressable>
         </View>
-        <Footer />
       </ScrollView>
     </View>
   );

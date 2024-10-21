@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 import stylec from './../../assets/style/main.css';
-import Footer from './../../components/Footer';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -97,8 +96,8 @@ const Registati = ({ showPage,sJWTtoken }) => {
                         <Text style={[{ margin: 20 }, styles.link]}>Accedi, qui!</Text>
                     </Pressable>
                     <Pressable style={styles.bottoni} onPress={registati}><Text style={styles.testi}>Registrati</Text></Pressable>
+                    <Pressable onPress={() => showPage(1)} style={ styles.sinistra }><Text style={ styles.tornaallahome }>Torna alla home</Text></Pressable>
                 </View>
-                <Footer />
             </ScrollView>
         </View>
     );

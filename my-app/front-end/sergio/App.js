@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import styles from './assets/style/main.js';
 
 /* ====== Componenti ====== */
 import Navbar from './components/Navbar';
+import FooterWeb from './components/FooterWeb';
+import FooterApp from './components/FooterApp';
 import PupupFunBlock from './components/PupupFunBlock';
 
 /* ====== Pagine ====== */
@@ -30,7 +32,8 @@ export default function App() {
 
   return (
     <View style={styles.body}>
-      <Navbar showPage={showPage} gshowPage={gshowPage} />
+      { Platform.OS === 'web' && <Navbar showPage={showPage} gshowPage={gshowPage} /> }
+      { Platform.OS !== 'web' && <FooterApp showPage={showPage} gshowPage={gshowPage} /> }
 
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
@@ -38,6 +41,8 @@ export default function App() {
       {visiblePage === 3 && <NewStory showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sWVTtoken={sWVTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sWVTtoken={sWVTtoken} />}
+
+      { Platform.OS === 'web' && <FooterWeb /> }
 
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}

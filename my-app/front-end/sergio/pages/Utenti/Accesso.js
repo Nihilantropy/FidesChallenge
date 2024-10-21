@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 import stylec from './../../assets/style/main.css';
-import Footer from './../../components/Footer';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -70,12 +69,10 @@ const Accesso = ({ showPage,sJWTtoken }) => {
                     <TextInput autoComplete="email" spellCheck={false} placeholder="Email" style={styles.credenziali} value={email} onChangeText={(text) => setEmail(text)}/>
                     <TextInput autoComplete="password" spellCheck={false} secureTextEntry={true} style={styles.credenziali} placeholder="Password" value={password} onChangeText={(text) => setPassword(text)} />
                     {errorText !== '' && (<Text style={[{ margin: 20 }, styles.testi]}>{errorText}</Text>)}
-                    <Pressable onPress={() => showPage(5)}>
-                        <Text style={[{ margin: 20 }, styles.link]}>Registati, qui!</Text>
-                    </Pressable>
+                    <Pressable onPress={() => showPage(5)}><Text style={[{ margin: 20 }, styles.link]}>Registati, qui!</Text></Pressable>
                     <Pressable style={styles.bottoni} onPress={accesso}><Text style={styles.testi}>Accedi</Text></Pressable>
+                    <Pressable onPress={() => showPage(1)} style={ styles.sinistra }><Text style={ styles.tornaallahome }>Torna alla home</Text></Pressable>
                 </View>
-                <Footer />
             </ScrollView>
         </View>
     );

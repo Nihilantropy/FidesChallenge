@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
-import Footer from './../../components/Footer';
 
 const HomeStory = ({ showPage }) => {
   return (
@@ -17,9 +16,6 @@ const HomeStory = ({ showPage }) => {
         <View style={styles.box}><Text style={styles.testi}>Ciclo che farà vedere tutte le storie</Text></View>
         <View style={styles.box}><Text style={styles.testi}>Ciclo che farà vedere tutte le storie</Text></View>
         <View style={styles.box}><Text style={styles.testi}>Ciclo che farà vedere tutte le storie</Text></View>
-        <View style={styles.box}><Text style={styles.testi}>Ciclo che farà vedere tutte le storie</Text></View>
-        <View style={styles.box}><Text style={styles.testi}>Ciclo che farà vedere tutte le storie</Text></View>
-        <Footer />
       </ScrollView>
     </View>
   );
