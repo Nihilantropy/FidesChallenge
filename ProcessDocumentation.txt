@@ -6,12 +6,20 @@ based on react-express-mysql project (link in documentation)
 
 creating docker-compose.yml to build 3 microservices:
 
-1 - backend server
+1 - backend server:
 2 - mysql Database
 3 - frontend client
 
 Backend-side:
 	1 - setup mysql container using 'knex' and 'mysql2'
 	2 - setup server container using 'nodejs' and 'express'.
-	3 - create a connection to the db container (same network "backend-db") using knexfile and server
+	3 - create a connection to the db container (same network "server-db") using knexfile and server
 	
+	Once the Containers are set up correctly we started working on the users microservice:
+	1 - Set up the entrypoint at index.js, wait for the db to connect before starting the app.
+	2 - Once the db is connected the app starts listen at port 3000. At default rout / we have a basic db check.
+	3 - All users routes are prefixed with /users
+	4 - Basic users routes are: /create, /login, /profile, /delete 
+
+	The /login /profile /delete authentication is made via paseto tokens.
+	Password are encrypted via bcrypt alghoritm by the client, stored in the db hashed and compared with bcrypt when the user try to login.

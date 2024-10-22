@@ -1,11 +1,9 @@
 backend-db
-	- check the correct config of user db (mysql_user)
-	- use encrypting algorithm to secure users passwords
-	- search for API to simplify the user registration logic
+	DONE
 
-backend-server
-	- create function to retrive data from db, based on user input
-	- search for API to simplify the user input parsing and password encryption
+backend-users
+	- Done basic route for /create /login /profile /delete
+	- Can add some advanced routes like /change-password etc... (not mandatory)
 
 frontend-client
-	- 
+	- Make sure the container runs smoothly at start up
