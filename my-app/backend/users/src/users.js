@@ -51,23 +51,42 @@ router.post('/login', async (req, res) => {
 
 // Protected Profile route
 router.get('/profile', async (req, res) => {
-    // Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
-    const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
+	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
+	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
-    if (authErr) {
-        return res.status(authErr.code).json({ message: authErr.message });
-    }
+	if (authErr) {
+		return res.status(authErr.code).json({ message: authErr.message });
+	}
 
 	console.log("Authentication passed!");
-    const userId = req.user.id; // Assuming user ID is attached to the request object by the authenticate middleware
-    const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
+	const userId = req.user.id; // Assuming user ID is attached to the request object by the authenticate middleware
+	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
-    if (err) {
-        return res.status(err.code).json({ message: err.message });
-    }
+	if (err) {
+		return res.status(err.code).json({ message: err.message });
+	}
 
 	console.log(profile);
-    res.status(200).json(profile);
+	res.status(200).json(profile);
 });
+
+router.delete('/delete', async (req, res) => {
+	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
+	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
+
+	if (authErr) {
+		return res.status(authErr.code).json({ message: authErr.message });
+	}
+
+	// Use catchErrorTyped to handle potential errors without try-catch
+	const [err, result] = await catchErrorTyped(deleteUser(userId), [CustomError]);
+
+	if (err) {
+		return res.status(err.code).json({ message: err.message });
+	}
+
+	res.status(200).json({ message: 'User account deleted successfully' });
+
+})
 
 export default router;
