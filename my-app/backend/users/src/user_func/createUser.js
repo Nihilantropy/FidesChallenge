@@ -6,14 +6,14 @@ async function createUser(userData) {
 
 	// Validate required fields
 	if (!first_name || !last_name || !username || !email || !password) {
-		throw new ValidationError('All fields are required');
+		throw new ValidationError('All fields are required:first name, last name, username, email, password');
 	}
 
 	// Validate field lengths
 	const fields = { first_name, last_name, username, email, password };
 	for (const [key, value] of Object.entries(fields)) {
-		if (value.length > 20) {
-			throw new ValidationError(`${key} cannot be longer than 20 characters`);
+		if (value.length > 40) {
+			throw new ValidationError(`${key} cannot be longer than 40 characters`);
 		}
 	}
 

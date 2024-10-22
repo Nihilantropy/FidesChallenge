@@ -15,9 +15,19 @@ export class ConflictError extends CustomError {
         super(message, 409);
     }
 }
+export class UserNotFoundError extends CustomError {
+    constructor() {
+        super('User not found', 404);
+    }
+}
 export class InvalidCredentialsError extends CustomError {
     constructor() {
         super('Invalid email or password', 401);
+    }
+}
+export class NoCredentialError extends CustomError {
+    constructor() {
+        super('No credentials provided', 400);
     }
 }
 export class TokenCreationError extends CustomError {

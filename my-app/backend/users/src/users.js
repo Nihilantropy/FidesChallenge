@@ -4,11 +4,11 @@ const router = express.Router();
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 // Import user functionalities from separate modules
 import loginUser from './user_func/login.js';
 import createUser from './user_func/createUser.js';
 import getProfile from './user_func/getProfile.js';
+import deleteUser from './user_func/deleteUser.js';
 import { authenticate } from './middleware/auth.js';
 
 import { catchErrorTyped } from './err/dist/catchError.js';
@@ -33,16 +33,15 @@ router.post('/create', async (req, res) => {
 // User login route
 router.post('/login', async (req, res) => {
 	const { email, password } = req.body;
+	
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
-	console.log(token);
 	// Check for errors
 	if (err) {
 		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
 		console.log(err.message);
 		return res.status(statusCode).json({ message: err.message });
 	}
-
 	// If the token is returned successfully
 	console.log(token);
 	return res.status(200).json({ token });
@@ -59,6 +58,7 @@ router.get('/profile', async (req, res) => {
 	}
 
 	console.log("Authentication passed!");
+
 	const userId = req.user.id; // Assuming user ID is attached to the request object by the authenticate middleware
 	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
@@ -78,8 +78,12 @@ router.delete('/delete', async (req, res) => {
 		return res.status(authErr.code).json({ message: authErr.message });
 	}
 
+	const userId = req.user.id; // Extract the user ID from the token (set in authenticate)
+
 	// Use catchErrorTyped to handle potential errors without try-catch
 	const [err, result] = await catchErrorTyped(deleteUser(userId), [CustomError]);
+
+	console.log("User delated? ", result);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
