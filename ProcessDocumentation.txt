@@ -21,5 +21,5 @@ Backend-side:
 	3 - All users routes are prefixed with /users
 	4 - Basic users routes are: /create, /login, /profile, /delete 
 
-	The /login /profile /delete authentication is made via paseto tokens.
+	The /login /profile /delete authentication is made via paseto tokens, using asymmetric encryption.
 	Password are encrypted via bcrypt alghoritm by the client, stored in the db hashed and compared with bcrypt when the user try to login.
