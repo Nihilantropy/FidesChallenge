@@ -6,7 +6,7 @@ based on react-express-mysql project (link in documentation)
 
 creating docker-compose.yml to build 3 microservices:
 
-1 - backend server:
+1 - backend server (users):
 2 - mysql Database
 3 - frontend client
 
@@ -22,4 +22,7 @@ Backend-side:
 	4 - Basic users routes are: /create, /login, /profile, /delete 
 
 	The /login /profile /delete authentication is made via paseto tokens, using asymmetric encryption.
-	Password are encrypted via bcrypt alghoritm by the client, stored in the db hashed and compared with bcrypt when the user try to login.
+	Password are encrypted via bcrypt alghoritm, stored in the db hashed and compared with bcrypt when the user try to login.
+
+Adding stories-service (4):
+	
