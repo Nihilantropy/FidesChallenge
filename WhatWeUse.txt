@@ -1,8 +1,14 @@
 Infrastructure:
 	Kubernetes, Docker
 
-Front-end:
+Frontend:
 	Nodejs:22-alpine3.19, expo:51.0.28, react-native
 
-Back-end:
-	Nodejs:22-alpine3.19, MySQL:8.0, MySQL2:3.11.3, Express:4.21.1
+Backend-db:
+	MySQL:8.0,
+
+Backend-users:
+	Nodejs:22-alpine3.19, Express:4.21.1
+	
+Backend-story:
+	Springboot:3.3.4, java:17.0.12

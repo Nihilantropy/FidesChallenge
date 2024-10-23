@@ -1,7 +1,30 @@
 services:
+   # Database (MySQL) micro
+  db:
+    container_name: db-service
+    env_file:
+      - ./backend/db/.env
+    build:
+      context: ./backend/db
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d/:delegated
+    networks:
+      - server-db
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    
   # Backend users micro
   backend-users:
-    container_name: users
+    container_name: users-service
     env_file:
       - ./backend/users/.env
     build:
@@ -24,32 +47,27 @@ services:
       db:
         condition: service_healthy
 
-  # Database (MySQL) micro
-  db:
-    container_name: db
-    env_file:
-      - ./backend/db/.env
+  # Backend story service (Spring Boot) micro
+  backend-stories:
+    container_name: story-service
     build:
-      context: ./backend/db
+      context: ./backend/stories
       dockerfile: Dockerfile
-    restart: always
-    volumes:
-      - db-data:/var/lib/mysql
-      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d/:delegated
-    networks:
-      - server-db
     ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 5s
+      - "8080:8080"
+    volumes:
+      - ./backend/stories:/code/src:rw
+    networks:
+      - client-server
+      - server-db
+    depends_on:
+      db:
+        condition: service_healthy
+
 
   # Frontend expo micro
   frontend-expo:
-    container_name: expo
+    container_name: expo-service
     env_file:
       - ./frontend/client/myapp/.env
     build:
@@ -69,9 +87,6 @@ services:
     environment:
          - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 
          - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.136.177
-    #depends_on:
-    #  backend-server:
-    #    condition: service_healthy
 
 # Networks configuration
 networks:
