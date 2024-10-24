@@ -1,0 +1,102 @@
+services:
+   # Database (MySQL) micro
+  db:
+    container_name: db-service
+    env_file:
+      - ./backend/db/.env
+    build:
+      context: ./backend/db
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql
+      - db-initdb:/docker-entrypoint-initdb.d/
+    networks:
+      - server-db
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    
+  # Backend users micro
+  backend-users:
+    container_name: users-service
+    env_file:
+      - ./backend/users/.env
+    build:
+      context: ./backend/users
+      dockerfile: Dockerfile
+    command: npm run start-watch
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+      - "9230:9230"
+    volumes:
+      - ./backend/users/src:/code/src:rw
+      - ./backend/users/package.json:/code/package.json
+      - ./backend/users/package-lock.json:/code/package-lock.json
+      - back-notused:/opt/app/node_modules
+    networks:
+      - client-server
+      - server-db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Backend story service (Spring Boot) micro
+  backend-stories:
+    container_name: story-service
+    build:
+      context: ./backend/stories
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/stories:/code/src:rw
+    networks:
+      - client-server
+      - server-db
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+  # Frontend expo micro
+  frontend-expo:
+    container_name: expo-service
+    env_file:
+      - ./frontend/client/myapp/.env
+    build:
+      context: ./frontend/client/myapp
+      dockerfile: Dockerfile
+    networks:
+      - client-server
+    #network_mode: "host"
+    ports:
+      - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    volumes:
+      - ./frontend/client/myapp/:/opt/my-app/
+      - /code/node_modules
+    environment:
+         - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 
+         - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.136.177
+
+# Networks configuration
+networks:
+  client-server:
+    driver: bridge
+  server-db:
+    driver: bridge
+
+# Volumes
+volumes:
+  back-notused:
+  db-data:
+  db-initdb:
