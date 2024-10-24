@@ -31,7 +31,7 @@ row2: {flexDirection: 'row',marginVertical: 10,marginLeft: 60},
 popup: {width: 'auto',position: 'absolute',padding: 15,...bordbase,...background},
 fondonero: {backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absolute',top: 0,left: 0,width: '100%',height: '100%'},
 credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
-textarea: {padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
+textarea: {textAlignVertical: 'top',padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
 bottoni: {borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background}
 };
 

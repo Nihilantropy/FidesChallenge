@@ -78,7 +78,7 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction }) => {
         })
         .catch(error => {
               setErrorText("Errore interno");
-        });            
+        });
     }catch (error) {
         setErrorText("Errore interno");
         return ;
