@@ -9,8 +9,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     volumes:
-      - db-data:/var/lib/mysql
-      - db-initdb:/docker-entrypoint-initdb.d/
+      - db-data:/var/lib/mysql  # Persist database data
     networks:
       - server-db
     ports:
@@ -96,4 +95,4 @@ networks:
 volumes:
   back-notused:
   db-data:
-  db-initdb:
+  #db-initdb:

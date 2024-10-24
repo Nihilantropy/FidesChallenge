@@ -18,17 +18,12 @@ ENV MYSQL_PASSWORD=$MYSQL_PASSWORD
 
 RUN chown -R mysql:root /var/lib/mysql/
 
-# Copy any custom SQL scripts or configurations (if needed)
-# This can be useful for setting up initial databases or seeding data
-# Place your .sql files in backend/db/initdb.d and they will be automatically loaded
-# COPY ./initdb.d/*.* /docker-entrypoint-initdb.d/
-# RUN chmod -R 777 /docker-entrypoint-initdb.d/
+# Copy custom SQL scripts to the Docker image (for first-time database setup)
+# The scripts placed in this directory will be executed automatically if the database is empty
+COPY ./initdb.d/ /docker-entrypoint-initdb.d/
 
-# RUN chown -R mysql:root /docker-entrypoint-initdb.d/
-
-# Set a custom configuration (optional)
-# If you need custom MySQL configurations, add them to backend/db/my.cnf
-# COPY ./my.cnf /etc/mysql/my.cnf
+# Ensure the correct permissions for SQL scripts
+RUN chmod -R 755 /docker-entrypoint-initdb.d/
 
 # Expose the MySQL default port
 EXPOSE 3306
