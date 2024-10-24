@@ -8,14 +8,14 @@ const testiunder={textDecorationLine: 'underline',...colortesti};
 const centro={justifyContent: 'center',alignItems: 'center',alignSelf: 'center'};
 const bordbase={borderColor: 'white',borderWidth: 3};
 const foto={width: 50,height: 50};
-const footerbase={padding: 5,width: '100%',borderTopWidth: 3,borderTopColor: 'white',justifyContent: 'center',...background};
+const footerbase={padding: 10,width: '100%',borderTopWidth: 3,borderTopColor: 'white',justifyContent: 'center',...background};
 
 let regole={
 body: {justifyContent: 'space-between',flex: 1,width: '99.9%',overflowX: 'hidden',...backgroundbody},
-navbar: {flexDirection: 'row',alignItems: 'center',justifyContent: 'space-between',position: 'absolute',top: 0,width: width,padding: 20,...background,...bordbase},
+navbar: {zIndex: 7,flexDirection: 'row',alignItems: 'center',justifyContent: 'space-between',position: 'absolute',top: 0,width: width,padding: 20,...background,...bordbase},
 titoli: {fontWeight: 'bold',...colortesti},
 footerweb: {marginTop: 25,...footerbase},
-footerapp: {position: 'absolute',bottom: 0,...footerbase},
+footerapp: {zIndex: 7,position: 'absolute',bottom: 0,...footerbase},
 footerapp2: {flexDirection: 'row',alignItems: 'center',justifyContent: 'space-between'},
 tornaallahome: {margin: 20,textAlign: 'left',alignSelf: 'flex-start',...testiunder},
 sinistra: {textAlign: 'left',alignSelf: 'flex-start',},
@@ -30,7 +30,8 @@ row: {flexDirection: 'row',marginVertical: 10,},
 row2: {flexDirection: 'row',marginVertical: 10,marginLeft: 60},
 popup: {width: 'auto',position: 'absolute',padding: 15,...bordbase,...background},
 fondonero: {backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absolute',top: 0,left: 0,width: '100%',height: '100%'},
-credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10, width: '100%',...colortesti},
+credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
+textarea: {padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
 bottoni: {borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background}
 };
 
@@ -40,6 +41,7 @@ if(width > 600){
     regole.link={...regole.link,fontSize: 25};
     regole.tornaallahome={...regole.tornaallahome,fontSize: 25};
     regole.credenziali={...regole.credenziali,fontSize: 25};
+    regole.textarea={...regole.textarea,fontSize: 25};
     regole.titoli={...regole.titoli,fontSize: 30};
     regole.footerweb={...regole.footerweb,padding: 20};
     regole.popup={...regole.popup,top: '20%',right: '30%'};
@@ -49,6 +51,7 @@ if(width > 600){
     regole.link={...regole.link,fontSize: 20};
     regole.tornaallahome={...regole.tornaallahome,fontSize: 20};
     regole.credenziali={...regole.credenziali,fontSize: 20};
+    regole.textarea={...regole.textarea,fontSize: 20};
     regole.titoli={...regole.titoli,fontSize: 25};
     regole.footerweb={...regole.footerweb,padding: 10};
     regole.popup={...regole.popup,top: '7%',right: 0};

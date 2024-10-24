@@ -11,6 +11,7 @@ const Tendina = ({ showPage, showTendina, gshowPage }) => {
       <View>
         {gshowPage() != 1 && (<Pressable onPress={() => { showPage(1); showTendina(false); }}><Text style={styles.link}>Home</Text></Pressable>)}
         {gshowPage() != 2 && (<Pressable onPress={() => { showPage(2); showTendina(false); }}><Text style={styles.link}>Leggi</Text></Pressable>)}
+        {gshowPage() != 6 && (<Pressable onPress={() => { showPage(6); showTendina(false); }}><Text style={styles.link}>Profilo</Text></Pressable>)}
       </View>
     </View>
   );
