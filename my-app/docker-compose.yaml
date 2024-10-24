@@ -10,7 +10,7 @@ services:
     restart: always
     volumes:
       - db-data:/var/lib/mysql
-      - ./backend/db/initdb.d:/docker-entrypoint-initdb.d/:delegated
+      - db-initdb:/docker-entrypoint-initdb.d/
     networks:
       - server-db
     ports:
@@ -99,3 +99,4 @@ networks:
 volumes:
   back-notused:
   db-data:
+  db-initdb:
