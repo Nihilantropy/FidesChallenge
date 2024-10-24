@@ -29,12 +29,12 @@ const Content_app = ({ getStory, setStory }) =>{
 
 const validator = require('validator');
 const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction }) => {
-  // useEffect(() => {
-  //   if (gWVTtoken() == ''){
-  //     showPage(2);
-  //     sShowPopupFB(true);
-  //   }
-  // }, [gWVTtoken, showPage, sShowPopupFB]);
+  useEffect(() => {
+    if (gWVTtoken() == ''){
+      showPage(2);
+      sShowPopupFB(true);
+    }
+  }, [gWVTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
     setInviaFunction(invia);

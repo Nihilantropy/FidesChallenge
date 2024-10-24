@@ -81,9 +81,9 @@ services:
       - "19000:19000"
       - "19001:19001"
       - "19002:19002"
-    volumes:
-      - ./frontend/sergio/:/opt/my-app/
-      - /code/node_modules
+    #volumes:
+      #- ./frontend/sergio/:/opt/my-app/
+      #- /code/node_modules
 
 # Networks configuration
 networks:

@@ -1,5 +1,5 @@
 import db from '../database.js'; // Ensure the path includes the .js extension
-import { ValidationError, ConflictError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
+import { ValidationError, ConflictError, DBFetchQueryError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
 
 async function createUser(userData) {
 	const { first_name, last_name, username, email, password } = userData;
@@ -23,12 +23,19 @@ async function createUser(userData) {
 		throw new ValidationError('Invalid email format');
 	}
 
+	// Handle fetch query error
+	try {
+		const existingUsername = await db('users').where({ username }).first();
+	}
+	catch (e) {
+		throw new DBFetchQueryError();
+	}
+	
 	// Check if the username already exists
-	const existingUsername = await db('users').where({ username }).first();
 	if (existingUsername) {
 		throw new ConflictError('Username already exists');
 	}
-
+	
 	// Check if the email already exists
 	const existingEmail = await db('users').where({ email }).first();
 	if (existingEmail) {
@@ -37,7 +44,15 @@ async function createUser(userData) {
 
 	// Insert new user into the database
 	const newUser = { first_name, last_name, username, email, password };
-	const [userId] = await db('users').insert(newUser);
+
+	try
+	{
+		const [userId] = await db('users').insert(newUser);
+	}
+	catch (e)
+	{
+		console.error("can't add user");
+	}
 
 	// Return the created user's details
 	return {
