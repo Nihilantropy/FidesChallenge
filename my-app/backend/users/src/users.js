@@ -17,6 +17,7 @@ import { CustomError } from './err/dist/CustomError.js';
 // User creation route
 router.post('/create', async (req, res) => {
 	const userData = req.body;
+	console.log(userData);
 	const [err, newUser] = await catchErrorTyped(createUser(userData), [CustomError]);
 
 	// If there's an error, handle it
@@ -34,6 +35,7 @@ router.post('/create', async (req, res) => {
 router.post('/login', async (req, res) => {
 	const { email, password } = req.body;
 	
+	console.log( email, password );
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
 	// Check for errors

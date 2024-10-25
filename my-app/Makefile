@@ -1,6 +1,6 @@
 MAKEFLAGS += -s
 
-all: stop prune canc start show
+all: stop prune start show
 
 start:
 	clear
@@ -24,10 +24,10 @@ restart:
 	docker compose -f docker-compose.yml restart -v --rmi all
 
 prune:
-	-docker stop $$(docker ps -qa)
-	-docker rm $$(docker ps -a -qa)
-	-docker rmi -f $$(docker images -qa)
-	-docker volume rm $$(docker volume ls -qa)
+	-docker stop $$(docker ps -q)
+	-docker rm $$(docker ps -a -q)
+	-docker rmi -f $$(docker images -q)
+	-docker volume rm $$(docker volume ls -q)
 	-docker network rm $$(docker network ls -q)
 	-docker image prune --all --force
 	-docker system prune --all --force --volumes

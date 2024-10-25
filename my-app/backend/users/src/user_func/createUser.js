@@ -23,13 +23,7 @@ async function createUser(userData) {
 		throw new ValidationError('Invalid email format');
 	}
 
-	// Handle fetch query error
-	try {
-		const existingUsername = await db('users').where({ username }).first();
-	}
-	catch (e) {
-		throw new DBFetchQueryError();
-	}
+	const existingUsername = await db('users').where({ username }).first();
 	
 	// Check if the username already exists
 	if (existingUsername) {
@@ -42,6 +36,8 @@ async function createUser(userData) {
 		throw new ConflictError('Email already in use');
 	}
 
+	console.log("Evviva!")
+	
 	// Insert new user into the database
 	const newUser = { first_name, last_name, username, email, password };
 
@@ -53,6 +49,7 @@ async function createUser(userData) {
 	{
 		console.error("can't add user");
 	}
+
 
 	// Return the created user's details
 	return {
