@@ -5,10 +5,10 @@ express documentation:
 https://expressjs.com/
 
 springboot documentation:
-TODO
+https://spring.io/guides
 
 java documentation:
-TODO
+https://dev.java/
 
 react documentation:
 https://react.dev/learn
