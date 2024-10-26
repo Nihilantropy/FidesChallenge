@@ -1,6 +1,7 @@
 command-sheet:
 	- Docker:
 		docker ps
+		docker logs <container id>
 		docker inspect <container id>
 		docker exec -it <container id> bin/bash
 		ping <container name> (inside container)

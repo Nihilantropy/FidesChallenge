@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "sergio",
+    "slug": "sergio",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/img/favicon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/img/favicon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/img/favicon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/img/favicon.png"
+    }
+  }
+}
