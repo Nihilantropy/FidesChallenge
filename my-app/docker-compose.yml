@@ -12,7 +12,7 @@ services:
       - proxy
     depends_on:
       - backend-users
-      - backend-stories
+      #- backend-stories
       - frontend-expo
 
    # Database (MySQL) micro
