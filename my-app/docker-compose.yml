@@ -47,21 +47,21 @@ services:
         condition: service_healthy
 
   # Backend story service (Spring Boot) micro
-  backend-stories:
-    container_name: story-service
-    build:
-      context: ./backend/stories
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./backend/stories:/code/src:rw
-    networks:
-      - server-db
-      - reverse-proxy
-    depends_on:
-      db:
-        condition: service_healthy
+  # backend-stories:
+  #   container_name: story-service
+  #   build:
+  #     context: ./backend/stories
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./backend/stories:/code/src:rw
+  #   networks:
+  #     - server-db
+  #     - reverse-proxy
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
 
 
   # Frontend expo micro
@@ -83,9 +83,9 @@ services:
     depends_on:
       backend-users:
         condition: service_healthy
-    #volumes:
-      #- ./frontend/sergio/:/opt/my-app/
-      #- /code/node_modules
+    volumes:
+      - ./frontend/sergio/:/opt/my-app/
+      - /code/node_modules
 
   # reverse-proxy server
   nginx:

@@ -28,26 +28,24 @@ const Content_app = ({ getStory, setStory }) =>{
 };
 
 const validator = require('validator');
-const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction }) => {
-  useEffect(() => {
-    if (gWVTtoken() == ''){
-      showPage(2);
-      sShowPopupFB(true);
-    }
-  }, [gWVTtoken, showPage, sShowPopupFB]);
+const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShowErr }) => {
+  // useEffect(() => {
+  //   if (gWVTtoken() == ''){
+  //     showPage(2);
+  //     sShowPopupFB(true);
+  //   }
+  // }, [gWVTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
     setInviaFunction(invia);
   }, [invia]);
 
-  const [errorText, setErrorText] = useState('');
   const [story, setStory] = useState('');
   const getStory = (page) => { return story; };
   function invia() {
-    setErrorText("");
     /* ====== Basic Check ====== */
     if (story === '') {
-        setErrorText("Completa tutti i campi prima di proseguire");
+        setShowErr("Completa tutti i campi prima di proseguire");
         return;
     }
 
@@ -71,16 +69,16 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction }) => {
             if (!result) return;
             const { status, body } = result;
             if (status != 200) {
-                setErrorText(body.message);
+                setShowErr(body.message);
             }else{
               showPage(2);
             }
         })
         .catch(error => {
-              setErrorText("Errore interno");
-        });            
+          setShowErr("Errore interno");
+        });
     }catch (error) {
-        setErrorText("Errore interno");
+        setShowErr("Errore interno");
         return ;
     }
   }

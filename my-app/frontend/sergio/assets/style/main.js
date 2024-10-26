@@ -20,18 +20,21 @@ footerapp2: {flexDirection: 'row',alignItems: 'center',justifyContent: 'space-be
 tornaallahome: {margin: 20,textAlign: 'left',alignSelf: 'flex-start',...testiunder},
 sinistra: {textAlign: 'left',alignSelf: 'flex-start',},
 foto: {...foto},
+qrcode: {width: 200,height: 200},
 cleseimg: {paddingRight: 10},
 tendina: {flexDirection: 'row'},
 testi: {...colortesti},
 link: {...testiunder},
 box: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase,...centro},
+box2: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase},
+centro: {...centro},
 stacca: {width: '100%'},
 row: {flexDirection: 'row',marginVertical: 10,},
 row2: {flexDirection: 'row',marginVertical: 10,marginLeft: 60},
 popup: {width: 'auto',position: 'absolute',padding: 15,...bordbase,...background},
-fondonero: {backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absolute',top: 0,left: 0,width: '100%',height: '100%'},
+fondonero: {zIndex: 40,backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absolute',top: 0,left: 0,width: '100%',height: '100%'},
 credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
-textarea: {padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
+textarea: {textAlignVertical: 'top',padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
 bottoni: {borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background}
 };
 

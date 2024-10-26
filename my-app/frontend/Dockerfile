@@ -12,24 +12,11 @@ ENV PORT $PORT
 # due to default /opt permissions we have to create the dir with node and change perms
 RUN mkdir /opt/my-app && chown node:node /opt/my-app
 
-WORKDIR /opt/my-app
-
-RUN npm i expo
-
 ENV PATH /opt/my-app/.bin:$PATH
-
-COPY . /opt/my-app/
-
-RUN npm i
-
-RUN npm i -g @expo/ngrok
-
-
-# Copy the project files
 
 EXPOSE 8081 19000 19001 19002
 
 RUN export PATH=$PATH:/opt/my-app/node_modules/.bin
 
-# Start the server
-CMD ["npx", "expo", "start", "--tunnel"]
+# Start the config post mount volums
+CMD ["config.sh"]
