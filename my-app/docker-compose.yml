@@ -83,10 +83,10 @@ services:
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
-    env_file:
-      - ./frontend/sergio/.env
+    #env_file:
+    #  - ./frontend/sergio/.env
     build:
-      context: ./frontend/sergio
+      context: ./frontend
       dockerfile: Dockerfile
     networks:
       - proxy
