@@ -71,21 +71,21 @@ services:
       start_period: 30s
 
   # Backend story service (Spring Boot) micro
-  # backend-stories:
-  #   container_name: story-service
-  #   build:
-  #     context: ./backend/stories
-  #     dockerfile: Dockerfile
+  backend-stories:
+    container_name: story-service
+    build:
+      context: ./backend/stories
+      dockerfile: Dockerfile
   #   ports:
   #     - "8080:8080"
-  #   volumes:
-  #     - ./backend/stories:/code/src:rw
-  #   networks:
-  #     - server-db
-  #     - reverse-proxy
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
+    volumes:
+       - ./backend/stories:/code/src:rw
+    networks:
+       - server-db
+       - proxy
+    depends_on:
+      db:
+        condition: service_healthy
 
 
   # Frontend expo micro
