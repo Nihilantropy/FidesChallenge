@@ -11,12 +11,6 @@ app.use(morgan('common'));
 // Use the user routes (all routes in users.js are prefixed with /users)
 app.use('/users', userRoutes);
 
-// Error handler middleware
-app.use((err, req, res, next) => {
-	console.error(err.stack);
-	res.status(500).json({ message: 'Something went wrong!' });
-});
-
 // Example route to check MySQL version
 app.get('/', async (req, res, next) => {
 	try {
@@ -32,6 +26,12 @@ app.get('/', async (req, res, next) => {
 // Health check route
 app.get('/healthz', (req, res) => {
 	res.status(200).send('I am happy and healthy\n');
+});
+
+// Error handler middleware
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).json({ message: 'Something went wrong!' });
 });
 
 // Export the app
