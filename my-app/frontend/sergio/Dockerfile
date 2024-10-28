@@ -17,4 +17,4 @@ RUN npm i @expo/ngrok@^4.1.0
 EXPOSE 8081 19000 19001 19002
 
 # Run config.sh before starting the main application
-CMD ["npx", "expo", "start", "--tunnel"]
+CMD ["npx", "expo", "start"]

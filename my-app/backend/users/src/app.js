@@ -23,11 +23,6 @@ app.get('/', async (req, res, next) => {
 	}
 });
 
-// Health check route
-app.get('/healthz', (req, res) => {
-	res.status(200).send('I am happy and healthy\n');
-});
-
 // Error handler middleware
 app.use((err, req, res, next) => {
 	console.error(err.stack);

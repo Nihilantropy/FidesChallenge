@@ -30,15 +30,15 @@ async function loginUser(email, password) {
 	}
 	
 	console.log("User found:", user);  // Debug log
-	// if (password !== user.password) {
-	// 	throw new InvalidCredentialsError(); // TODO remove this, uncomment below
-	// }
+	if (password !== user.password) {
+		throw new InvalidCredentialsError(); // TODO remove this, uncomment below
+	}
 
 	// Check if the provided password matches the hashed password in the DB
-	const passwordMatch = await bcrypt.compare(password, user.password);
-	if (!passwordMatch) {
-		throw new InvalidCredentialsError(); // Use the custom error
-	}
+	// const passwordMatch = await bcrypt.compare(password, user.password);
+	// if (!passwordMatch) {
+	// 	throw new InvalidCredentialsError(); // Use the custom error
+	// }
 
 	// If password matches, generate a Paseto token
 	try {
