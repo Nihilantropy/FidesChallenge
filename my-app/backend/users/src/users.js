@@ -92,7 +92,11 @@ router.delete('/delete', async (req, res) => {
 	}
 
 	res.status(200).json({ message: 'User account deleted successfully' });
-
 })
+
+// Health check route
+router.get('/healthz', (req, res) => {
+	res.status(200).send('I am happy and healthy\n');
+});
 
 export default router;

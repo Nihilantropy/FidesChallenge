@@ -35,30 +35,24 @@ async function createUser(userData) {
 	if (existingEmail) {
 		throw new ConflictError('Email already in use');
 	}
-
-	console.log("Evviva!")
 	
 	// Insert new user into the database
 	const newUser = { first_name, last_name, username, email, password };
 
-	try
-	{
+	try {
 		const [userId] = await db('users').insert(newUser);
+		// Return the created user's details
+		return {
+			id: userId,
+			first_name,
+			last_name,
+			username,
+			email
+		};
+	} catch (e) {
+		console.error("Error adding user:", e); // Log the actual error for debugging
+		throw new DBFetchQueryError('Error adding user to the database'); // Throw a custom error
 	}
-	catch (e)
-	{
-		console.error("can't add user");
-	}
-
-
-	// Return the created user's details
-	return {
-		id: userId,
-		first_name,
-		last_name,
-		username,
-		email
-	};
 }
 
 // Export the createUser function
