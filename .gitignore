@@ -1,4 +1,4 @@
 node_modules
 .DSstore
-#.env
+.env
 .vscode
