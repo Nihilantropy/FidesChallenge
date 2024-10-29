@@ -1,28 +1,28 @@
 import React, { useState, useRef } from 'react';
 import { View, Platform } from 'react-native';
-import styles from './assets/style/main.js';
+import styles from './app/assets/style/main.js';
 
 /* ====== Componenti ====== */
-import Navbar from './components/Navbar';
-import FooterWeb from './components/FooterWeb';
-import FooterApp from './components/FooterApp';
+import Navbar from './app/components/Navbar';
+import FooterWeb from './app/components/FooterWeb';
+import FooterApp from './app/components/FooterApp';
 
-import PupupFunBlock from './components/PupupFunBlock';
-import PupupConf from './components/PupupConf';
-import PupupErr from './components/PupupErr';
-import PupupDelStory from './components/PupupDelStory';
+import PupupFunBlock from './app/components/PupupFunBlock';
+import PupupConf from './app/components/PupupConf';
+import PupupErr from './app/components/PupupErr';
+import PupupDelStory from './app/components/PupupDelStory';
 
 /* ====== Pagine ====== */
-import Home from './pages/Home';
+import Home from './app/pages/Home';
 
-import HomeStory from './pages/Story/HomeStory';
-import HomeMyStory from './pages/Story/HomeMyStory';
-import NewStory from './pages/Story/NewStory';
-import ModStory from './pages/Story/ModStory';
+import HomeStory from './app/pages/Story/HomeStory';
+import HomeMyStory from './app/pages/Story/HomeMyStory';
+import NewStory from './app/pages/Story/NewStory';
+import ModStory from './app/pages/Story/ModStory';
 
-import Registati from './pages/Utenti/Registati';
-import Accesso from './pages/Utenti/Accesso';
-import Profilo from './pages/Utenti/Profilo';
+import Registati from './app/pages/Utenti/Registati';
+import Accesso from './app/pages/Utenti/Accesso';
+import Profilo from './app/pages/Utenti/Profilo';
 
 export default function App() {
   /* ====== Show Page ====== */
