@@ -48,8 +48,8 @@ const Registati = ({ showPage,sJWTtoken }) => {
         }
         /* ====== Send post ====== */
         console.log("invio fetch = email:"+sanitizedEmail+" | nome:"+sanitizedNome+" | cognome:"+sanitizedCognome+" | nickname:"+sanitizedNickname+" | password:"+hashedPassword);
-        try {
-            fetch("http://backend-users:3000/users/create", {
+        // try {
+            fetch("http://localhost/users/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,12 +72,12 @@ const Registati = ({ showPage,sJWTtoken }) => {
                     showPage(2);
                 }
             })
-            .catch(error => {
-                    setErrorText("Errore interno");
-            });            
-        }catch (error) {
-            setErrorText("Errore interno");
-            return ;
+            // .catch(error => {
+            //         setErrorText("Errore interno");
+        //     });            
+        // }catch (error) {
+        //     setErrorText("Errore interno");
+        //     return ;
         }
     }
     return (

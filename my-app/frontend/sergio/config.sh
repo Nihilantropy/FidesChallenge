@@ -1,6 +1,5 @@
-if [ ! -e "/opt/my-app/package-lock.json" ]; then
-    cd /opt/my-app/
+if [ ! -e "/opt/my-app/node_modules" ]; then
     npm install
 fi
 
-npx expo start --tunnel
+npx expo start
