@@ -11,8 +11,8 @@ services:
     networks:
       - proxy
     depends_on:
-      backend-users:
-        condition: service_healthy
+      - backend-users
+        #condition: service_healthy
       #frontend-expo:
       #  condition: service_healthy
       #- backend-stories
@@ -21,11 +21,11 @@ services:
    # Database (MySQL) micro
   db:
     container_name: db-service
-    env_file:
-      - ./backend/db/.env
     build:
       context: ./backend/db
       dockerfile: Dockerfile
+    env_file:
+      - ./backend/db/.env
     restart: always
     volumes:
       - db-data:/var/lib/mysql  # Persist database data
@@ -55,15 +55,13 @@ services:
     #  - "9230:9230"
     volumes:
       - ./backend/users/src:/code/src:rw
-      - ./backend/users/package.json:/code/package.json
-      - ./backend/users/package-lock.json:/code/package-lock.json
       - back-notused:/opt/app/node_modules
     networks:
       - server-db
       - proxy
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+        #condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/users/healthz"]
       interval: 10s
@@ -71,28 +69,28 @@ services:
       start_period: 30s
 
   # Backend story service (Spring Boot) micro
-  backend-stories:
-    container_name: story-service
-    build:
-      context: ./backend/stories
-      dockerfile: Dockerfile
+  #backend-stories:
+  #  container_name: story-service
+  #  build:
+  #    context: ./backend/stories
+  #    dockerfile: Dockerfile
   #   ports:
   #     - "8080:8080"
-    volumes:
-       - ./backend/stories:/code/src:rw
-    networks:
-       - server-db
-       - proxy
-    depends_on:
-      db:
-        condition: service_healthy
+  #  volumes:
+  #     - ./backend/stories:/code/src:rw
+  #  networks:
+  #     - server-db
+  #     - proxy
+  #  depends_on:
+  #    db:
+  #      condition: service_healthy
 
 
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
-    #env_file:
-    #  - ./frontend/sergio/.env
+    env_file:
+      - ./frontend/sergio/.env
     build:
       context: ./frontend/sergio
       dockerfile: Dockerfile
@@ -107,8 +105,8 @@ services:
     #depends_on:
     #  backend-users:
     #    condition: service_healthy
-    #volumes:
-    #  - ./frontend/sergio/:/opt/my-app/
+    volumes:
+      - ./frontend/sergio/app:/opt/my-app/app
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081"]
       interval: 30s      # Check every 30 seconds
