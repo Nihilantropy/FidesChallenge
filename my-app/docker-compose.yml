@@ -21,11 +21,11 @@ services:
    # Database (MySQL) micro
   db:
     container_name: db-service
-    env_file:
-      - ./backend/db/.env
     build:
       context: ./backend/db
       dockerfile: Dockerfile
+    env_file:
+      - ./backend/db/.env
     restart: always
     volumes:
       - db-data:/var/lib/mysql  # Persist database data
@@ -94,7 +94,7 @@ services:
     #env_file:
     #  - ./frontend/sergio/.env
     build:
-      context: ./frontend
+      context: ./frontend/sergio
       dockerfile: Dockerfile
     networks:
       - proxy
