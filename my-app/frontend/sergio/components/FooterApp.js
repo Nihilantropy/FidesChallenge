@@ -46,7 +46,7 @@ const Footer4 = ({ showPage }) =>{
   )
 };
 
-const FooterApp = ({ showPage, gshowPage, invia }) => {
+const FooterApp = ({ showPage, gshowPage, invia,modifica }) => {
   const renderFooter = () => {
     switch (gshowPage()) {
       case 6:
@@ -58,6 +58,8 @@ const FooterApp = ({ showPage, gshowPage, invia }) => {
         return <Footer2 showPage={showPage} />;
       case 3:
         return <Footer3 showPage={showPage} invia={invia} />;
+      case 8:
+        return <Footer3 showPage={showPage} invia={modifica} />;
       case 1:
         return <Footer4 showPage={showPage} />;
       default:

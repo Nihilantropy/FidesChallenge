@@ -14,7 +14,7 @@ const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
         { "email": "angly@gmail.com", "nome": "Angly", "cognome": "Regna", "nickname": "Angly colui che regna"},
     ];
 
-    fetch("http://localhost:3000/users/profile", {
+    fetch("http://backend-users:3000/users/profile", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

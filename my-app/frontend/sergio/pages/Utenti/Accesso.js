@@ -33,7 +33,7 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         /* ====== Send post ====== */
         console.log("invio fetch = email:"+sanitizedEmail+" | password:"+hashedPassword);
         try {
-            fetch("http://localhost:3000/users/login", {
+            fetch("http://backend-users:3000/users/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
