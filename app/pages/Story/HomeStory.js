@@ -1,8 +1,6 @@
 import React, {useState,useEffect} from 'react';
-import { View,Text,Pressable,ScrollView,Image } from 'react-native';
+import { View,Text,Pressable,ScrollView,Image,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
-import TrackPlayer, { Capability } from 'react-native-track-player';
-import shaka from 'shaka-player';
 
 const RaccontaPreferito = ({ setPupup, azione, gWVTtoken, sShowPopupFB, setPage, sShowErr }) => {
   useEffect(() => {
@@ -28,32 +26,16 @@ const RaccontaPreferito = ({ setPupup, azione, gWVTtoken, sShowPopupFB, setPage,
   const remPref = () => setPreferiti(false);
 
   // Funzioni per audio
-  async function setupPlayer(url) {
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.updateOptions({
-      stopWithApp: true,
-      capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo, Capability.JumpForward, Capability.JumpBackward]
-    });
-    await TrackPlayer.add({
-      id: '1',
-      url: url,
-      title: 'Lettura testo'
-    });
-  }
-  async function playAudio() {await TrackPlayer.play();}
-  async function pauseAudio() {await TrackPlayer.pause();}
-  async function setPlaybackRate(rate) {await TrackPlayer.setRate(rate);}
+  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../Suond/Web') : require('./../Suond/Mobile');
   async function speakText(text) {
     try {
-      const response = await fetch("http://127.0.0.1:5000/speak", {
+      const response = await fetch("http://192.168.1.20:5000/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: text, language: 'it' })
       });
       if (!response.ok){throw new Error(response.statusText);}
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      await setupPlayer(audioUrl);
+      await setupPlayer(await response.blob());
       playAudio();
     } catch (error) {
       sShowErr("Errore nella lettura"+error);
@@ -70,27 +52,13 @@ const RaccontaPreferito = ({ setPupup, azione, gWVTtoken, sShowPopupFB, setPage,
       <Text>{"\n"}</Text>
       <Text style={styles.testi}>{stori.storia}</Text>
       <Text>{"\n\n"}</Text>
-      <Pressable style={styles.bottoni} onPress={() => setStori(jsonData[Math.floor(Math.random() * jsonData.length)])}>
-        <Text style={styles.testi}>Raccontami un'altra storia</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => speakText(stori.storia)}>
-        <Text style={styles.testi}>Ascolta la storia</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => pauseAudio()}>
-        <Text style={styles.testi}>Pausa</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => playAudio()}>
-        <Text style={styles.testi}>avvia</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => setPlaybackRate(2)}>
-        <Text style={styles.testi}>x2</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => setPlaybackRate(0.5)}>
-        <Text style={styles.testi}>x0.5</Text>
-      </Pressable>
-      <Pressable style={styles.testi} onPress={() => setPlaybackRate(1)}>
-        <Text style={styles.testi}>x1</Text>
-      </Pressable>
+      <Pressable style={styles.bottoni} onPress={() => setStori(jsonData[Math.floor(Math.random() * jsonData.length)])}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => speakText(stori.storia)}><Text style={styles.testi}>Ascolta la storia</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => pauseAudio()}><Text style={styles.testi}>Pausa</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => playAudio()}><Text style={styles.testi}>avvia</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => setPlaybackRate(2)}><Text style={styles.testi}>x2</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => setPlaybackRate(0.5)}><Text style={styles.testi}>x0.5</Text></Pressable>
+      <Pressable style={styles.testi} onPress={() => setPlaybackRate(1)}><Text style={styles.testi}>x1</Text></Pressable>
     </View>
   );
 };
@@ -104,7 +72,7 @@ const Inventa = () => {
 };
 
 const HomeStory = ({ showPage, gWVTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) => {
-  const [Page, setPage] = useState('');
+  const [Page, setPage] = useState('Racconta');
   const [Pupup, setPupup] = useState(true);
   return (
     <View style={styles.stacca}>

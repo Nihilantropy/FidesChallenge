@@ -40,9 +40,6 @@ const Accesso = ({ showPage,sJWTtoken }) => {
                 },
                 body: JSON.stringify({
                     email: sanitizedEmail,
-                    first_name: sanitizedNome,
-                    last_name: sanitizedCognome,
-                    username: sanitizedNickname,
                     password: hashedPassword
                 }),
             })

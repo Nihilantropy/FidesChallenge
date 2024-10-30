@@ -10,17 +10,14 @@ const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
       }
     }, [gWVTtoken, showPage, sShowPopupFB]);
     
-    let jsonData =[
-        { "email": "angly@gmail.com", "nome": "Angly", "cognome": "Regna", "nickname": "Angly colui che regna"},
-    ];
-
+    let jsonData;
     fetch("http://localhost/users/profile", {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            wvt: gWVTtoken()
+            token: gWVTtoken()
         }),
     })
     .then(result => {

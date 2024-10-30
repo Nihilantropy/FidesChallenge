@@ -32,7 +32,7 @@ export default function App() {
 
   /* ====== Autentificazione utente ====== */
   const [WVTtoken, setWVTtoken] = useState('');
-  const sWVTtoken = (page) => { setWVTtoken(page); };
+  const sJWTtoken = (page) => { setWVTtoken(page); };
   const gWVTtoken = (page) => { return WVTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
@@ -73,8 +73,8 @@ export default function App() {
       {visiblePage === 1 && <Home showPage={showPage} />}
       {visiblePage === 2 && <HomeStory sShowErr={sShowErr} showPage={showPage} gWVTtoken={gWVTtoken} sShowPopupFB={sShowPopupFB} />}
       {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setInviaFunction={setInviaFunction} />}
-      {visiblePage === 4 && <Accesso showPage={showPage} sWVTtoken={sWVTtoken} />}
-      {visiblePage === 5 && <Registati showPage={showPage} sWVTtoken={sWVTtoken} />}
+      {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
+      {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 6 && <Profilo showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setShowPopupConf={setShowPopupConf} />}
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gWVTtoken={gWVTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setModificaFunction={setModificaFunction} />}
@@ -84,7 +84,7 @@ export default function App() {
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
       {ShowErr !== '' && <PupupErr sShowErr={sShowErr} gShowPopupErr={gShowPopupErr} />}
-      {ShowPopupConf === true && <PupupConf gWVTtoken={gWVTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sWVTtoken={sWVTtoken} />}
+      {ShowPopupConf === true && <PupupConf gWVTtoken={gWVTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sJWTtoken={sJWTtoken} />}
       {ShowPopupES === true && <PupupDelStory gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} setShowPopupConf={setShowPopupConf} />}
     </View>
   );

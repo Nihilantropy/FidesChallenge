@@ -56,9 +56,9 @@ const Registati = ({ showPage,sJWTtoken }) => {
                 },
                 body: JSON.stringify({
                     email: sanitizedEmail,
-                    nome: sanitizedNome,
-                    cognome: sanitizedCognome,
-                    nickname: sanitizedNickname,
+                    first_name: sanitizedNome,
+                    last_name: sanitizedCognome,
+                    username: sanitizedNickname,
                     password: hashedPassword
                 }),
             })
@@ -68,7 +68,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
                 if (status != 200) {
                     setErrorText(body.message);
                 }else {
-                    sJWTtoken(body.tokenjwt);
+                    sJWTtoken(body.token);
                     showPage(2);
                 }
             })
