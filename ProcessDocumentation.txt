@@ -25,4 +25,4 @@ Backend-side:
 	Password are encrypted via bcrypt alghoritm, stored in the db hashed and compared with bcrypt when the user try to login.
 
 Adding stories-service (4):
-	
+
