@@ -1,0 +1,127 @@
+services:
+
+  # reverse-proxy server
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: nginx_proxy
+    ports:
+      - "80:80"
+    networks:
+      - proxy
+    depends_on:
+      - backend-users
+        #condition: service_healthy
+      #frontend-expo:
+      #  condition: service_healthy
+      #- backend-stories
+        #condition: service_healthy
+
+   # Database (MySQL) micro
+  db:
+    container_name: db-service
+    build:
+      context: ./backend/db
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/db/.env
+    restart: always
+    volumes:
+      - db-data:/var/lib/mysql  # Persist database data
+    networks:
+      - server-db
+    #ports:
+    #  - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    
+  # Backend users micro
+  backend-users:
+    container_name: users-service
+    env_file:
+      - ./backend/users/.env
+    build:
+      context: ./backend/users
+      dockerfile: Dockerfile
+    command: npm run start-watch
+    #ports:
+    #  - "3000:3000"
+    #  - "9229:9229"
+    #  - "9230:9230"
+    volumes:
+      - ./backend/users/src:/code/src:rw
+      - back-notused:/opt/app/node_modules
+    networks:
+      - server-db
+      - proxy
+    depends_on:
+      - db
+        #condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/users/healthz"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+
+  # Backend story service (Spring Boot) micro
+  #backend-stories:
+  #  container_name: story-service
+  #  build:
+  #    context: ./backend/stories
+  #    dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #  volumes:
+  #     - ./backend/stories:/code/src:rw
+  #  networks:
+  #     - server-db
+  #     - proxy
+  #  depends_on:
+  #    db:
+  #      condition: service_healthy
+
+
+  # Frontend expo micro
+  frontend-expo:
+    container_name: expo-service
+    env_file:
+      - ./frontend/sergio/.env
+    build:
+      context: ./frontend/sergio
+      dockerfile: Dockerfile
+    networks:
+      - proxy
+    #network_mode: "host"
+    #ports:
+    #  - "8081:8081"
+    #  - "19000:19000"
+    #  - "19001:19001"
+    #  - "19002:19002"
+    #depends_on:
+    #  backend-users:
+    #    condition: service_healthy
+    volumes:
+      - ./frontend/sergio/app:/opt/my-app/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s      # Check every 30 seconds
+      timeout: 10s       # Timeout after 10 seconds
+      retries: 5         # Try 5 times before marking as unhealthy
+      start_period: 60s  # Give the container 60 seconds to start up
+
+# Networks configuration
+networks:
+  server-db:
+    driver: bridge
+  proxy:
+    driver: bridge
+
+# Volumes
+volumes:
+  back-notused:
+  db-data:

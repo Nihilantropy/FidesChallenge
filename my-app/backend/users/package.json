@@ -1,0 +1,34 @@
+{
+	"name": "backend-service",
+	"version": "1.0.0",
+	"description": "Backend service using Express and MySQL",
+	"main": "src/index.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon src/index.js",
+		"start-watch": "nodemon src/index.js --inspect=0.0.0.0:9229",
+		"start-wait-debuger": "nodemon src/index.js --inspect-brk=0.0.0.0:9229",
+		"test": "cross-env NODE_ENV=test PORT=8081 mocha --timeout 10000 --exit --inspect=0.0.0.0:9230",
+		"test-watch": "nodemon --exec \"npm test\"",
+		"test-wait-debuger": "cross-env NODE_ENV=test PORT=8081 mocha --no-timeouts --exit --inspect-brk=0.0.0.0:9230"
+	},
+	"dependencies": {
+		"backend-service": "file:",
+		"bcrypt": "^5.1.1",
+		"body-parser": "^1.20.3",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.1",
+		"knex": "^3.1.0",
+		"morgan": "^1.10.0",
+		"mysql2": "^3.11.3",
+		"paseto": "^3.1.4"
+	},
+	"devDependencies": {
+		"chai": "^5.1.1",
+		"chai-http": "^5.1.1",
+		"cross-env": "^7.0.3",
+		"mocha": "^10.7.3",
+		"nodemon": "^3.1.7",
+		"typescript": "^5.6.3"
+	}
+}

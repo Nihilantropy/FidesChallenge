@@ -1,0 +1,5 @@
+npx create-expo-app --template
+	template: Blank
+npx expo install react-native-web react-dom
+npx expo install bcryptjs validator crypto
+npm run web
