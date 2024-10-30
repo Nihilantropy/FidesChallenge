@@ -3,12 +3,12 @@ import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 
 const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
-    // useEffect(() => {
-    //   if (gWVTtoken() == ''){
-    //     showPage(1);
-    //     sShowPopupFB(true);
-    //   }
-    // }, [gWVTtoken, showPage, sShowPopupFB]);
+    useEffect(() => {
+      if (gWVTtoken() == ''){
+        showPage(1);
+        sShowPopupFB(true);
+      }
+    }, [gWVTtoken, showPage, sShowPopupFB]);
     
     let jsonData =[
         { "email": "angly@gmail.com", "nome": "Angly", "cognome": "Regna", "nickname": "Angly colui che regna"},
