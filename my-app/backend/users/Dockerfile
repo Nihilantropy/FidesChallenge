@@ -18,11 +18,6 @@ COPY package.json /code/package.json
 COPY package-lock.json /code/package-lock.json
 RUN npm ci
 
-RUN apk --no-cache add curl
-
-# Healthcheck to ensure this service returns HTTP 200
-HEALTHCHECK --interval=60s CMD curl -f http://localhost:$PORT/users/healthz || exit 1
-
 # copy in our source code last, as it changes the most
 COPY . /code
 

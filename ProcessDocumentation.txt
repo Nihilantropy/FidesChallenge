@@ -34,7 +34,10 @@ Adding stories-service (4):
 	1 - using springboot, maven project for modularity, scalability and performances
 	2 - make the service connect to the db
 	
-
+Adding migration service (5):
+	1 - migration ensure modular expantion of the database thanks to knex migrations
+	2 - the migration-service starts, try to connect to the db, when it connect run teh migration scripts, updating
+		the db with the latest migration, then exit (0)
 
 Fontend:
 	1 - creating a fast, and user frendly app layout

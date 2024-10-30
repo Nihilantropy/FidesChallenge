@@ -1,7 +1,9 @@
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/StoriesApplication.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/config/DatabaseConfig.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/controller/StoryController.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/CustomException.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/model/Story.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/repository/StoryRepository.java
-/Users/claudiorea/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/service/StoryService.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/StoriesApplication.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/config/HealthCheckSchedulerConfig.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/controller/HealthCheckController.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/controller/StoryController.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/DatabaseException.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/GlobalExceptionHandler.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/InvalidInputException.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/StoryNotFoundException.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/service/HealthCheckService.java

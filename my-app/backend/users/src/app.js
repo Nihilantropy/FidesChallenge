@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import db from './database.js';
 import userRoutes from './users.js';
+import { healthCheck, healthCheckEndpoint } from './healthcheck.js';
 const app = express();
 
 // Middleware
@@ -10,6 +11,9 @@ app.use(morgan('common'));
 
 // Use the user routes (all routes in users.js are prefixed with /users)
 app.use('/users', userRoutes);
+
+// Health check endpoint
+app.get('/users/healthz', healthCheckEndpoint);
 
 // Example route to check MySQL version
 app.get('/', async (req, res, next) => {
@@ -23,10 +27,19 @@ app.get('/', async (req, res, next) => {
 	}
 });
 
+// Health check function to verify DB connection every 60 seconds
+const dbCheckInterval = setInterval(healthCheck, 60000); // Checks every 60 seconds
+
 // Error handler middleware
 app.use((err, req, res, next) => {
 	console.error(err.stack);
 	res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// Cleanup on exit
+process.on('SIGINT', () => {
+    clearInterval(dbCheckInterval);
+    process.exit();
 });
 
 // Export the app

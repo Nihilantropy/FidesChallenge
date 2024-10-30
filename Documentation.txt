@@ -25,3 +25,7 @@ https://kubernetes.io/docs/home/
 docker documentation:
 https://docs.docker.com/manuals/
 
+https documentation:
+https://en.wikipedia.org/wiki/HTTP
+https://umbraco.com/knowledge-base/http-status-codes/
+
