@@ -4,7 +4,7 @@ import styles from './../assets/style/main.js';
 
 const PupupDelStory = ({ sShowPopupES,sShowErr,gid }) => {
   function elimina() {
-    fetch("http://localhost:3000/story/delete", {
+    fetch("http://localhost/story/delete", {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

@@ -4,8 +4,11 @@ import { TokenNotFound, InvalidCredentialsError } from '../err/dist/CustomError.
 
 // Middleware to authenticate using Paseto token
 export async function authenticate(req) {
-	const token = req.headers['authorization']?.split(' ')[1];
+	// Extract token from the Authorization header
+	const authHeader = req.headers['authorization'];
+	const token = authHeader && authHeader.split(' ')[1]; // Get token part after "Bearer "
 
+	console.log(token);
 	// If no token is provided, throw a TokenNotFound error
 	if (!token) {
 		throw new TokenNotFound();

@@ -3,32 +3,29 @@ import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 
 const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
-    // useEffect(() => {
-    //   if (gWVTtoken() == ''){
-    //     showPage(1);
-    //     sShowPopupFB(true);
-    //   }
-    // }, [gWVTtoken, showPage, sShowPopupFB]);
+    useEffect(() => {
+      if (gWVTtoken() == ''){
+        showPage(1);
+        sShowPopupFB(true);
+      }
+    }, [gWVTtoken, showPage, sShowPopupFB]);
     
-    let jsonData =[
-        { "email": "angly@gmail.com", "nome": "Angly", "cognome": "Regna", "nickname": "Angly colui che regna"},
-    ];
+    let jsonData;
 
-    fetch("http://backend-users:3000/users/profile", {
-        method: 'POST',
+    console.log(gWVTtoken());
+    fetch("http://localhost/users/profile", {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${gWVTtoken()}` // Set token in the Authorization header
         },
-        body: JSON.stringify({
-            wvt: gWVTtoken()
-        }),
     })
     .then(result => {
         if (!result) return;
         const { status, body } = result;
         if (status != 200) {
             showPage(1);
-        }else {
+        } else {
             jsonData = body;
         }
     })
@@ -43,8 +40,8 @@ const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
                         {jsonData.map((item, index) => (
                             <View key={index}>
                                 <Text style={styles.testi}>Email: {item.email}</Text>
-                                <Text style={styles.testi}>Nome Cognome: {item.nome} {item.cognome}</Text>
-                                <Text style={styles.testi}>Nickname: {item.nickname}</Text>
+                                <Text style={styles.testi}>Nome Cognome: {item.first_name} {item.last_name}</Text>
+                                <Text style={styles.testi}>Nickname: {item.username}</Text>
                             </View>
                         ))}
                         <Text style={styles.titoli}>{"\n"}</Text>

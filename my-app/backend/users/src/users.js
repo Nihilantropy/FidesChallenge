@@ -18,7 +18,7 @@ import { CustomError } from './err/dist/CustomError.js';
 router.post('/create', async (req, res) => {
 	const userData = req.body;
 	// console.log(userData);
-	const [err, newUser] = await catchErrorTyped(createUser(userData), [CustomError]);
+	const [err, token] = await catchErrorTyped(createUser(userData), [CustomError]);
 
 	// If there's an error, handle it
 	if (err) {
@@ -26,9 +26,8 @@ router.post('/create', async (req, res) => {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	// Successfully created the user
-	console.log('User created:', newUser);
-	return res.status(201).json(newUser);
+	console.log(token);
+	return res.status(201).json({ token });
 });
 
 // User login route
@@ -52,6 +51,8 @@ router.post('/login', async (req, res) => {
 
 // Protected Profile route
 router.get('/profile', async (req, res) => {
+
+	console.log("authentication requested")
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
 	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
@@ -85,13 +86,11 @@ router.delete('/delete', async (req, res) => {
 	// Use catchErrorTyped to handle potential errors without try-catch
 	const [err, result] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 
-	console.log("User delated? ", result);
-
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	res.status(200).json({ message: 'User account deleted successfully' });
+	res.status(204).json({ message: 'User account deleted successfully' });
 })
 
 // Health check route

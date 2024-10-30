@@ -43,7 +43,7 @@ async function loginUser(email, password) {
 	// If password matches, generate a Paseto token
 	try {
 		const token = await V4.sign(
-			{ id: user.id, email: user.email }, // Payload
+			{ id: user.id }, // Payload
 			privateKey, // Secret key
 			{ expiresIn: '1h' } // Token expiration time
 		);

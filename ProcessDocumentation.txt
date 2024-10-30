@@ -6,9 +6,9 @@ based on react-express-mysql project (link in documentation)
 
 creating docker-compose.yml to build 3 microservices:
 
-1 - backend server (users):
+1 - backend (users):
 2 - mysql Database
-3 - frontend client
+3 - frontend
 
 Backend-side:
 	1 - setup mysql container using 'knex' and 'mysql2'
@@ -24,5 +24,19 @@ Backend-side:
 	The /login /profile /delete authentication is made via paseto tokens, using asymmetric encryption.
 	Password are encrypted via bcrypt alghoritm, stored in the db hashed and compared with bcrypt when the user try to login.
 
+Adding nginx reverse-proxy to secure client-server communication
+	1 - downloading the latest image
+	2 - set up an nginx.conf file to work with the different microservices
+	3 - users will now only have to connect to the localhost default port 80 to be redirected
+		to the frontend service
+
 Adding stories-service (4):
+	1 - using springboot, maven project for modularity, scalability and performances
+	2 - make the service connect to the db
+	
+
+
+Fontend:
+	1 - creating a fast, and user frendly app layout
+	2 - ensure that the http request are made to teh correct routes
 

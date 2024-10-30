@@ -65,18 +65,18 @@ const Registati = ({ showPage,sJWTtoken }) => {
             .then(result => {
                 if (!result) return;
                 const { status, body } = result;
-                if (status != 200) {
+                if (status != 201) {
                     setErrorText(body.message);
                 }else {
-                    sJWTtoken(body.tokenjwt);
+                    sJWTtoken(body.token);
                     showPage(2);
                 }
             })
-            .catch(error => {
-                    setErrorText("Errore interno");
-            });            
+            // .catch(error => {
+            //         setErrorText("Errore interno un pochino");
+            // } );            
         }catch (error) {
-            setErrorText("Errore interno");
+            setErrorText("Errore interno + error");
             return ;
         }
     }

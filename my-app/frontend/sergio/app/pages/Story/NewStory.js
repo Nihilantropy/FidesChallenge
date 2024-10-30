@@ -91,7 +91,7 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
     const sanitizedStory = validator.escape(story);
     
     /* ====== Send post ====== */
-    fetch("http://localhost:3000/story/new_story", {
+    fetch("http://localhost/story/new_story", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
