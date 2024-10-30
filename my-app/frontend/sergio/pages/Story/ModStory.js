@@ -2,7 +2,7 @@ import React, {  useState, useEffect } from 'react';
 import { TextInput, View, Text, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const Content_web = ({ showPage, invia, setStory, getStory }) => {
+const Content_web = ({ showPage, modifica, setStory, getStory }) => {
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
@@ -22,11 +22,11 @@ const Content_web = ({ showPage, invia, setStory, getStory }) => {
   return (
     <ScrollView>
       <View style={styles.box}>
-        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Nuova Storia</Text></View>
+        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Modifica Storia</Text></View>
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
-          <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
+          <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
-          <Pressable onPress={invia}><Text style={styles.link}>Racconta</Text></Pressable>
+          <Pressable onPress={modifica}><Text style={styles.link}>Modifica</Text></Pressable>
         </View>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
         <Text style={styles.testidestra}>{story.length}/1000</Text>
@@ -61,7 +61,7 @@ const Content_app = ({ getStory, setStory }) =>{
 };
 
 const validator = require('validator');
-const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShowErr }) => {
+const ModStory = ({ showPage, gWVTtoken, sShowPopupFB, setModificaFunction, setShowErr, gid }) => {
   // useEffect(() => {
   //   if (gWVTtoken() == ''){
   //     showPage(2);
@@ -70,12 +70,12 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
   // }, [gWVTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
-    setInviaFunction(invia);
-  }, [invia]);
+    setModificaFunction(modifica);
+  }, [modifica]);
 
   const [story, setStory] = useState('');
   const getStory = (page) => { return story; };
-  function invia() {
+  function modifica() {
     /* ====== Basic Check ====== */
     if (story === '') {
       setShowErr("Completa tutti i campi prima di proseguire");
@@ -91,14 +91,16 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
     const sanitizedStory = validator.escape(story);
     
     /* ====== Send post ====== */
-    fetch("http://localhost/story/new_story", {
+    console.log("invio fetch = Story:"+sanitizedStory);
+    fetch("http://localhost/story/mod_story", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             storia: sanitizedStory,
-            jwt: gWVTtoken()
+            jwt: gWVTtoken(),
+            id: gid()
         }),
     })
     .then(result => {
@@ -107,7 +109,7 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
         if (status != 200) {
           setShowErr(body.message);
         }else{
-          showPage(2);
+          showPage(7);
         }
     })
     .catch(error => {
@@ -116,9 +118,9 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
   }
   return (
     <View style={styles.stacca}>
-      { Platform.OS === 'web' && <Content_web showPage={showPage} invia={invia} setStory={setStory} getStory={getStory} /> }
+      { Platform.OS === 'web' && <Content_web showPage={showPage} modifica={modifica} setStory={setStory} getStory={getStory} /> }
       { Platform.OS !== 'web' && <Content_app getStory={getStory} setStory={setStory} /> }
     </View>
   );
 };
-export default NewStory;
+export default ModStory;

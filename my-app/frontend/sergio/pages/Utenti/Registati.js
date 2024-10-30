@@ -49,7 +49,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         /* ====== Send post ====== */
         console.log("invio fetch = email:"+sanitizedEmail+" | nome:"+sanitizedNome+" | cognome:"+sanitizedCognome+" | nickname:"+sanitizedNickname+" | password:"+hashedPassword);
         try {
-            fetch("http://localhost:3000/users/create", {
+            fetch("http://localhost/users/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
