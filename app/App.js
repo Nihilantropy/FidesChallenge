@@ -26,7 +26,7 @@ import Profilo from './pages/Utenti/Profilo';
 
 export default function App() {
   /* ====== Show Page ====== */
-  const [visiblePage, setVisiblePage] = useState(2);
+  const [visiblePage, setVisiblePage] = useState(1);
   const showPage = (page) => { setVisiblePage(page); };
   const gshowPage = (page) => { return visiblePage; };
 

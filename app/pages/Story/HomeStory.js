@@ -72,7 +72,7 @@ const Inventa = () => {
 };
 
 const HomeStory = ({ showPage, gWVTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) => {
-  const [Page, setPage] = useState('Racconta');
+  const [Page, setPage] = useState('');
   const [Pupup, setPupup] = useState(true);
   return (
     <View style={styles.stacca}>

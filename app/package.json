@@ -19,11 +19,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
-    "react-native-sound": "^0.11.2",
-    "react-native-track-player": "^4.1.1",
-    "react-native-tts": "^4.1.1",
     "react-native-web": "~0.19.10",
-    "shaka-player": "^4.11.11",
     "validator": "^13.12.0"
   },
   "devDependencies": {
