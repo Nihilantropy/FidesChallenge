@@ -90,7 +90,7 @@ router.delete('/delete', async (req, res) => {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	res.status(204).json({ message: 'User account deleted successfully' });
+	res.status(204).json({ result: result, message: 'User account deleted successfully' });
 })
 
 export default router;

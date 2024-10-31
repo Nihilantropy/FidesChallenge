@@ -5,7 +5,7 @@ async function deleteUser(userId) {
 	// Delete the user from the database
 	try {
 		await db('users').where({ id: userId }).del();
-		return { success: true };
+		return true;
 	} catch (e) {
 		throw new DBFetchQueryError('Error deleting the user');
 	}
