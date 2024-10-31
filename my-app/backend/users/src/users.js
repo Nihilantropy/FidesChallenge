@@ -84,13 +84,13 @@ router.delete('/delete', async (req, res) => {
 	const userId = req.user.id; // Extract the user ID from the token (set in authenticate)
 
 	// Use catchErrorTyped to handle potential errors without try-catch
-	const [err, result] = await catchErrorTyped(deleteUser(userId), [CustomError]);
+	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	res.status(204).json({ result: result, message: 'User account deleted successfully' });
+	res.status(204).json({ message: 'User account deleted successfully' });
 })
 
 export default router;
