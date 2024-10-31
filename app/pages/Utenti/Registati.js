@@ -65,7 +65,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
             .then(result => {
                 if (!result) return;
                 const { status, body } = result;
-                if (status != 200) {
+                if (status != 201) {
                     setErrorText(body.message);
                 }else {
                     sJWTtoken(body.token);

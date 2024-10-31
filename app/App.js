@@ -31,9 +31,9 @@ export default function App() {
   const gshowPage = (page) => { return visiblePage; };
 
   /* ====== Autentificazione utente ====== */
-  const [WVTtoken, setWVTtoken] = useState('');
+  const [WVTtoken, setWVTtoken] = useState('a');
   const sJWTtoken = (page) => { setWVTtoken(page); };
-  const gWVTtoken = (page) => { return WVTtoken; };
+  const gJWTtoken = (page) => { return WVTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
   const [ShowPopupFB, setShowPopupFB] = useState(false);
@@ -71,20 +71,20 @@ export default function App() {
 
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
-      {visiblePage === 2 && <HomeStory sShowErr={sShowErr} showPage={showPage} gWVTtoken={gWVTtoken} sShowPopupFB={sShowPopupFB} />}
-      {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setInviaFunction={setInviaFunction} />}
+      {visiblePage === 2 && <HomeStory sShowErr={sShowErr} showPage={showPage} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} />}
+      {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 6 && <Profilo showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setShowPopupConf={setShowPopupConf} />}
-      {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gWVTtoken={gWVTtoken} />}
-      {visiblePage === 8 && <ModStory gid={gid} setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setModificaFunction={setModificaFunction} />}
+      {visiblePage === 6 && <Profilo showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setShowPopupConf={setShowPopupConf} />}
+      {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 8 && <ModStory gid={gid} setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setModificaFunction={setModificaFunction} />}
 
       { Platform.OS === 'web' && <FooterWeb /> }
 
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
       {ShowErr !== '' && <PupupErr sShowErr={sShowErr} gShowPopupErr={gShowPopupErr} />}
-      {ShowPopupConf === true && <PupupConf gWVTtoken={gWVTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sJWTtoken={sJWTtoken} />}
+      {ShowPopupConf === true && <PupupConf gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sJWTtoken={sJWTtoken} />}
       {ShowPopupES === true && <PupupDelStory gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} setShowPopupConf={setShowPopupConf} />}
     </View>
   );

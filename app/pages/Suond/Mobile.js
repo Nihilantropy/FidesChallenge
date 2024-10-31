@@ -17,3 +17,4 @@ export const setupPlayer = async (blob) => {
 
 export const playAudio = async () => {if (sound) {await sound.playAsync();}};
 export const pauseAudio = async () => {if (sound) {await sound.pauseAsync();}};
+export const setPlaybackRate = async (rate) => {if (sound) {await sound.setRateAsync(rate, true);/*false: ignora il pitch*/}};

@@ -2,33 +2,27 @@ import React from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import styles from './../assets/style/main.js';
 
-const PupupConf = ({ showPage, setShowPopupConf, sWVTtoken, sShowErr, gWVTtoken }) => {
+const PupupConf = ({ showPage, setShowPopupConf, sWVTtoken, sShowErr, gJWTtoken }) => {
   function elimina() {
     fetch("http://localhost/users/delete", {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            wvt: gWVTtoken()
-        }),
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+gJWTtoken()
+        }
     })
     .then(result => {
         if (!result) return;
         const { status, body } = result;
-        if (status != 200) {
+        if (status != 204) {
           setShowPopupConf(false);
-          sShowErr("Errore interno");
+          sShowErr(body.message);
         }else {
           setShowPopupConf(false);
           sWVTtoken('');
           showPage(1);
         }
     })
-    .catch(error => {
-      setShowPopupConf(false);
-      sShowErr("Errore interno");
-    });
   }
   return (
     <View style={styles.fondonero}>

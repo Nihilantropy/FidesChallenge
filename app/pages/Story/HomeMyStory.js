@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const HomeMyStory = ({ showPage,gWVTtoken,sid,sShowPopupES }) => {
+const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES }) => {
   useEffect(() => {
-    if (gWVTtoken() == ''){
+    if (gJWTtoken() == ''){
       showPage(1);
     }
-  }, [gWVTtoken, showPage]);
+  }, [gJWTtoken, showPage]);
 
   let jsonData =[
     { "id": 1, "titolo": "Parasati in Love", "storia": "Una storia d'amore tormentata tra due persone con passati difficili che cercano redenzione attraverso il loro legame."},

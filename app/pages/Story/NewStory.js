@@ -61,13 +61,13 @@ const Content_app = ({ getStory, setStory }) =>{
 };
 
 const validator = require('validator');
-const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShowErr }) => {
-  // useEffect(() => {
-  //   if (gWVTtoken() == ''){
-  //     showPage(2);
-  //     sShowPopupFB(true);
-  //   }
-  // }, [gWVTtoken, showPage, sShowPopupFB]);
+const NewStory = ({ showPage, gJWTtoken, sShowPopupFB, setInviaFunction, setShowErr }) => {
+  useEffect(() => {
+    if (gJWTtoken() == ''){
+      showPage(2);
+      sShowPopupFB(true);
+    }
+  }, [gJWTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
     setInviaFunction(invia);
@@ -98,7 +98,7 @@ const NewStory = ({ showPage, gWVTtoken, sShowPopupFB, setInviaFunction, setShow
         },
         body: JSON.stringify({
             storia: sanitizedStory,
-            jwt: gWVTtoken()
+            jwt: gJWTtoken()
         }),
     })
     .then(result => {
