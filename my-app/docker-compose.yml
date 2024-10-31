@@ -74,8 +74,8 @@ services:
     build:
       context: ./backend/stories
       dockerfile: Dockerfile
-    volumes:
-      - ./backend/stories/target:/app/target:rw
+    #volumes:
+    #  - ./backend/stories/target:/app/target:rw
     networks:
        - server-db
        - proxy
@@ -91,7 +91,7 @@ services:
     networks:
       - frontend-tts
     depends_on:
-      - fronted-expo
+      - frontend-expo
 
   # Frontend expo micro
   frontend-expo:
