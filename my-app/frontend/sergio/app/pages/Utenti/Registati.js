@@ -14,7 +14,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
     const [confpassword, setConfpassword] = useState('');
     const [errorText, setErrorText] = useState('');
 
-    function registati() {
+    const registati = async () => {
         /* ====== Basic Check ====== */
         setErrorText("");
         if (email === '' || nome === '' || cognome === '' || nickname === '' || password === '' || confpassword === '') {
@@ -41,7 +41,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         const sanitizedNome = validator.escape(nome);
         const sanitizedCognome = validator.escape(cognome);
         const sanitizedNickname = validator.escape(nickname);
-        const hashedPassword = hashPassword(password);
+        const hashedPassword = await hashPassword(password);
         if (hashedPassword == '') {
             setErrorText("Errore interno");
             return;
@@ -49,7 +49,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         /* ====== Send post ====== */
         console.log("invio fetch = email:"+sanitizedEmail+" | nome:"+sanitizedNome+" | cognome:"+sanitizedCognome+" | nickname:"+sanitizedNickname+" | password:"+hashedPassword);
         try {
-            fetch("http://localhost/users/create", {
+            fetch("http://localhost:8000/users/create", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

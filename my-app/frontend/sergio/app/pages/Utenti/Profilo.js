@@ -11,7 +11,7 @@ const Profilo = ({ showPage, gJWTtoken, sShowPopupFB, setShowPopupConf }) => {
     }, [gJWTtoken, showPage, sShowPopupFB]);
 
     const [jsonData, setJsonData] = useState([{email: '', first_name: '', last_name: '', username: ''}]);
-    fetch("http://localhost/users/profile", {
+    fetch("http://localhost:8000/users/profile", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
