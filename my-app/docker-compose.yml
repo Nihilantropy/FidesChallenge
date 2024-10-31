@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: nginx_proxy
     ports:
-      - "80:80"
+      - "8000:8000"
     networks:
       - proxy
     depends_on:
