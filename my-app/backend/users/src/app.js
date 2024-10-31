@@ -1,13 +1,24 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import db from './database.js';
 import userRoutes from './users.js';
 import { healthCheck, healthCheckEndpoint } from './healthcheck.js';
 const app = express();
 
+// CORS options
+const corsOptions = {
+    origin: 'http://expo-service:8081', // Address of the Expo service
+    methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true, // Allow credentials (like cookies or authorization headers) if needed
+};
+
 // Middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan('common'));
+
 
 // Use the user routes (all routes in users.js are prefixed with /users)
 app.use('/users', userRoutes);

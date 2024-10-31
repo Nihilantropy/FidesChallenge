@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 const router = express.Router();
 
 import dotenv from 'dotenv';
@@ -14,10 +15,17 @@ import { authenticate } from './middleware/auth.js';
 import { catchErrorTyped } from './err/dist/catchError.js';
 import { CustomError } from './err/dist/CustomError.js';
 
+// CORS options
+const routeCorsOptions = {
+    origin: ['http://expo-service:8081'], // Allow requests from the Expo service directly
+    methods: ['GET', 'POST', 'DELETE'], // Allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Headers that can be included
+    credentials: true, // Allow credentials if needed
+};
+
 // User creation route
-router.post('/create', async (req, res) => {
+router.post('/create', cors(routeCorsOptions), async (req, res) => {
 	const userData = req.body;
-	// console.log(userData);
 	const [err, token] = await catchErrorTyped(createUser(userData), [CustomError]);
 
 	// If there's an error, handle it
@@ -31,10 +39,10 @@ router.post('/create', async (req, res) => {
 });
 
 // User login route
-router.post('/login', async (req, res) => {
+router.post('/login', cors(routeCorsOptions), async (req, res) => {
 	const { email, password } = req.body;
-	
-	console.log( email, password );
+
+	console.log(email, password);
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
 	// Check for errors
@@ -46,13 +54,11 @@ router.post('/login', async (req, res) => {
 	// If the token is returned successfully
 	console.log(token);
 	return res.status(200).json({ token });
-
 });
 
 // Protected Profile route
-router.get('/profile', async (req, res) => {
-
-	console.log("authentication requested")
+router.get('/profile', cors(routeCorsOptions), async (req, res) => {
+	console.log("authentication requested");
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
 	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
@@ -73,7 +79,8 @@ router.get('/profile', async (req, res) => {
 	res.status(200).json(profile);
 });
 
-router.delete('/delete', async (req, res) => {
+// User deletion route
+router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
 	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
@@ -91,6 +98,6 @@ router.delete('/delete', async (req, res) => {
 	}
 
 	res.status(204).json({ message: 'User account deleted successfully' });
-})
+});
 
 export default router;

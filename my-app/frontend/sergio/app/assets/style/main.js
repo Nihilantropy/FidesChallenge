@@ -27,7 +27,7 @@ testidestra: {textAlign: 'rigth',alignSelf: 'flex-end',...colortesti},
 link: {...testiunder},
 box: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase,...centro},
 box2: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase},
-box3: {padding: 20,marginTop: 30,zIndex: 30,...background,...bordbase},
+box3: {padding: 20,marginTop: 30,marginLeft: 20,width: width/2.5,...background,...bordbase},
 centro: {...centro},
 stacca: {width: '100%'},
 row: {flexDirection: 'row',marginVertical: 10,},
@@ -53,7 +53,6 @@ if(width > 600){
     regole.popup={...regole.popup,top: '20%',left: '30%'};
     regole.foto={width: 45,height: 45};
     regole.foto2={width: 20,height: 20};
-    regole.box3={...regole.box3,marginLeft: 20,width: width/2.5};
 }else{
     /* ===== Piccoli schermi ===== */
     regole.testi={...regole.testi,fontSize: 20};
@@ -68,7 +67,6 @@ if(width > 600){
     regole.foto2={width: 15,height: 15};
     regole.box={...regole.box,width: width-10};
     regole.box2={...regole.box2,width: width-10};
-    regole.box3={...regole.box3,marginLeft: 5,width: width-10};
 }
 
 if(Platform.OS === 'web'){
