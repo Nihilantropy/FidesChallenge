@@ -27,7 +27,11 @@ testidestra: {textAlign: 'rigth',alignSelf: 'flex-end',...colortesti},
 link: {...testiunder},
 box: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase,...centro},
 box2: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase},
+<<<<<<<< HEAD:my-app/frontend/sergio/app/assets/style/main.js
 box3: {padding: 20,marginTop: 30,marginLeft: 20,width: width/2.5,...background,...bordbase},
+========
+box3: {padding: 20,marginTop: 30,zIndex: 30,...background,...bordbase},
+>>>>>>>> e231ba1adeae45fc8251acdf49ab7381c9e79918:app/assets/style/main.js
 centro: {...centro},
 stacca: {width: '100%'},
 row: {flexDirection: 'row',marginVertical: 10,},
@@ -53,6 +57,10 @@ if(width > 600){
     regole.popup={...regole.popup,top: '20%',left: '30%'};
     regole.foto={width: 45,height: 45};
     regole.foto2={width: 20,height: 20};
+<<<<<<<< HEAD:my-app/frontend/sergio/app/assets/style/main.js
+========
+    regole.box3={...regole.box3,marginLeft: 20,width: width/2.5};
+>>>>>>>> e231ba1adeae45fc8251acdf49ab7381c9e79918:app/assets/style/main.js
 }else{
     /* ===== Piccoli schermi ===== */
     regole.testi={...regole.testi,fontSize: 20};
@@ -67,6 +75,10 @@ if(width > 600){
     regole.foto2={width: 15,height: 15};
     regole.box={...regole.box,width: width-10};
     regole.box2={...regole.box2,width: width-10};
+<<<<<<<< HEAD:my-app/frontend/sergio/app/assets/style/main.js
+========
+    regole.box3={...regole.box3,marginLeft: 5,width: width-10};
+>>>>>>>> e231ba1adeae45fc8251acdf49ab7381c9e79918:app/assets/style/main.js
 }
 
 if(Platform.OS === 'web'){
