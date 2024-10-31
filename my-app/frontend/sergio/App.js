@@ -31,7 +31,7 @@ export default function App() {
   const gshowPage = (page) => { return visiblePage; };
 
   /* ====== Autentificazione utente ====== */
-  const [WVTtoken, setWVTtoken] = useState('a');
+  const [WVTtoken, setWVTtoken] = useState('');
   const sJWTtoken = (page) => { setWVTtoken(page); };
   const gJWTtoken = (page) => { return WVTtoken; };
 

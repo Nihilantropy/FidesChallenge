@@ -49,13 +49,13 @@ const Accesso = ({ showPage,sJWTtoken }) => {
                 if (status != 200) {
                     setErrorText(body.message);
                 }else {
-                    sJWTtoken(body.tokenjwt);
+                    sJWTtoken(body.token);
                     showPage(2);
                 }
             })
             .catch(error => {
                     setErrorText("Errore interno");
-            });            
+            });
         }catch (error) {
             setErrorText("Errore interno");
             return ;
