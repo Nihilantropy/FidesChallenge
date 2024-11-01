@@ -97,7 +97,7 @@ services:
   frontend-expo:
     container_name: expo-service
     build:
-      context: ./frontend/sergio
+      context: ./frontend
       dockerfile: Dockerfile
     networks:
       - proxy

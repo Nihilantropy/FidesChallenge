@@ -13,7 +13,7 @@ const Profilo = ({ showPage, gWVTtoken, sShowPopupFB, setShowPopupConf }) => {
     let jsonData;
 
     console.log(gWVTtoken());
-    fetch("http://localhost/users/profile", {
+    fetch("http://localhost:8000/users/profile", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

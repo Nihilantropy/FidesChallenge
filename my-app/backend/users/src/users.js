@@ -17,11 +17,12 @@ import { CustomError } from './err/dist/CustomError.js';
 
 // CORS options
 const routeCorsOptions = {
-    origin: ['http://expo-service:8081'], // Allow requests from the Expo service directly
-    methods: ['GET', 'POST', 'DELETE'], // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Headers that can be included
-    credentials: true, // Allow credentials if needed
+    origin: ['http://expo-service:8081', 'http://localhost:8000'], // Add Nginx proxy origin
+    methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true, // Allow credentials (like cookies or authorization headers) if needed
 };
+
 
 // User creation route
 router.post('/create', cors(routeCorsOptions), async (req, res) => {

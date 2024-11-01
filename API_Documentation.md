@@ -2,6 +2,16 @@
 
 ## Users Service (Account Creation, Authentication, Profile Info, Account Deletion)
 
+### CORS:
+  - **Allowed origin**: `http://expo-service:8081`, `http://localhost:8000`
+  - **Allowed methods**: `GET, POST, DELETE`
+  - **Allowed headers**: `Content-Type, Authorization`
+  - **Credentials**: `True`
+
+### All request has to be send to => `http://localhost:8000(endpoints)`
+
+## endpoints:
+
 ### `/users/create`
 - **Request Type**: `POST`
 - **Expected Info**:

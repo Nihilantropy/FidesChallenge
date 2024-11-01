@@ -8,7 +8,7 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-    origin: 'http://expo-service:8081', // Address of the Expo service
+    origin: ['http://expo-service:8081', 'http://localhost:8000'], // Add Nginx proxy origin
     methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed
@@ -16,6 +16,7 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(morgan('common'));
 
@@ -24,7 +25,7 @@ app.use(morgan('common'));
 app.use('/users', userRoutes);
 
 // Health check endpoint
-app.get('/users/healthz', healthCheckEndpoint);
+app.get('/healthz', healthCheckEndpoint);
 
 // Example route to check MySQL version
 app.get('/', async (req, res, next) => {
