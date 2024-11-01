@@ -19,7 +19,6 @@ footerapp2: {flexDirection: 'row',alignItems: 'center',justifyContent: 'space-be
 rowpuro: {flexDirection: 'row'},
 tornaallahome: {margin: 20,textAlign: 'left',alignSelf: 'flex-start',...testiunder},
 sinistra: {textAlign: 'left',alignSelf: 'flex-start'},
-qrcode: {width: 200,height: 200},
 cleseimg: {paddingRight: 10},
 tendina: {flexDirection: 'row'},
 testi: {...colortesti},
@@ -27,7 +26,7 @@ testidestra: {textAlign: 'rigth',alignSelf: 'flex-end',...colortesti},
 link: {...testiunder},
 box: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase,...centro},
 box2: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase},
-box3: {padding: 20,marginTop: 30,zIndex: 30,...background,...bordbase},
+box3: {padding: 15,marginTop: 30,...background,...bordbase},
 centro: {...centro},
 stacca: {width: '100%'},
 row: {flexDirection: 'row',marginVertical: 10,},
@@ -37,6 +36,9 @@ fondonero: {zIndex: 40,backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absol
 credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
 textarea: {textAlignVertical: 'top',padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
 bottoni: {borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background},
+col1: {width: 'auto',margin: 10},
+col2: {width: 'auto'},
+homestoryele: {},
 foto: {},
 foto2: {},
 };
@@ -54,6 +56,7 @@ if(width > 600){
     regole.foto={width: 45,height: 45};
     regole.foto2={width: 20,height: 20};
     regole.box3={...regole.box3,marginLeft: 20,width: width/2.5};
+    regole.homestoryele={...regole.homestoryele,flexDirection: 'row'};
 }else{
     /* ===== Piccoli schermi ===== */
     regole.testi={...regole.testi,fontSize: 20};
@@ -69,6 +72,7 @@ if(width > 600){
     regole.box={...regole.box,width: width-10};
     regole.box2={...regole.box2,width: width-10};
     regole.box3={...regole.box3,marginLeft: 5,width: width-10};
+    regole.homestoryele={...regole.homestoryele};
 }
 
 if(Platform.OS === 'web'){
