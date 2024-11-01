@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
-import stylec from './../../assets/style/main.css';
+// import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -47,38 +47,34 @@ const Registati = ({ showPage,sJWTtoken }) => {
             return;
         }
         /* ====== Send post ====== */
-        console.log("invio fetch = email:"+sanitizedEmail+" | nome:"+sanitizedNome+" | cognome:"+sanitizedCognome+" | nickname:"+sanitizedNickname+" | password:"+hashedPassword);
-        try {
-            fetch("http://localhost:8000/users/create", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: sanitizedEmail,
-                    first_name: sanitizedNome,
-                    last_name: sanitizedCognome,
-                    username: sanitizedNickname,
-                    password: hashedPassword
-                }),
-            })
-            .then(result => {
-                if (!result) return;
-                const { status, body } = result;
-                if (status != 201) {
-                    setErrorText(body.message);
-                }else {
-                    sJWTtoken(body.token);
-                    showPage(2);
-                }
-            })
-            .catch(error => {
-                    setErrorText("Errore interno");
-            });            
-        }catch (error) {
+        fetch("http://localhost:8000/users/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: sanitizedEmail,
+                first_name: sanitizedNome,
+                last_name: sanitizedCognome,
+                username: sanitizedNickname,
+                password: hashedPassword
+            }),
+        })
+        .then(response => {
+            const status = response.status;
+            return response.json().then(data => ({ status, data }));
+        })
+        .then(({ status, data }) => {
+            if (status !== 201) {
+                setErrorText(data.message);
+            } else {
+                sJWTtoken(data.token);
+                showPage(2);
+            }
+        })
+        .catch(error => {
             setErrorText("Errore interno");
-            return ;
-        }
+        });        
     }
     return (
         <View style={styles.stacca}>

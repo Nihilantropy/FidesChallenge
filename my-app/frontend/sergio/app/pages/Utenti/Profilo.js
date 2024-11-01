@@ -3,33 +3,40 @@ import { View, Text, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
 
 const Profilo = ({ showPage, gJWTtoken, sShowPopupFB, setShowPopupConf }) => {
-    useEffect(() => {
-      if (gJWTtoken() == ''){
-        showPage(1);
-        sShowPopupFB(true);
-      }
-    }, [gJWTtoken, showPage, sShowPopupFB]);
-
     const [jsonData, setJsonData] = useState([{email: '', first_name: '', last_name: '', username: ''}]);
-    fetch("http://localhost:8000/users/profile", {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+gJWTtoken()
+    useEffect(() => {
+        /* Fuori se non loggato */
+        if (gJWTtoken() == ''){
+          showPage(1);
+          sShowPopupFB(true);
+          return ;
         }
-    })
-    .then(result => {
-        if (!result) return;
-        const { status, body } = result;
-        if (status != 200) {
+
+        /* Ricerca info */
+        fetch("http://localhost:8000/users/profile", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+gJWTtoken()
+            }
+        })
+        .then(response => {
+            const status = response.status;
+            return response.json().then(data => ({ status, data }));
+        })
+        .then(({ status, data }) => {
+            if (status !== 200) {
+                showPage(1);
+            } else {
+                alert(data);
+                setJsonData(data);
+            }
+        })
+        .catch(error => {
             showPage(1);
-        }else {
-            setJsonData(body);
-        }
-    })
-    .catch(error => {
-        ;//showPage(1);
-    });
+        });
+    }, [gJWTtoken, showPage, sShowPopupFB, setJsonData]);
+
     return (
         <View style={styles.stacca}>
             <ScrollView>

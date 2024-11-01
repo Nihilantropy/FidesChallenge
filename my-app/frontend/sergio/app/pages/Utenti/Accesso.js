@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
-import stylec from './../../assets/style/main.css';
+// import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -10,7 +10,7 @@ const Accesso = ({ showPage,sJWTtoken }) => {
     const [password, setPassword] = useState('');
     const [errorText, setErrorText] = useState('');
 
-    function accesso() {
+    const accesso = async () => {
         setErrorText("");
         /* ====== Basic Check ====== */
         if (email === '' || password === '') {
@@ -24,42 +24,38 @@ const Accesso = ({ showPage,sJWTtoken }) => {
 
         /* ====== Sanitized ====== */
         const sanitizedEmail = validator.escape(email);
-        const hashedPassword = hashPassword(password);
+        const hashedPassword = await hashPassword(password);
         if (hashedPassword == '') {
             setErrorText("Errore interno");
             return;
         }
         
         /* ====== Send post ====== */
-        console.log("invio fetch = email:"+sanitizedEmail+" | password:"+hashedPassword);
-        try {
-            fetch("http://localhost:8000/users/login", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: sanitizedEmail,
-                    password: hashedPassword
-                }),
-            })
-            .then(result => {
-                if (!result) return;
-                const { status, body } = result;
-                if (status != 200) {
-                    setErrorText(body.message);
-                }else {
-                    sJWTtoken(body.token);
-                    showPage(2);
-                }
-            })
-            .catch(error => {
-                    setErrorText("Errore interno");
-            });
-        }catch (error) {
+        fetch("http://localhost:8000/users/login", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: sanitizedEmail,
+                password: hashedPassword
+            }),
+        })
+        .then(response => {
+            const status = response.status;
+            return response.json().then(data => ({ status, data }));
+        })
+        .then(({ status, data }) => {
+            if (status != 200) {
+                setErrorText(body.message);
+            } else {
+                sJWTtoken(body.token);
+                showPage(2);
+            }
+        })
+        .catch(error => {
             setErrorText("Errore interno");
-            return ;
-        }
+        });
     }
     return (
         <View style={styles.stacca}>

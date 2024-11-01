@@ -62,12 +62,12 @@ const Content_app = ({ getStory, setStory }) =>{
 
 const validator = require('validator');
 const ModStory = ({ showPage, gJWTtoken, sShowPopupFB, setModificaFunction, setShowErr, gid }) => {
-  useEffect(() => {
-    if (gJWTtoken() == ''){
-      showPage(2);
-      sShowPopupFB(true);
-    }
-  }, [gJWTtoken, showPage, sShowPopupFB]);
+  // useEffect(() => {
+  //   if (gJWTtoken() == ''){
+  //     showPage(2);
+  //     sShowPopupFB(true);
+  //   }
+  // }, [gJWTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
     setModificaFunction(modifica);

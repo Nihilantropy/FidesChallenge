@@ -3,26 +3,26 @@ import { View, Platform } from 'react-native';
 import styles from './app/assets/style/main.js';
 
 /* ====== Componenti ====== */
-import Navbar from './app/components/Navbar';
-import FooterWeb from './app/components/FooterWeb';
-import FooterApp from './app/components/FooterApp';
+import Navbar from './app/components/Navbar.js';
+import FooterWeb from './app/components/FooterWeb.js';
+import FooterApp from './app/components/FooterApp.js';
 
-import PupupFunBlock from './app/components/PupupFunBlock';
-import PupupConf from './app/components/PupupConf';
-import PupupErr from './app/components/PupupErr';
-import PupupDelStory from './app/components/PupupDelStory';
+import PupupFunBlock from './app/components/PupupFunBlock.js';
+import PupupConf from './app/components/PupupConf.js';
+import PupupErr from './app/components/PupupErr.js';
+import PupupDelStory from './app/components/PupupDelStory.js';
 
 /* ====== Pagine ====== */
-import Home from './app/pages/Home';
+import Home from './app/pages/Home.js';
 
-import HomeStory from './app/pages/Story/HomeStory';
-import HomeMyStory from './app/pages/Story/HomeMyStory';
-import NewStory from './app/pages/Story/NewStory';
-import ModStory from './app/pages/Story/ModStory';
+import HomeStory from './app/pages/Story/HomeStory.js';
+import HomeMyStory from './app/pages/Story/HomeMyStory.js';
+import NewStory from './app/pages/Story/NewStory.js';
+import ModStory from './app/pages/Story/ModStory.js';
 
-import Registati from './app/pages/Utenti/Registati';
-import Accesso from './app/pages/Utenti/Accesso';
-import Profilo from './app/pages/Utenti/Profilo';
+import Registati from './app/pages/Utenti/Registati.js';
+import Accesso from './app/pages/Utenti/Accesso.js';
+import Profilo from './app/pages/Utenti/Profilo.js';
 
 export default function App() {
   /* ====== Show Page ====== */
@@ -31,9 +31,9 @@ export default function App() {
   const gshowPage = (page) => { return visiblePage; };
 
   /* ====== Autentificazione utente ====== */
-  const [WVTtoken, setWVTtoken] = useState('');
-  const sJWTtoken = (page) => { setWVTtoken(page); };
-  const gJWTtoken = (page) => { return WVTtoken; };
+  const [JWTtoken, setJWTtoken] = useState('');
+  const sJWTtoken = (page) => { setJWTtoken(page); };
+  const gJWTtoken = (page) => { return JWTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
   const [ShowPopupFB, setShowPopupFB] = useState(false);
@@ -71,7 +71,7 @@ export default function App() {
 
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
-      {visiblePage === 2 && <HomeStory sShowErr={sShowErr} showPage={showPage} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} />}
+      {visiblePage === 2 && <HomeStory showPage={showPage} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} />}
       {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
