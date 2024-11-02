@@ -4,10 +4,10 @@
     "slug": "sergio",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./app/assets/img/favicon.png",
+    "icon": "./assets/img/favicon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./app/assets/img/favicon.png",
+      "image": "./assets/img/favicon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -16,12 +16,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/img/favicon.png",
+        "foregroundImage": "./assets/img/favicon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./app/assets/img/favicon.png"
+      "favicon": "./assets/img/favicon.png"
     }
   }
 }

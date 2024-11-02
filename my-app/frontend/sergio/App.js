@@ -1,28 +1,28 @@
 import React, { useState, useRef } from 'react';
 import { View, Platform } from 'react-native';
-import styles from './app/assets/style/main.js';
+import styles from './assets/style/main.js';
 
 /* ====== Componenti ====== */
-import Navbar from './app/components/Navbar.js';
-import FooterWeb from './app/components/FooterWeb.js';
-import FooterApp from './app/components/FooterApp.js';
+import Navbar from './components/Navbar';
+import FooterWeb from './components/FooterWeb';
+import FooterApp from './components/FooterApp';
 
-import PupupFunBlock from './app/components/PupupFunBlock.js';
-import PupupConf from './app/components/PupupConf.js';
-import PupupErr from './app/components/PupupErr.js';
-import PupupDelStory from './app/components/PupupDelStory.js';
+import PupupFunBlock from './components/PupupFunBlock';
+import PupupConf from './components/PupupConf';
+import PupupErr from './components/PupupErr';
+import PupupDelStory from './components/PupupDelStory';
 
 /* ====== Pagine ====== */
-import Home from './app/pages/Home.js';
+import Home from './pages/Home';
 
-import HomeStory from './app/pages/Story/HomeStory.js';
-import HomeMyStory from './app/pages/Story/HomeMyStory.js';
-import NewStory from './app/pages/Story/NewStory.js';
-import ModStory from './app/pages/Story/ModStory.js';
+import HomeStory from './pages/Story/HomeStory';
+import HomeMyStory from './pages/Story/HomeMyStory';
+import NewStory from './pages/Story/NewStory';
+import ModStory from './pages/Story/ModStory';
 
-import Registati from './app/pages/Utenti/Registati.js';
-import Accesso from './app/pages/Utenti/Accesso.js';
-import Profilo from './app/pages/Utenti/Profilo.js';
+import Registati from './pages/Utenti/Registati';
+import Accesso from './pages/Utenti/Accesso';
+import Profilo from './pages/Utenti/Profilo';
 
 export default function App() {
   /* ====== Show Page ====== */
@@ -32,7 +32,7 @@ export default function App() {
 
   /* ====== Autentificazione utente ====== */
   const [WVTtoken, setWVTtoken] = useState('');
-  const sJWTtoken = (page) => { setWVTtoken(page); };
+  const sWVTtoken = (page) => { setWVTtoken(page); };
   const gWVTtoken = (page) => { return WVTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
@@ -73,8 +73,8 @@ export default function App() {
       {visiblePage === 1 && <Home showPage={showPage} />}
       {visiblePage === 2 && <HomeStory showPage={showPage} gWVTtoken={gWVTtoken} sShowPopupFB={sShowPopupFB} />}
       {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setInviaFunction={setInviaFunction} />}
-      {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
+      {visiblePage === 4 && <Accesso showPage={showPage} sWVTtoken={sWVTtoken} />}
+      {visiblePage === 5 && <Registati showPage={showPage} sWVTtoken={sWVTtoken} />}
       {visiblePage === 6 && <Profilo showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setShowPopupConf={setShowPopupConf} />}
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gWVTtoken={gWVTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gWVTtoken={gWVTtoken} setModificaFunction={setModificaFunction} />}
@@ -84,7 +84,7 @@ export default function App() {
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
       {ShowErr !== '' && <PupupErr sShowErr={sShowErr} gShowPopupErr={gShowPopupErr} />}
-      {ShowPopupConf === true && <PupupConf gWVTtoken={gWVTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sJWTtoken={sJWTtoken} />}
+      {ShowPopupConf === true && <PupupConf gWVTtoken={gWVTtoken} sShowErr={sShowErr} showPage={showPage} setShowPopupConf={setShowPopupConf} sWVTtoken={sWVTtoken} />}
       {ShowPopupES === true && <PupupDelStory gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} setShowPopupConf={setShowPopupConf} />}
     </View>
   );
