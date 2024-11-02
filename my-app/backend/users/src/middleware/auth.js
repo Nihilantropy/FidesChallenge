@@ -5,10 +5,10 @@ import { TokenNotFound, InternalServerError } from '../err/dist/CustomError.js';
 // Middleware to authenticate using Paseto token
 export async function authenticate(req) {
 	// Extract token from the Authorization header
-	const authHeader = req.headers['Authorization'];
+	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1]; // Get token part after "Bearer "
 
-	console.log("token is: ", token);
+	// console.log("token is: ", token);
 	// If no token is provided, throw a TokenNotFound error
 	if (!token) {
 		throw new TokenNotFound();
@@ -18,11 +18,11 @@ export async function authenticate(req) {
 
 	// Attempt to verify the token
 	const payload = await V4.verify(token, publicKey).catch(() => {
-		console.error(payload);
 		// If verification fails, throw an InternalServer<Error
 		throw new InternalServerError();
 	});
+	console.log("payload is: ", payload)
 
-	// Attach the user info to the request object
-	req.user = payload;
+	// Attach the user ID to req.user, extracting the first element from the id array
+	req.user = { id: payload.id[0] };
 }

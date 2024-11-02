@@ -41,7 +41,7 @@
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
 - **Response**:
-  - JSON `{ email, first_name, last_name, username, profileInfo }`
+  - JSON `{ id, first_name, last_name, username, email }`
 - **Return Status + json {message}**:
   - **200 OK + message** - Success
   - **401 Unauthorized + error message** - Unauthorized (missing or invalid token)
