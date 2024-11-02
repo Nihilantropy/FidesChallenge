@@ -5,25 +5,23 @@ import styles from './../assets/style/main.js';
 const PupupConf = ({ showPage, setShowPopupConf, sJWTtoken, sShowErr, gJWTtoken }) => {
   function elimina() {
     fetch("http://localhost/users/delete", {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            wvt: gJWTtoken()
-        }),
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gJWTtoken()
+      },
     })
     .then(result => {
-        if (!result) return;
-        const { status, body } = result;
-        if (status != 200) {
-          setShowPopupConf(false);
-          sShowErr("Errore interno");
-        }else {
-          setShowPopupConf(false);
-          sJWTtoken('');
-          showPage(1);
-        }
+      if (!result) return;
+      const { status, body } = result;
+      if (status != 200) {
+        setShowPopupConf(false);
+        sShowErr("Errore interno");
+      }else {
+        setShowPopupConf(false);
+        sJWTtoken('');
+        showPage(1);
+      }
     })
     .catch(error => {
       setShowPopupConf(false);

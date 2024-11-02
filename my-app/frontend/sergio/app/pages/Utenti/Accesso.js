@@ -47,9 +47,9 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         })
         .then(({ status, data }) => {
             if (status != 200) {
-                setErrorText(body.message);
+                setErrorText(data.message);
             } else {
-                sJWTtoken(body.token);
+                sJWTtoken(data.token);
                 showPage(2);
             }
         })
