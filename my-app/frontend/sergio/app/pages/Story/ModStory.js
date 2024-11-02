@@ -92,7 +92,7 @@ const ModStory = ({ showPage, gWVTtoken, sShowPopupFB, setModificaFunction, setS
     
     /* ====== Send post ====== */
     console.log("invio fetch = Story:"+sanitizedStory);
-    fetch("http://localhost:3000/story/mod_story", {
+    fetch("http://localhost/story/mod_story", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

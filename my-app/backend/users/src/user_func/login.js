@@ -2,7 +2,7 @@ import { V4 } from 'paseto'; // Using V4 version of Paseto for token creation
 import { Buffer } from 'buffer';
 import db from '../database.js'; // Assuming you have a configured knex instance
 import bcrypt from 'bcrypt'; // Assuming you're storing hashed passwords in the DB
-import { InvalidCredentialsError, TokenCreationError, NoCredentialError, InternalServerError } from '../err/dist/CustomError.js';
+import { InvalidCredentialsError, TokenCreationError, NoCredentialError, InternalServerError, DBFetchQueryError } from '../err/dist/CustomError.js';
 
 const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
 
@@ -21,7 +21,7 @@ async function loginUser(email, password) {
 		user = await db('users').where({ email }).first();
 	}
 	catch (e) {
-		console.error("user not found");
+		throw new DBFetchQueryError();
 	}
 
 	// If the user is not found
@@ -30,20 +30,22 @@ async function loginUser(email, password) {
 	}
 	
 	console.log("User found:", user);  // Debug log
+	console.log(password, user.password)
 	// if (password !== user.password) {
-	// 	throw new InvalidCredentialsError(); // TODO remove this, uncomment below
+	// 	throw new InvalidCredentialsError();
 	// }
 
 	// Check if the provided password matches the hashed password in the DB
 	const passwordMatch = await bcrypt.compare(password, user.password);
 	if (!passwordMatch) {
+		console.error("invalid password");
 		throw new InvalidCredentialsError(); // Use the custom error
 	}
 
 	// If password matches, generate a Paseto token
 	try {
 		const token = await V4.sign(
-			{ id: user.id, email: user.email }, // Payload
+			{ id: user.id }, // Payload
 			privateKey, // Secret key
 			{ expiresIn: '1h' } // Token expiration time
 		);
@@ -56,8 +58,8 @@ async function loginUser(email, password) {
 		console.log("token created!");
 		return token;
 	
-	} catch (error) {
-		console.error("Error during token generation:", error);
+	} catch (e) {
+		console.error("Error during token generation:", e);
 		throw new InternalServerError("Token generation failed");
 	}
 }

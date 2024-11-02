@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 const router = express.Router();
 
 import dotenv from 'dotenv';
@@ -14,11 +15,19 @@ import { authenticate } from './middleware/auth.js';
 import { catchErrorTyped } from './err/dist/catchError.js';
 import { CustomError } from './err/dist/CustomError.js';
 
+// CORS options
+const routeCorsOptions = {
+    origin: ['http://expo-service:8081', 'http://localhost:8000'], // Add Nginx proxy origin
+    methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    credentials: true, // Allow credentials (like cookies or authorization headers) if needed
+};
+
+
 // User creation route
-router.post('/create', async (req, res) => {
+router.post('/create', cors(routeCorsOptions), async (req, res) => {
 	const userData = req.body;
-	// console.log(userData);
-	const [err, newUser] = await catchErrorTyped(createUser(userData), [CustomError]);
+	const [err, token] = await catchErrorTyped(createUser(userData), [CustomError]);
 
 	// If there's an error, handle it
 	if (err) {
@@ -26,16 +35,15 @@ router.post('/create', async (req, res) => {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	// Successfully created the user
-	console.log('User created:', newUser);
-	return res.status(201).json(newUser);
+	console.log(token);
+	return res.status(201).json({ token });
 });
 
 // User login route
-router.post('/login', async (req, res) => {
+router.post('/login', cors(routeCorsOptions), async (req, res) => {
 	const { email, password } = req.body;
-	
-	console.log( email, password );
+
+	console.log(email, password);
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
 	// Check for errors
@@ -47,11 +55,11 @@ router.post('/login', async (req, res) => {
 	// If the token is returned successfully
 	console.log(token);
 	return res.status(200).json({ token });
-
 });
 
 // Protected Profile route
-router.get('/profile', async (req, res) => {
+router.get('/profile', cors(routeCorsOptions), async (req, res) => {
+	console.log("authentication requested");
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
 	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
@@ -72,7 +80,8 @@ router.get('/profile', async (req, res) => {
 	res.status(200).json(profile);
 });
 
-router.delete('/delete', async (req, res) => {
+// User deletion route
+router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
 	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
 
@@ -83,20 +92,13 @@ router.delete('/delete', async (req, res) => {
 	const userId = req.user.id; // Extract the user ID from the token (set in authenticate)
 
 	// Use catchErrorTyped to handle potential errors without try-catch
-	const [err, result] = await catchErrorTyped(deleteUser(userId), [CustomError]);
-
-	console.log("User delated? ", result);
+	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	res.status(200).json({ message: 'User account deleted successfully' });
-})
-
-// Health check route
-router.get('/healthz', (req, res) => {
-	res.status(200).send('I am happy and healthy\n');
+	res.status(204).json({ message: 'User account deleted successfully' });
 });
 
 export default router;
