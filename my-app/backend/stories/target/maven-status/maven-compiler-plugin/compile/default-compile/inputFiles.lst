@@ -1,4 +1,5 @@
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/StoriesApplication.java
+/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/config/DatabaseConnectionManager.java
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/config/HealthCheckSchedulerConfig.java
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/controller/HealthCheckController.java
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/controller/StoryController.java
@@ -6,4 +7,3 @@
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/GlobalExceptionHandler.java
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/InvalidInputException.java
 /home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/exception/StoryNotFoundException.java
-/home/nihil/Desktop/FidesChallenge/my-app/backend/stories/src/main/java/com/sergio/storiesapp/service/HealthCheckService.java

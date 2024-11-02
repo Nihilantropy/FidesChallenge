@@ -74,19 +74,30 @@ services:
     build:
       context: ./backend/stories
       dockerfile: Dockerfile
-    volumes:
-      - ./backend/stories/target:/app/target:rw
+    #volumes:
+    #  - ./backend/stories/target:/app/target:rw
     networks:
        - server-db
        - proxy
     depends_on:
       - db
+  
+  # Text-to-Speach micro
+  backend-tts:
+    container_name: tts_service
+    build:
+      context: ./backend/tts
+      dockerfile: Dockerfile
+    networks:
+      - frontend-tts
+    depends_on:
+      - frontend-expo
 
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
     build:
-      context: ./frontend/sergio
+      context: ./frontend
       dockerfile: Dockerfile
     networks:
       - proxy
@@ -96,6 +107,8 @@ services:
 # Networks configuration
 networks:
   server-db:
+    driver: bridge
+  frontend-tts:
     driver: bridge
   proxy:
     driver: bridge

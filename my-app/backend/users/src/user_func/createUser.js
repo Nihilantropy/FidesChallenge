@@ -1,6 +1,7 @@
 import db from '../database.js'; // Ensure the path includes the .js extension
 import { V4 } from 'paseto'; // Using V4 version of Paseto for token creation
 import { Buffer } from 'buffer';
+import bcrypt from 'bcrypt'; // Import bcrypt for password hashing
 import { ValidationError, ConflictError, DBFetchQueryError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
 const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
 
@@ -17,7 +18,7 @@ async function createUser(userData) {
 	const fields = { first_name, last_name, username, email, password };
 	for (const [key, value] of Object.entries(fields)) {
 		if (value.length > 100) {
-			throw new ValidationError(`${key} cannot be longer than 40 characters`);
+			throw new ValidationError(`${key} cannot be longer than 100 characters`);
 		}
 	}
 
@@ -38,9 +39,12 @@ async function createUser(userData) {
 	if (existingEmail) {
 		throw new ConflictError('Email already in use');
 	}
+
+	// Hash the password before storing it in the database
+	const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 	
 	// Insert new user into the database
-	const newUser = { first_name, last_name, username, email, password };
+	const newUser = { first_name, last_name, username, email, password: hashedPassword };
 
 	let	userId;
 
