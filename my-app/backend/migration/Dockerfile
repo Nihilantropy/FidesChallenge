@@ -1,5 +1,8 @@
 FROM node:22-alpine3.19
 
+# Install dependencies
+RUN apk add --no-cache mariadb-client mariadb-connector-c
+
 # Set the working directory
 WORKDIR /app
 

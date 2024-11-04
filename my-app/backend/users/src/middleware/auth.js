@@ -19,6 +19,7 @@ export async function authenticate(req) {
 	// Attempt to verify the token
 	const payload = await V4.verify(token, publicKey).catch(() => {
 		// If verification fails, throw an InternalServer<Error
+		console.error("Error on token verify")
 		throw new InternalServerError();
 	});
 	console.log("payload is: ", payload)

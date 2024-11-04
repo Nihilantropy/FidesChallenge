@@ -45,6 +45,8 @@ services:
       - ./backend/migration/.env
     networks:
       - server-db
+    volumes:
+      - backup_data:/backup
     depends_on:
         - db
     
@@ -117,3 +119,4 @@ networks:
 volumes:
   back-notused:
   db-data:
+  backup_data:
