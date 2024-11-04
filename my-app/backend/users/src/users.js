@@ -17,7 +17,7 @@ import { CustomError } from './err/dist/CustomError.js';
 
 // CORS options
 const routeCorsOptions = {
-    origin: ['http://expo-service:8081', 'http://localhost:8000'], // Add Nginx proxy origin
+    origin: ['http://expo-service:8081', 'http://localhost:8000', 'http://backend-stories:8080'], // Add Nginx proxy origin
     methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed

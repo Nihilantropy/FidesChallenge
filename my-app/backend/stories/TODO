@@ -4,7 +4,7 @@
 
 1. **POST `/stories`** - **Create a New Story**
    - **Description**: This route allows users to create a new story by submitting the story content, title, and other relevant metadata.
-   - **Request Body**: JSON object containing fields like `title`, `content`, `authorId`, and optional tags.
+   - **Request Body**: JSON object containing fields like `title`, `content`, and optional tags.
    - **Response**: Returns the newly created story's details, including its unique ID.
 
 2. **GET `/stories`** - **Get All Stories**

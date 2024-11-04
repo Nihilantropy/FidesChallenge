@@ -5,7 +5,7 @@
 1. **POST `/users/create`** - **Create a New User**
    - **Description**: This route allows new users to register by submitting their details (username, email, password).
    - **Request Body**: JSON object containing fields like `username`, `email`, and `password`.
-   - **Response**: Returns the newly created user details, excluding the password.
+   - **Response**: Returns a JWT or Paseto token for the new user.
 
 2. **POST `/users/login`** - **User Login**
    - **Description**: Authenticates a user by validating their email and password, returning a token if successful.

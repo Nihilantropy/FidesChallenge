@@ -20,6 +20,7 @@ The users microservice provides the following key routes for user management:
 - **POST `/users/login`**: Authenticate user and issue a token.
 - **GET `/users/profile`**: Retrieve the authenticated user's profile.
 - **DELETE `/users/delete`**: Delete the authenticated user account.
+- **GET `/users/healthz`**: Health check endpoint to verify service availability.
 
 ## Functions
 
