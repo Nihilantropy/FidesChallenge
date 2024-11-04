@@ -4,29 +4,22 @@ import styles from './../assets/style/main.js';
 import QRCode from 'react-native-qrcode-svg';
 
 const Qrcode = () => {
-  const [route, setRoute] = useState('exp://192.168.43.250:8081');
-  const handlePressAndroid = async () => {
-    try {
-      const supported = await Linking.canOpenURL(route);
-      if (supported) await Linking.openURL(route);
-        else Linking.openURL('https://play.google.com/store/apps/details?id=com.yourapp');
-    } catch (error) {Linking.openURL('https://play.google.com/store/apps/details?id=com.yourapp');}
-  };
-  const handlePressOIs = async () => {
-    try {
-      const supported = await Linking.canOpenURL(route);
-      if (supported) await Linking.openURL(route);
-        else Linking.openURL('https://apple.it');
-    } catch (error) {Linking.openURL('https://apple.it');}
-  };
+  const [route, setRoute] = useState('exp://192.168.1.20:8081');
   return (
     <View style={styles.box}>
-      <Text style={styles.testi}>Preferisci utilizzare l'app? Scansiona il QRcode.</Text>
+      <Text style={styles.testi}>
+        Preferisci utilizzare l'app? Scansiona il QRcode. O premi {' '}
+        <Pressable onPress={() => Linking.openURL(route)}><Text style={styles.link}>Qui</Text></Pressable>
+      </Text>
       <Text style={styles.testi}>{"\n"}</Text>
       <QRCode value={route} size={200} color="black" backgroundColor="white" />
       <Text style={styles.testi}>{"\n"}</Text>
-      <Pressable onPress={handlePressAndroid}><Text style={styles.link}>Premi qui per aprire l'app mobile per Android</Text></Pressable>
-      <Pressable onPress={handlePressOIs}><Text style={styles.link}>Premi qui per aprire l'app mobile per OIs</Text></Pressable>
+      <Text style={styles.testi}>Per la versione Mobile installare: React Go</Text>
+      <View style={[styles.rowpuro, {justifyContent: 'space-between'}]}>
+        <Pressable onPress={() => Linking.openURL('https://play.google.com/store/apps/details?id=host.exp.exponent')}><Text style={styles.link}>Android</Text></Pressable>
+        <Text>           </Text>
+        <Pressable onPress={() => Linking.openURL('https://apps.apple.com/it/app/expo-go/id982107779')}><Text style={styles.link}>OIs</Text></Pressable>
+      </View>
     </View>
   );
 };
