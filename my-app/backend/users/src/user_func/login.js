@@ -3,6 +3,7 @@ import { Buffer } from 'buffer';
 import db from '../database.js'; // Assuming you have a configured knex instance
 import bcrypt from 'bcrypt'; // Assuming you're storing hashed passwords in the DB
 import { InvalidCredentialsError, TokenCreationError, NoCredentialError, InternalServerError, DBFetchQueryError } from '../err/dist/CustomError.js';
+import { error } from 'console';
 
 const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
 
@@ -21,6 +22,7 @@ async function loginUser(email, password) {
 		user = await db('users').where({ email }).first();
 	}
 	catch (e) {
+		console.error(e)
 		throw new DBFetchQueryError();
 	}
 
@@ -30,14 +32,12 @@ async function loginUser(email, password) {
 	}
 	
 	console.log("User found:", user);  // Debug log
-	console.log(password, user.password)
-	// if (password !== user.password) {
-	// 	throw new InvalidCredentialsError();
-	// }
+
+	
+	const hashedPassword = await bcrypt.hash(password, 10);
 
 	// Check if the provided password matches the hashed password in the DB
-	const passwordMatch = await bcrypt.compare(password, user.password);
-	if (!passwordMatch) {
+	if (hashedPassword !== user.password) {
 		console.error("invalid password");
 		throw new InvalidCredentialsError(); // Use the custom error
 	}

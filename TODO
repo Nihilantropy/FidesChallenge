@@ -8,6 +8,10 @@ backend-users
 
 backend-stories
 	- create the stories microservice using java/springboot
+	- work on /add /
 
 frontend-client
 	- Make sure the container runs smoothly at start up
+
+backend-migration:
+	- test the migration table changes while db is up and running (if it breaks)
