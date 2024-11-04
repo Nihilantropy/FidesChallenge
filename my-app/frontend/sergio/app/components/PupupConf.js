@@ -4,28 +4,29 @@ import styles from './../assets/style/main.js';
 
 const PupupConf = ({ showPage, setShowPopupConf, sJWTtoken, sShowErr, gJWTtoken }) => {
   function elimina() {
-    fetch("http://localhost/users/delete", {
+    fetch("http://localhost:8000/users/delete", {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+gJWTtoken()
       },
     })
-    .then(result => {
-      if (!result) return;
-      const { status, body } = result;
-      if (status != 200) {
-        setShowPopupConf(false);
-        sShowErr("Errore interno");
-      }else {
-        setShowPopupConf(false);
-        sJWTtoken('');
-        showPage(1);
-      }
+    .then(response => {
+        const status = response.status;
+        return response.json().then(data => ({ status, data }));
+    })
+    .then(({ status, data }) => {
+        if (status != 204) {
+          setShowPopupConf(false);
+          sShowErr("Errore interno");
+        }else {
+          setShowPopupConf(false);
+          sJWTtoken('');
+          showPage(1);
+        }
     })
     .catch(error => {
-      setShowPopupConf(false);
-      sShowErr("Errore interno");
+        setErrorText("Errore interno");
     });
   }
   return (

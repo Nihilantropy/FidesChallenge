@@ -74,7 +74,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         })
         .catch(error => {
             setErrorText("Errore interno");
-        });        
+        });
     }
     return (
         <View style={styles.stacca}>
