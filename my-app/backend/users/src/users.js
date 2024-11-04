@@ -61,7 +61,7 @@ router.post('/login', cors(routeCorsOptions), async (req, res) => {
 router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 	console.log("authentication requested");
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
-	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
+	const [authErr, payload] = await catchErrorTyped(authenticate(req), [CustomError]);
 
 	if (authErr) {
 		return res.status(authErr.code).json({ message: authErr.message });
@@ -69,8 +69,8 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	const userId = req.user.id; // Assuming user ID is attached to the request object by the authenticate middleware
-	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
+	console.log(payload)
+	const [err, profile] = await catchErrorTyped(getProfile(payload), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
@@ -82,17 +82,21 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 
 // User deletion route
 router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
+
+	console.log("authentication requested");
+	
 	// Use the catchErrorTyped function to handle any errors thrown by the authenticate middleware
-	const [authErr] = await catchErrorTyped(authenticate(req), [CustomError]);
+	const [authErr, payload] = await catchErrorTyped(authenticate(req), [CustomError]);
 
 	if (authErr) {
 		return res.status(authErr.code).json({ message: authErr.message });
 	}
 
-	const userId = req.user.id; // Extract the user ID from the token (set in authenticate)
+	console.log("Authentication passed!");
 
+	console.log(payload)
 	// Use catchErrorTyped to handle potential errors without try-catch
-	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
+	const [err] = await catchErrorTyped(deleteUser(payload), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });

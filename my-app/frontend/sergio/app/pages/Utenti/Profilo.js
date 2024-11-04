@@ -29,7 +29,7 @@ const Profilo = ({ showPage, gJWTtoken, sShowPopupFB, setShowPopupConf }) => {
             if (status !== 200) {
                 showPage(1);
             } else {
-                alert(data);
+                //alert(data);
                 setJsonData(data);
             }
         })

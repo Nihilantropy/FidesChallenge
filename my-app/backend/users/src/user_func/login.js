@@ -33,14 +33,12 @@ async function loginUser(email, password) {
 	
 	console.log("User found:", user);  // Debug log
 
-	
-	const hashedPassword = await bcrypt.hash(password, 10);
+	const passwordMatch = await bcrypt.compare(password, user.password); // Use bcrypt.compare here
 
-	// Check if the provided password matches the hashed password in the DB
-	if (hashedPassword !== user.password) {
-		console.error("invalid password");
-		throw new InvalidCredentialsError(); // Use the custom error
-	}
+    if (!passwordMatch) {
+        console.error("Invalid password");
+        throw new InvalidCredentialsError(); // Use the custom error
+    }
 
 	// If password matches, generate a Paseto token
 	try {

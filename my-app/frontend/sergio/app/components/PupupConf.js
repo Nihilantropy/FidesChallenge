@@ -4,7 +4,7 @@ import styles from './../assets/style/main.js';
 
 const PupupConf = ({ showPage, setShowPopupConf, sJWTtoken, sShowErr, gJWTtoken }) => {
   function elimina() {
-    fetch("http://localhost/users/delete", {
+    fetch("http://localhost:8000/users/delete", {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
