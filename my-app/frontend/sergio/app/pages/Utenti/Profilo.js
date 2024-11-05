@@ -29,7 +29,7 @@ const Profilo = ({ showPage, gJWTtoken, sShowPopupFB, setShowPopupConf }) => {
             if (status !== 200) {
                 showPage(1);
             } else {
-                alert(data);
+                //alert(data);
                 setJsonData(data);
             }
         })
@@ -43,13 +43,11 @@ const Profilo = ({ showPage, gJWTtoken, sShowPopupFB, setShowPopupConf }) => {
             <ScrollView>
                 <View style={styles.centro}>
                     <View style={styles.box2}>
-                        {jsonData.map((item, index) => (
-                            <View key={index}>
-                                <Text style={styles.testi}>Email: {item.email}</Text>
-                                <Text style={styles.testi}>Nome Cognome: {item.first_name} {item.last_name}</Text>
-                                <Text style={styles.testi}>Nickname: {item.username}</Text>
-                            </View>
-                        ))}
+                        <View>
+                            <Text style={styles.testi}>Email: {jsonData.email}</Text>
+                            <Text style={styles.testi}>Nome Cognome: {jsonData.first_name} {jsonData.last_name}</Text>
+                            <Text style={styles.testi}>Nickname: {jsonData.username}</Text>
+                        </View>
                         <Text style={styles.titoli}>{"\n"}</Text>
                         <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Mostra le mie storie</Text></Pressable>
                         <Pressable onPress={() => setShowPopupConf(true)}><Text style={styles.link}>Elimina il mio account</Text></Pressable>

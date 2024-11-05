@@ -75,7 +75,7 @@ export default function App() {
       {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 6 && <Profilo showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setShowPopupConf={setShowPopupConf} />}
+      {visiblePage === 6 && <Profilo sJWTtoken={sJWTtoken} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setShowPopupConf={setShowPopupConf} />}
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setModificaFunction={setModificaFunction} />}
 

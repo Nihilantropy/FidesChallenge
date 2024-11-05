@@ -4,13 +4,10 @@ export async function up(knex) {
     if (!hasStoriesTable) {
         await knex.schema.createTable('stories', (table) => {
             table.increments('id').primary();
-            table.string('name').notNullable();
-            table.text('body').notNullable();
+            table.string('title').notNullable();
+            table.text('content').notNullable();
             table.integer('author_id').unsigned().notNullable().references('id').inTable('users');
-            table.integer('likes').defaultTo(0);
-            table.integer('comments_nbr').defaultTo(0);
-            table.string('comment_author').notNullable();
-            table.text('comment_body').notNullable();
+            table.string('author_name').notNullable()
             table.timestamp('created_at').defaultTo(knex.fn.now());
         });
     }

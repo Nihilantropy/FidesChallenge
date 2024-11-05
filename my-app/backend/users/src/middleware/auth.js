@@ -22,8 +22,6 @@ export async function authenticate(req) {
 		console.error("Error on token verify")
 		throw new InternalServerError();
 	});
-	console.log("payload is: ", payload)
 
-	// Attach the user ID to req.user, extracting the first element from the id array
-	req.user = { id: payload.id[0] };
+	return payload;
 }
