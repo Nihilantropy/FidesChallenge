@@ -1,0 +1,7 @@
+Problem:
+	1 - We have build an nginx proxy server. Whenever we make an http request from the frontend to the backend server we
+		are forced to use the proxy route (ex. if we need to make a request to the backend-users services on port 3000
+		ate the create route we have to pass at localhost/users/create, that is the nginx route that will redirect
+		to the backend services. if we try to make the request directly, the browser refuse the connection)
+	2 - Why npm install on some device takes a really long time?
+		

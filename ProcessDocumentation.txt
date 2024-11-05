@@ -1,0 +1,45 @@
+create git repo
+
+create 4 branches - merged, claudio, mario, anghi
+
+based on react-express-mysql project (link in documentation)
+
+creating docker-compose.yml to build 3 microservices:
+
+1 - backend (users):
+2 - mysql Database
+3 - frontend
+
+Backend-side:
+	1 - setup mysql container using 'knex' and 'mysql2'
+	2 - setup server container using 'nodejs' and 'express'.
+	3 - create a connection to the db container (same network "server-db") using knexfile and server
+	
+	Once the Containers are set up correctly we started working on the users microservice:
+	1 - Set up the entrypoint at index.js, wait for the db to connect before starting the app.
+	2 - Once the db is connected the app starts listen at port 3000. At default rout / we have a basic db check.
+	3 - All users routes are prefixed with /users
+	4 - Basic users routes are: /create, /login, /profile, /delete 
+
+	The /login /profile /delete authentication is made via paseto tokens, using asymmetric encryption.
+	Password are encrypted via bcrypt alghoritm, stored in the db hashed and compared with bcrypt when the user try to login.
+
+Adding nginx reverse-proxy to secure client-server communication
+	1 - downloading the latest image
+	2 - set up an nginx.conf file to work with the different microservices
+	3 - users will now only have to connect to the localhost default port 80 to be redirected
+		to the frontend service
+
+Adding stories-service (4):
+	1 - using springboot, maven project for modularity, scalability and performances
+	2 - make the service connect to the db
+	
+Adding migration service (5):
+	1 - migration ensure modular expantion of the database thanks to knex migrations
+	2 - the migration-service starts, try to connect to the db, when it connect run teh migration scripts, updating
+		the db with the latest migration, then exit (0)
+
+Fontend:
+	1 - creating a fast, and user frendly app layout
+	2 - ensure that the http request are made to teh correct routes
+

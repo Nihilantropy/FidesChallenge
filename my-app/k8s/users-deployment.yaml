@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-app
+spec:
+  replicas: 1  # Numero di repliche/pod
+  selector:
+    matchLabels:
+      app: users-app
+  template:
+    metadata:
+      labels:
+        app: users-app
+    spec:
+      containers:
+      - name: users-container
+        image: my-app-backend-users
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production" # Ambiente
+        - name: PORT
+          value: "3000"
+        volumeMounts:
+        - mountPath: /config # Monta il volume della config map (opzionale)
+          name: config-volume
+        command: ["npm", "start"]
+      volumes:
+        - name: config-volume # Volume con ConfigMap (opzionale)
+          configMap:
+            name: users-config
