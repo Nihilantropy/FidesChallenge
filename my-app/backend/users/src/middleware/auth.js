@@ -22,7 +22,6 @@ export async function authenticate(req) {
 		console.error("Error on token verify")
 		throw new InternalServerError();
 	});
-	console.log("payload is: ", payload)
 
-	return payload.id;
+	return payload;
 }

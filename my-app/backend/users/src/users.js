@@ -69,8 +69,8 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	console.log(payload)
-	const [err, profile] = await catchErrorTyped(getProfile(payload), [CustomError]);
+	const userId = payload.id[0]
+	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
@@ -94,9 +94,9 @@ router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	console.log(payload)
+	const userId = payload.id[0]
 	// Use catchErrorTyped to handle potential errors without try-catch
-	const [err] = await catchErrorTyped(deleteUser(payload), [CustomError]);
+	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
