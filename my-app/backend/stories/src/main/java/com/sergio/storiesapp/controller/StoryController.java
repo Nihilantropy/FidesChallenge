@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://expo-service:8081", "http://localhost:8000", "http://backend-users:3000"})
+@CrossOrigin(origins = {"http://expo-service:8081", "http://backend-users:3000"})
 @RequestMapping("/stories")
 public class StoryController {
 
