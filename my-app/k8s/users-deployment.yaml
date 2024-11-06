@@ -23,6 +23,21 @@ spec:
           value: "production" # Ambiente
         - name: PORT
           value: "3000"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials # Nome del Secret per le credenziali DB
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials  # Nome del Secret per le credenziali DB
+              key: password
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: user-secret   # Nome del Secret
+              key: PRIVATE_KEY    # Nome della chiave nel Secret
         volumeMounts:
         - mountPath: /config # Monta il volume della config map (opzionale)
           name: config-volume

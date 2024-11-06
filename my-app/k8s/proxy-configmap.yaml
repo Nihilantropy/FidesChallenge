@@ -8,15 +8,11 @@ data:
 
     http {
         upstream users-app {
-            server backend-users:3000;
-        }
-
-        upstream stories-microservice {
-            server backend-stories:8080;
+            server users-service:3000;
         }
 
         upstream frontend-expo {
-            server frontend-expo:8081;
+            server frontend-expo-service:8081;
         }
 
         server {
@@ -24,7 +20,7 @@ data:
 
             # Proxy to frontend
             location / {
-                proxy_pass http://frontend-expo/;
+                proxy_pass http://frontend-expo-service/;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -38,33 +34,7 @@ data:
 
             # Proxy to users service
             location /users/ {
-                proxy_pass http://backend-users;
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-
-                # Set CORS headers
-                add_header Access-Control-Allow-Origin $http_origin always;
-                add_header Access-Control-Allow-Credentials true;
-                add_header Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS";
-                add_header Access-Control-Allow-Headers "Content-Type, Authorization";
-
-                # Handle OPTIONS method
-                if ($request_method = OPTIONS) {
-                    add_header Access-Control-Allow-Origin $http_origin always;
-                    add_header Access-Control-Allow-Credentials true;
-                    add_header Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS";
-                    add_header Access-Control-Allow-Headers "Content-Type, Authorization";
-                    add_header Content-Length 0;
-                    add_header Content-Type text/plain;
-                    return 204;
-                }
-            }
-
-            # Proxy to stories service
-            location /stories/ {
-                proxy_pass http://backend-stories;
+                proxy_pass http://users-service;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

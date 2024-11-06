@@ -22,4 +22,4 @@ spec:
     protocol: TCP
     port: 19002
     targetPort: 19002
-  type: NodePort         # Tipo di servizio, potrebbe essere LoadBalancer su un cloud provider
+  type: ClusterIP         # Tipo di servizio, potrebbe essere LoadBalancer su un cloud provider

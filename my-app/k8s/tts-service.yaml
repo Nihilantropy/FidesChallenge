@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: tts-service
 spec:
-  type: LoadBalancer  # Cambia a NodePort o ClusterIP secondo necessità
+  type: ClusterIP # Cambia a NodePort o ClusterIP secondo necessità
   selector:
     app: tts-app
   ports:

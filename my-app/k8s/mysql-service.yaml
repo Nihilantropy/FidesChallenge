@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: mysql-service
 spec:
-  type: ClusterIP
+   type: NodePort
   selector:
     app: mysql
   ports:

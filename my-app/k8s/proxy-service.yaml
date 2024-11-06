@@ -3,10 +3,11 @@ kind: Service
 metadata:
   name: nginx-proxy-service
 spec:
-  type: LoadBalancer  # Cambia in ClusterIP o NodePort per esigenze diverse
+  type: NodePort
   ports:
     - port: 8000
       targetPort: 8000
       protocol: TCP
+      nodePort: 30080
   selector:
     app: nginx-proxy
