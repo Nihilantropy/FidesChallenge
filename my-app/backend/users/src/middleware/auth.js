@@ -2,6 +2,24 @@ import { V4 } from 'paseto';
 import { Buffer } from 'buffer';
 import { TokenNotFound, InternalServerError } from '../err/dist/CustomError.js'; // Import your custom error classes
 
+const publicKey = Buffer.from(process.env.PUBLIC_KEY.replace(/\\n/g, '\n'), 'utf-8');
+
+async function verifyToken(token) {
+	try {
+        const payload = await V4.verify(
+            token,         // The token to verify
+            publicKey,     // Public key (or privateKey if using symmetric encryption)
+            { complete: true }  // Optional: may provide additional verification details
+        );
+        
+        return payload;  // Contains { id, username } based on your genToken structure
+
+    } catch (e) {
+        console.error("Error during token verification:", e);
+        throw new InvalidTokenError("Invalid or expired token");
+    }
+}
+
 // Middleware to authenticate using Paseto token
 export async function authenticate(req) {
 	// Extract token from the Authorization header
@@ -14,14 +32,10 @@ export async function authenticate(req) {
 		throw new TokenNotFound();
 	}
 
-	const publicKey = Buffer.from(process.env.PUBLIC_KEY.replace(/\\n/g, '\n'), 'utf-8');
+	const payload = await verifyToken(token)
 
-	// Attempt to verify the token
-	const payload = await V4.verify(token, publicKey).catch(() => {
-		// If verification fails, throw an InternalServer<Error
-		console.error("Error on token verify")
-		throw new InternalServerError();
-	});
+	console.log("token verified!")
 
-	return payload;
+	//return the payload nested object that stores the actual data
+	return payload.payload;
 }

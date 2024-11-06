@@ -69,7 +69,10 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	const userId = payload.id[0]
+	console.log("payload after profile auth is: ", payload)
+	const userId = payload.id
+	const username = payload.username
+	console.log(userId, username)
 	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
 	if (err) {
@@ -94,7 +97,7 @@ router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	const userId = payload.id[0]
+	const userId = payload.id
 	// Use catchErrorTyped to handle potential errors without try-catch
 	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 

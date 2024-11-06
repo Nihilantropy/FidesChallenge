@@ -1,8 +1,10 @@
 package com.sergio.storiesapp.controller;
 
-import com.sergio.storiesapp.exception.InvalidInputException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
+import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +17,25 @@ import java.util.Map;
 @RequestMapping("/stories")
 public class StoryController {
 
+    private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
+
     @Autowired
     private UserService userService;
 
     @PostMapping
     public ResponseEntity<?> createStory(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> storyData) {
+        // Log the incoming Authorization token (sanitize in production)
+        logger.debug("Received Authorization Token: " + token);
+
         // Extract the title and content from the request body
         String title = storyData.get("title");
         String content = storyData.get("content");
 
         // Log incoming story data
-        System.out.println("Received Story Creation Request:");
-        System.out.println("Title: " + title);
-        System.out.println("Content: " + content);
-        
+        logger.debug("Received Story Creation Request:");
+        logger.debug("Title: " + title);
+        logger.debug("Content: " + content);
+
         // Validate inputs
         if (title == null || title.trim().isEmpty()) {
             throw new InvalidInputException("The title field should not be empty.");
@@ -41,17 +48,24 @@ public class StoryController {
         Map<String, String> userInfo = userService.authenticateUser(token);
         if (userInfo == null) {
             // Return Unauthorized if authentication fails
+            logger.error("Authentication failed: Invalid Authorization Token");
             return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
         }
 
         // Log user info if authentication succeeds
         String userId = userInfo.get("id");
         String username = userInfo.get("username");
-        System.out.println("Authentication successful.");
-        System.out.println("User ID: " + userId);
-        System.out.println("Username: " + username);
+        logger.debug("Authentication successful.");
+        logger.debug("User ID: " + userId);
+        logger.debug("Username: " + username);
 
         // If authenticated, proceed with creating the story (placeholder message for now)
         return new ResponseEntity<>("User authenticated, ready to save story with title: " + title, HttpStatus.OK);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+    return new ResponseEntity<>("Test successful", HttpStatus.OK);
+}
+
 }

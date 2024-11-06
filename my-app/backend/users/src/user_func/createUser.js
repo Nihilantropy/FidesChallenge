@@ -1,9 +1,7 @@
 import db from '../database.js'; // Ensure the path includes the .js extension
-import { V4 } from 'paseto'; // Using V4 version of Paseto for token creation
-import { Buffer } from 'buffer';
 import bcrypt from 'bcrypt'; // Import bcrypt for password hashing
-import { ValidationError, ConflictError, DBFetchQueryError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
-const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
+import { ValidationError, ConflictError, DBFetchQueryError, InternalServerError } from '../err/dist/CustomError.js'; // Ensure the path includes the .js extension
+import { genToken } from '../middleware/genToken.js';
 
 async function createUser(userData) {
 	console.log(userData);
@@ -49,31 +47,25 @@ async function createUser(userData) {
 	let	userId;
 
 	try {
-		userId = await db('users').insert(newUser);
+		const result = await db('users').insert(newUser);
+  		userId = result[0]; // Extract the first element from the array
 	} catch (e) {
 		console.error("Error adding user:", e); // Log the actual error for debugging
 		throw new DBFetchQueryError('Error adding user to the database'); // Throw a custom error
 	}
+	console.log("user id is: ", userId)
+
 	console.log("creating user token for direct authentication");
 
-	try {
-		const token = await V4.sign(
-			{ id: userId }, // Payload
-			privateKey, // Secret key
-			{ expiresIn: '1h' } // Token expiration time
-		);
-		
-		if (!token) {
-			throw new TokenCreationError();
-		}
+	// Generate a token
+	const payload = { id: userId, username: username };
 
-		console.log("token created!");
-		return (token);
-	
-	} catch (e) {
-		console.error("Error during token generation:", e);
-		throw new InternalServerError("Token generation failed");
+	const token = await genToken(payload);
+	if (!token) {
+		throw new InternalServerError();
 	}
+
+	return token;
 }
 
 // Export the createUser function
