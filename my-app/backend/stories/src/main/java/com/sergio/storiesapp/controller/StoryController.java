@@ -22,7 +22,7 @@ public class StoryController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<?> createStory(@RequestHeader("Authorization") String token, @RequestBody Map<String, String> storyData) {
         // Log the incoming Authorization token (sanitize in production)
         logger.debug("Received Authorization Token: " + token);

@@ -79,7 +79,7 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	console.log(profile);
+	console.log("profile infos are: ", profile);
 	res.status(200).json(profile);
 });
 
