@@ -41,6 +41,7 @@ col2: {width: 'auto'},
 homestoryele: {},
 foto: {},
 foto2: {},
+foto3: {},
 };
 
 if(width > 600){
@@ -55,6 +56,7 @@ if(width > 600){
     regole.popup={...regole.popup,top: '20%',left: '30%'};
     regole.foto={width: 45,height: 45};
     regole.foto2={width: 20,height: 20};
+    regole.foto3={width: 70,height: 70};
     regole.box3={...regole.box3,marginLeft: 20,width: width/2.5};
     regole.homestoryele={...regole.homestoryele,flexDirection: 'row'};
 }else{
@@ -69,6 +71,7 @@ if(width > 600){
     regole.popup={...regole.popup,top: '7%',left: 0};
     regole.foto={width: 35,height: 35};
     regole.foto2={width: 15,height: 15};
+    regole.foto2={width: 50,height: 50};
     regole.box={...regole.box,width: width-10};
     regole.box2={...regole.box2,width: width-10};
     regole.box3={...regole.box3,marginLeft: 5,width: width-10};

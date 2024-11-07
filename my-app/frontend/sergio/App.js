@@ -71,7 +71,7 @@ export default function App() {
 
       {/* ====== Pagine ====== */}
       {visiblePage === 1 && <Home showPage={showPage} />}
-      {visiblePage === 2 && <HomeStory showPage={showPage} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} />}
+      {visiblePage === 2 && <HomeStory showPage={showPage} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} sShowErr={sShowErr} />}
       {visiblePage === 3 && <NewStory setShowErr={setShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}

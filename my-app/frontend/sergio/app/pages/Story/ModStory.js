@@ -6,7 +6,7 @@ const Content_web = ({ showPage, modifica, setStory, getStory }) => {
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
-    if (text.length <= 1000) {
+    if (text.length <= 1500) {
       setStory(text);
       setStoryText(text);
     }
@@ -29,7 +29,7 @@ const Content_web = ({ showPage, modifica, setStory, getStory }) => {
           <Pressable onPress={modifica}><Text style={styles.link}>Modifica</Text></Pressable>
         </View>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1000</Text>
+        <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
     </ScrollView>
   );
@@ -39,7 +39,7 @@ const Content_app = ({ getStory, setStory }) =>{
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(200);
   const handleTextChange = (text) => {
-    if (text.length <= 1000) {
+    if (text.length <= 1500) {
       setStory(text);
       setStoryText(text);
     }
@@ -54,7 +54,7 @@ const Content_app = ({ getStory, setStory }) =>{
     <ScrollView>
       <View style={styles.box}>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1000</Text>
+        <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
     </ScrollView>
   )
@@ -82,7 +82,7 @@ const ModStory = ({ showPage, gJWTtoken, sShowPopupFB, setModificaFunction, setS
       return;
     }
 
-    if (story.length > 1000) {
+    if (story.length > 1500) {
       setShowErr("Raggionto il limite di caratteri");
       return;
     }
