@@ -4,6 +4,7 @@ import db from '../database.js'; // Assuming you have a configured knex instance
 import bcrypt from 'bcrypt'; // Assuming you're storing hashed passwords in the DB
 import { InvalidCredentialsError, TokenCreationError, NoCredentialError, InternalServerError, DBFetchQueryError } from '../err/dist/CustomError.js';
 import { error } from 'console';
+import { genToken } from '../middleware/genToken.js';
 
 const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
 
@@ -40,26 +41,12 @@ async function loginUser(email, password) {
         throw new InvalidCredentialsError(); // Use the custom error
     }
 
-	// If password matches, generate a Paseto token
-	try {
-		const token = await V4.sign(
-			{ id: user.id }, // Payload
-			privateKey, // Secret key
-			{ expiresIn: '1h' } // Token expiration time
-		);
-		
+    // Generate a token
+    const payload = { id: user.id, username: user.username };
 	
-		if (!token) {
-			throw new TokenCreationError();
-		}
-
-		console.log("token created!");
-		return token;
-	
-	} catch (e) {
-		console.error("Error during token generation:", e);
-		throw new InternalServerError("Token generation failed");
-	}
+    const token = await genToken(payload);
+    
+    return token;
 }
 
 // Export the loginUser function

@@ -16,7 +16,8 @@ COPY target/stories-microservice-0.0.1-SNAPSHOT.jar /app/stories-microservice.ja
 # Make sure the wait-for-it script is executable
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 
+
 EXPOSE 8080
 
 # Command to run the application using wait-for-it.sh
-ENTRYPOINT ["/usr/local/bin/wait-for-it.sh", "${MYSQL_HOST}", "${MYSQL_PORT}", "--", "java", "-jar", "/app/stories-microservice.jar"]
+ENTRYPOINT ["/usr/local/bin/wait-for-it.sh", "${MYSQL_HOST}", "${MYSQL_PORT}"]

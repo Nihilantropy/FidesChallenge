@@ -44,8 +44,20 @@ export class TokenCreationError extends CustomError {
 	}
 }
 
+export class InvalidTokenError extends CustomError {
+	constructor(message: string = 'Invalid or expired token') {
+		super(message, 401);
+	}
+}
+
 export class TokenNotFound extends CustomError {
 	constructor(message: string = 'Error: no token provided') {
+		super(message, 400);
+	}
+}
+
+export class AuthHeaderNotFound extends CustomError {
+	constructor(message: string = 'Protected routes require authorization header with token') {
 		super(message, 401);
 	}
 }
