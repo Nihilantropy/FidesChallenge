@@ -1,6 +1,6 @@
 import { V4 } from 'paseto';
 import { Buffer } from 'buffer';
-import { TokenNotFound, InternalServerError } from '../err/dist/CustomError.js'; // Import your custom error classes
+import { TokenNotFound, InvalidTokenError, AuthHeaderNotFound } from '../err/dist/CustomError.js'; // Import your custom error classes
 
 const publicKey = Buffer.from(process.env.PUBLIC_KEY.replace(/\\n/g, '\n'), 'utf-8');
 
@@ -16,7 +16,7 @@ async function verifyToken(token) {
 
     } catch (e) {
         console.error("Error during token verification:", e);
-        throw new InvalidTokenError("Invalid or expired token");
+        throw new InvalidTokenError();
     }
 }
 
@@ -24,6 +24,9 @@ async function verifyToken(token) {
 export async function authenticate(req) {
 	// Extract token from the Authorization header
 	const authHeader = req.headers['authorization'];
+	if (!authHeader) {
+		throw new AuthHeaderNotFound();
+	}
 	const token = authHeader && authHeader.split(' ')[1]; // Get token part after "Bearer "
 
 	// console.log("token is: ", token);
@@ -32,10 +35,8 @@ export async function authenticate(req) {
 		throw new TokenNotFound();
 	}
 
+	console.log("token sent by user is: ", token)
 	const payload = await verifyToken(token)
-
 	console.log("token verified!")
-
-	//return the payload nested object that stores the actual data
-	return payload.payload;
+	return payload.payload
 }

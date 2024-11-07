@@ -64,6 +64,7 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 	const [authErr, payload] = await catchErrorTyped(authenticate(req), [CustomError]);
 
 	if (authErr) {
+		console.log("authenitcation failed")
 		return res.status(authErr.code).json({ message: authErr.message });
 	}
 
