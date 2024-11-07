@@ -86,7 +86,7 @@
 
 ## Endpoints:
 
-### `/`
+### `/`(Create Story)
 - **Request Type**: `POST`
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
@@ -97,6 +97,28 @@
   - **201 Created** - Story created successfully
   - **400 Bad Request** - Invalid input (e.g., title or content is empty)
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
+  - **500 Internal Server Error** - Internal server errors
+
+### `/` (Get Latest Stories)
+- **Request Type**: `GET`
+- **Expected Info**:
+  - None
+- **Response**:
+  - JSON `[{ storyId, title, content, createdAt, author: { id, username } }]`
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - List of latest stories (up to a limit of 5)
+  - **204 No Content** - No stories available
+  - **500 Internal Server Error** - Internal server errors
+
+### `/random` (Get Random Story)
+- **Request Type**: `GET`
+- **Expected Info**:
+  - None
+- **Response**:
+  - JSON `{ storyId, title, content, createdAt, author: { id, username } }`
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - A random story
+  - **204 No Content** - No stories available
   - **500 Internal Server Error** - Internal server errors
 
 ### `/healthz`
