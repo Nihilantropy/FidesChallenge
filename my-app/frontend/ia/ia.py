@@ -1,0 +1,18 @@
+from flask import Flask, request, jsonify
+from transformers import pipeline
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/generete_story', methods=['POST'])
+def speak():
+    data = request.get_json()
+    prompt = data.get('prompt', '')
+    generator = pipeline('text-generation', model='gpt-2')
+    storia=generator(prompt, max_length=1500)[0]['generated_text']
+    return jsonify({'storia': storia})
+    # return "Haruki Shiga è un timido studente delle superiori e il suo carattere è opposto a quello di Sakura Yamauchi, una sua compagna di classe, apparentemente sempre allegra e piena di vita. Un giorno, però, il ragazzo ritrova casualmente in un ospedale il diario segreto di Sakura che lei aveva perduto, e leggendolo scopre una terribile verità: la ragazza ha una malattia terminale al pancreas che la porterà alla morte in breve tempo. Il ragazzo diviene così custode del segreto di Sakura e decide di passare sempre più tempo con lei, per i giorni che ancora le rimangono da vivere. I due decidono di partire per una vacanza estiva dalla durata di un giorno, dove continuano la loro conoscenza. Finita la vacanza, Sakura invita Haruki a casa sua per prestargli il libro Il piccolo principe. Sakura e Haruki continuano a vedersi, fino a quando la ragazza non viene ricoverata in ospedale. Durante questo ricovero, Haruki andrà a trovare spesso Sakura, con la quale scapperà per poter osservare i fuochi d'artificio. Durante questo momento, si abbracciano in modo molto romantico e Sakura dice al ragazzo che quando sarà il momento di morire, non tarderà a farglielo sapere. Intanto, il ricovero che doveva essere di alcuni giorni, si è prorogato per altre due settimane. Il giorno in cui Sakura viene dimessa, invia un messaggio a Haruki dicendogli di pranzare insieme, e dopo vari messaggi che i due scambiano, Haruki conclude dicendole 'Voglio mangiare il tuo pancreas' (Sakura aveva raccontato a Haruki una leggenda secondo la quale se mangi il pancreas di una persona defunta, la sua anima continuerà a vivere dentro di te). Il ragazzo aspetta con ansia di poterla rivedere, ma le ore passano e non c'è nessuna traccia di Sakura, così egli torna a casa. Durante la cena, Haruki scopre che Sakura non si era fatta vedere poiché vittima di un omicidio. Haruki si chiude completamente in se stesso, non partecipando nemmeno al funerale, ma dopo dieci giorni decide di andare a casa della ragazza, dove conosce la madre, alla quale rivela che era a conoscenza della malattia di Sakura; lei gli confida che Sakura voleva che il suo diario ed il telefono cellulare andassero proprio a lui. Haruki inizia a leggere il diario e nel cellulare scopre che il suo ultimo messaggio 'Voglio mangiare il tuo pancreas' era stato letto dalla ragazza. Dopodiché Haruki mostra il diario a Kyoko (la migliore amica di Sakura) che scoppia in lacrime dicendo di non poterlo perdonare per non averle rivelato della malattia terminale di Sakura. Infine Haruki insegue Kyoko chiedendole di perdonarlo e dicendole che un giorno vorrebbe che diventassero amici, proprio come voleva Sakura. Dopo i titoli di coda il film prosegue: passato un anno, Haruki e Kyoko si ritrovano vicino alla tomba di Sakura, dove il ragazzo ammette che gli è servito un anno intero per poter entrare in sintonia con tutti i suoi compagni. Il film si chiude con Haruki che dà un ultimo sguardo alla tomba di Sakura, e dopo si dirige insieme a Kyoko a casa sua dicendo che li stesse aspettando."
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001, host='0.0.0.0')

@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { View,Text,Pressable,ScrollView,Image,Platform } from 'react-native';
+import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-native';
 import styles from './../../assets/style/main.js';
 
 const RaccontaPreferito = ({ setPupup, azione, gJWTtoken, sShowPopupFB, setPage, sShowErr }) => {
@@ -57,9 +57,9 @@ const RaccontaPreferito = ({ setPupup, azione, gJWTtoken, sShowPopupFB, setPage,
       <Text>{"\n\n"}</Text>
       <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),setStori(jsonData[Math.floor(Math.random() * jsonData.length)])}}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
       <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-        {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(stori.storia)}><Text style={styles.testi}>Ascolta la storia</Text></Pressable>)}
-        {statorip == 'play' && (<Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Text style={styles.testi}>Pausa</Text></Pressable>)}
-        {statorip == 'pause' && (<Pressable style={styles.testi} onPress={() => {playAudio(),setStato('play')}}><Text style={styles.testi}>avvia</Text></Pressable>)}
+        {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(stori.storia)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
+        {statorip == 'play' && (<Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXklEQVR4nO3SoRHAMAwEQRmmqfTflUO+AIN30O6MoIBGNwMAP3rWu0/m1n6NQ8JH2qQV0mqTVkirTVohrTZphbTapBXSapNWSKtNWiGtNmmFtNqkFdJqk1ZICwDmng90pWTGMlhjngAAAABJRU5ErkJggg==' }} /></Pressable>)}
+        {statorip == 'pause' && (<Pressable style={styles.testi} onPress={() => {playAudio(),setStato('play')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
         <Text>        </Text>
         {Velocita == 'x1' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1.5),setVelocita('x1.5')}}><Text style={styles.testi}>x1</Text></Pressable>)}
         {Velocita == 'x1.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(2),setVelocita('x2')}}><Text style={styles.testi}>x1.5</Text></Pressable>)}
@@ -70,10 +70,72 @@ const RaccontaPreferito = ({ setPupup, azione, gJWTtoken, sShowPopupFB, setPage,
   );
 };
 
-const Inventa = () => {
+const Inventa = ({ sShowErr }) => {
+  const [prompt, setprompt] = useState('');
+  const [Storia, setStoria] = useState('');
+  const [height, setHeight] = useState(50);
+  const handleTextChange = (text) => {
+    if (text.length <= 1000) {
+      setprompt(text);
+    }
+  };
+  const handleContentSizeChange = (e) => {
+    const newHeight = e.nativeEvent.contentSize.height;
+    if (prompt.length > 0 && newHeight > 50) {
+      setHeight(newHeight);
+    } else if (prompt.length === 0) {
+      setHeight(50);
+    }
+  };
+  async function inventa_func() {
+    if (prompt == ''){
+      sShowErr("La richiesta non puo essere vuota");
+      return;
+    }
+    fetch("http://localhost:5001/generete_story", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: prompt
+      }),
+    })
+    .then(response => {
+      const status = response.status;
+      return response.json().then(data => ({ status, data }));
+    })
+    .then(({ status, data }) => {
+      if (status !== 200) setErrorText(data.message);
+      else setStoria(data.storia);
+    })
+    .catch(error => {
+      sShowErr("Scusa ma sono stanco");
+    });
+  }
   return (
     <View style={styles.box}>
-      <Text style={styles.testidestra}>Inventa</Text>
+      {Storia == '' && (
+        <View style={[{width: '80%'}]}>
+          <Text style={[styles.titoli, {alignSelf: 'center'}]}>Dimmi come vorresti la storia</Text>
+          <Text>{"\n"}{"\n"}</Text>
+          <View style={styles.rowpuro}>
+            <View style={[{width: '80%'}]}>
+              <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} value={prompt} style={[styles.textarea, { minHeight: 50, height: height, width: '100%' }]} placeholder="Scrivi qui la tua richiesta" onChangeText={handleTextChange} />
+              <Text style={styles.testidestra}>{prompt.length}/1000</Text>
+            </View>
+            <Text>    </Text>
+            <Pressable onPress={inventa_func}><Image style={styles.foto3} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRUlEQVR4nO2Zz0oDMRDGv7nUzPZFRDzpQZBMFrxq8aGk4EvV+jT+OVZ7jwQU64q62bWdpMwH33Ez88uXycIuYDKZTKYSxZBrpnDPJGumEHdrWTPJkhFm4yBIbnfffPgJaj4miViSG/irAWmk46TfPH9N5W4AiLzqNx66fhmSSCzRMBDST4EtEdiMRDtaZDPyu7RvJ7ZbqyPtnWdLpCPtnecaE3GQ883aDq2vFKT1fetDG8SRPDWQk7T7fY4OlwiSICbwR2ndBv60ShBH4XmK9jitOUF76Cg8VAfivkHI41/PoEQQhj/LLrxPIA5BigLJnQ/uYRWQbcBACyT3+uWSQT5g0svwAHJRNQj/k7Enn0xXQ0CWBTQeO17kgyDMCmg8brqBXGaDvKcy126eP32DMUo/V9J/CZ2ZkVRzMTgJk8lkMmHLegMyNGo5jgUOwwAAAABJRU5ErkJggg==' }} /></Pressable>
+          </View>
+        </View>
+      )}
+      {Storia != '' && (
+        <View style={[{width: '80%'}]}>
+          <Text style={[styles.titoli, {alignSelf: 'center'}]}>Ecco la tua storia</Text>
+          <Text>{"\n"}{"\n"}</Text>
+          <Text style={styles.testi}>{Storia}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -117,7 +179,7 @@ const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) 
           <View style={styles.col2}>
             {Page == 'Racconta' && <RaccontaPreferito azione='racconta' sShowErr={sShowErr} setPupup={setPupup} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} setPage={setPage} /> }
             {Page == 'Preferiti' && <RaccontaPreferito azione='preferito' sShowErr={sShowErr} setPupup={setPupup} gJWTtoken={gJWTtoken} sShowPopupFB={sShowPopupFB} setPage={setPage} /> }
-            {Page == 'Inventa' && <Inventa /> }
+            {Page == 'Inventa' && <Inventa sShowErr={sShowErr} /> }
           </View>
         </View>
       </ScrollView>
