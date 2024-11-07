@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
+import java.util.Random;
 
 import java.util.List;
 import java.util.Map;
@@ -97,7 +99,33 @@ public class StoryService {
             );
             return storyMap;
         }).collect(Collectors.toList());
+    }
 
+    /**
+     * Retrieves a random story from the repository.
+     * 
+     * @return an Optional containing a map of the random story's details if available, otherwise an empty Optional
+     */
+    public Optional<Map<String, Object>> getRandomStory() {
+        List<Story> allStories = storyRepository.findAll();
+        
+        if (allStories.isEmpty()) {
+            return Optional.empty(); // No stories available
+        }
+
+        // Get a random story
+        Random random = new Random();
+        Story randomStory = allStories.get(random.nextInt(allStories.size()));
+
+        // Map the story to a structured response format
+        Map<String, Object> storyMap = Map.of(
+            "id", randomStory.getId(),
+            "title", randomStory.getTitle(),
+            "content", randomStory.getContent(),
+            "createdAt", randomStory.getCreatedAt()
+        );
+
+        return Optional.of(storyMap);
     }
 }
 

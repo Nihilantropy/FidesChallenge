@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = {"http://expo-service:8081", "http://backend-users:3000"})
@@ -37,6 +38,7 @@ public class StoryController {
     @PostMapping("/")
     public ResponseEntity<String> createStory(
             @RequestHeader(value = "Authorization", required = false) String token,
+            @RequestHeader(value = "Content type", required = false) String type,
             @RequestBody Map<String, String> storyData) {
 
         if (token == null || token.trim().isEmpty()) {
@@ -54,11 +56,11 @@ public class StoryController {
         if (content == null || content.trim().isEmpty()) {
             return new ResponseEntity<>("The content field should not be empty", HttpStatus.BAD_REQUEST);
         }
-        if (title.length() > 99) {
-            return new ResponseEntity<>("Title cannot be longer than 99 characters", HttpStatus.BAD_REQUEST);
+        if (title.length() > 100) {
+            return new ResponseEntity<>("Title cannot be longer than 100 characters", HttpStatus.BAD_REQUEST);
         }
-        if (content.length() > 999) {
-            return new ResponseEntity<>("Content cannot be longer than 999 characters", HttpStatus.BAD_REQUEST);
+        if (content.length() > 1500) {
+            return new ResponseEntity<>("Content cannot be longer than 1500 characters", HttpStatus.BAD_REQUEST);
         }
 
         // Authenticate user
@@ -102,6 +104,27 @@ public class StoryController {
             return new ResponseEntity<>(latestStories, HttpStatus.OK); // Return stories as JSON
         } catch (Exception e) {
             logger.error("Error fetching latest stories: {}", e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Handle any errors
+        }
+    }
+
+    /**
+     * Gets a random story.
+     * 
+     * @return a ResponseEntity containing a random story in JSON format
+     */
+    @GetMapping("/random")
+    public ResponseEntity<Map<String, Object>> getRandomStory() {
+        try {
+            Optional<Map<String, Object>> randomStory = storyService.getRandomStory();
+
+            if (randomStory.isPresent()) {
+                return new ResponseEntity<>(randomStory.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No stories available
+            }
+        } catch (Exception e) {
+            logger.error("Error fetching random story: {}", e.getMessage(), e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Handle any errors
         }
     }
