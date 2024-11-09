@@ -31,7 +31,7 @@ public class StoryService {
      * @param authorName the name of the author
      * @return true if the story was saved successfully, otherwise false
      */
-    public boolean createStory(String title, String content, int authorId, String authorName) {
+    public boolean createStory(String title, String content, int authorId, String authorName, Integer authorRoleId) {
         logger.debug("Saving story: Title={}, Author ID={}, Author Name={}", title, authorId, authorName);
 
         // Check for an existing story with the same title by this author

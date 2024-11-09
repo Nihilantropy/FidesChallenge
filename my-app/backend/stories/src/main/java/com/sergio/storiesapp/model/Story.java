@@ -29,6 +29,12 @@ public class Story {
     @Column(name = "author_name", nullable = false)
     private String authorName;
 
+    @Column(name = "author_role_id", nullable = false)
+    private Integer authorRoleId;
+
+    @Column(name = "author_visible", nullable = false)
+    private Boolean authorVisible;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -74,6 +80,22 @@ public class Story {
         this.authorName = authorName;
     }
 
+    public Boolean getAuthorVisible() {
+        return authorVisible;
+    }
+
+    public void setAuthorVisible(Boolean authorVisible) {
+        this.authorVisible = authorVisible;
+    }
+
+    public Integer getAuthorRoleId() {
+        return authorRoleId;
+    }
+
+    public void setAuthorRoleId(Integer authorRoleId) {
+        this.authorRoleId = authorRoleId;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -93,5 +115,15 @@ public class Story {
                 ", authorName='" + authorName + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    // Additional logic for author type checking
+    public void setAuthorRole(Integer authorId, Integer authorRoleId, String authorName) {
+        this.authorId = authorId;
+        this.authorRoleId = authorRoleId;
+        this.authorName = authorName;
+        
+        // Make the author's visibility true by default (can be customized)
+        this.authorVisible = true;
     }
 }

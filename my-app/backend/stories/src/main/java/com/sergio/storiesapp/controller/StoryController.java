@@ -73,7 +73,8 @@ public class StoryController {
         try {
             String authorName = userInfo.get("username");
             int authorId = Integer.parseInt(userInfo.get("id"));
-            storyService.createStory(title, content, authorId, authorName);
+            int authorRoleId = Integer.parseInt(userInfo.get("role_id"));
+            storyService.createStory(title, content, authorId, authorName, authorRoleId);
             return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
         } catch (StoryCreationException e) {
             logger.warn("Story creation failed: " + e.getMessage());
