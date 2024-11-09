@@ -10,12 +10,12 @@ WORKDIR /app
 # Copy the wait-for-it.sh script
 COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
 
-# Copy the application JAR file
-COPY target/stories-microservice-0.0.1-SNAPSHOT.jar /app/stories-microservice.jar
-
 # Make sure the wait-for-it script is executable
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 
+RUN apt-get update && apt-get install -y dos2unix && \
+    dos2unix /usr/local/bin/wait-for-it.sh && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8080
 

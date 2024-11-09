@@ -5,7 +5,7 @@ services:
     build:
       context: ./proxy
       dockerfile: Dockerfile
-    container_name: nginx_proxy
+    container_name: proxy-service
     ports:
       - "8000:8000"
     networks:
@@ -13,6 +13,7 @@ services:
     depends_on:
       - backend-users
       - backend-stories
+      - backend-tts
       - frontend-expo
 
    # Database (MySQL) micro
@@ -46,7 +47,7 @@ services:
     networks:
       - server-db
     volumes:
-      - backup_data:/backup
+      - ./backend/migration/backup_data:/backup
     depends_on:
         - db
     
@@ -86,11 +87,12 @@ services:
   
   # Text-to-Speach micro
   backend-tts:
-    container_name: tts_service
+    container_name: tts-service
     build:
       context: ./backend/tts
       dockerfile: Dockerfile
     networks:
+      - proxy
       - frontend-tts
     depends_on:
       - frontend-expo
@@ -122,4 +124,4 @@ networks:
 volumes:
   back-notused:
   db-data:
-  backup_data:
+  #backup_data:

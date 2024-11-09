@@ -36,6 +36,18 @@
   - **401 Unauthorized + error message** - Invalid credentials (e.g., incorrect email or password)
   - **500 Internal Server Error + error message** - Internal server errors
 
+### `/login-admin`
+- **Request Type**: `POST`
+- **Expected Info**:
+  - JSON `{ email, password }`
+- **Response**:
+  - JSON `{ token: "v4token" }`
+- **Return Status + json {message}**:
+  - **200 OK + message** - Success
+  - **400 Bad Request + error message** - Validation error (e.g., missing fields)
+  - **401 Unauthorized + error message** - Invalid credentials (e.g., incorrect email or password)
+  - **500 Internal Server Error + error message** - Internal server errors
+
 ### `/profile`
 - **Request Type**: `GET`
 - **Expected Info**:
@@ -129,3 +141,28 @@
 - **Return Status + JSON `{message}`**:
   - **200 OK** - Success
   - **503 Service Unavailable** - Database or service is down
+
+
+<=============================================================================================================>
+
+## tts Service (text to speech)
+
+### CORS:
+  - **Allowed origin**: `http://expo-service:8081`, `http://localhost:8000`
+  - **Allowed methods**: `POST`
+  - **Allowed headers**: `Content-Type`
+
+### All requests must be sent to => `http://localhost:8000/speak`
+
+## Endpoints:
+
+### `/`(Create Story)
+- **Request Type**: `POST`
+- **Expected Info**:
+  - JSON `{ text }`
+- **Response**:
+  - none
+- **Return Status + JSON `{message}`**:
+  - **201 Created** - Story created successfully
+  - **400 Bad Request** - Invalid input (e.g., title or content is empty)
+  - **500 Internal Server Error** - Internal server errors

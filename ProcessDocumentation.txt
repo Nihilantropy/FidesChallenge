@@ -24,10 +24,12 @@ Backend-side:
 	The /login /profile /delete authentication is made via paseto tokens, using asymmetric encryption.
 	Password are encrypted via bcrypt alghoritm, stored in the db hashed and compared with bcrypt when the user try to login.
 
+	5 - adding a /login-admin route to secure access to admins
+
 Adding nginx reverse-proxy to secure client-server communication
 	1 - downloading the latest image
 	2 - set up an nginx.conf file to work with the different microservices
-	3 - users will now only have to connect to the localhost default port 80 to be redirected
+	3 - users will now only have to connect to the localhost default port 8000 to be redirected
 		to the frontend service
 
 Adding stories-service (4):
@@ -38,7 +40,8 @@ Adding stories-service (4):
 	
 Adding migration service (5):
 	1 - migration ensure modular expantion of the database thanks to knex migrations
-	2 - the migration-service starts, try to connect to the db, when it connect run a db backup, then the migration scripts, updating
+	2 - seeds provide initial configuration over specific tables 
+	3 - the migration-service starts, try to connect to the db, when it connect run a db backup, then the migration scripts, updating
 		the db with the latest migration, then exit (0)
 
 Fontend:

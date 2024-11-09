@@ -44,6 +44,7 @@ const runMigrations = async () => {
 
         // Run migrations
         await knex.migrate.latest();
+        await knex.seed.run();
         console.log('Migrations have been successfully applied.');
     } catch (error) {
         console.error('Error during migrations:', error.message);

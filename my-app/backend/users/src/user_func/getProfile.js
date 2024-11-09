@@ -7,7 +7,7 @@ async function getProfile(userId) {
 	try
 	{
 		user = await db('users')
-			.select('id', 'first_name', 'last_name', 'username', 'email') // Specify fields to retrieve
+			.select('id', 'first_name', 'last_name', 'username', 'email', 'role_id') // Specify fields to retrieve
 			.where({ id: userId })
 			.first();
 	}

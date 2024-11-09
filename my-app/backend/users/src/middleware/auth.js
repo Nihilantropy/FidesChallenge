@@ -12,7 +12,7 @@ async function verifyToken(token) {
             { complete: true }  // Optional: may provide additional verification details
         );
         
-        return payload;  // Contains { id, username } based on your genToken structure
+        return payload;  // Contains { id, username, role_id } based on your genToken structure
 
     } catch (e) {
         console.error("Error during token verification:", e);

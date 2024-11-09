@@ -58,7 +58,7 @@ async function createUser(userData) {
 	console.log("creating user token for direct authentication");
 
 	// Generate a token
-	const payload = { id: userId, username: username };
+	const payload = { id: userId, username: username, role_id: 2 };
 
 	const token = await genToken(payload);
 	if (!token) {

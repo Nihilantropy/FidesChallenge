@@ -7,6 +7,7 @@ dotenv.config();
 
 // Import user functionalities from separate modules
 import loginUser from './user_func/login.js';
+import loginAdmin from './user_func/login-admin.js';
 import createUser from './user_func/createUser.js';
 import getProfile from './user_func/getProfile.js';
 import deleteUser from './user_func/deleteUser.js';
@@ -45,6 +46,24 @@ router.post('/login', cors(routeCorsOptions), async (req, res) => {
 
 	console.log(email, password);
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
+
+	// Check for errors
+	if (err) {
+		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
+		console.log(err.message);
+		return res.status(statusCode).json({ message: err.message });
+	}
+	// If the token is returned successfully
+	console.log(token);
+	return res.status(200).json({ token });
+});
+
+// Admin login route
+router.post('/login-admin', cors(routeCorsOptions), async (req, res) => {
+	const { email, password } = req.body;
+
+	console.log(email, password);
+	const [err, token] = await catchErrorTyped(loginAdmin(email, password), [CustomError]);
 
 	// Check for errors
 	if (err) {
