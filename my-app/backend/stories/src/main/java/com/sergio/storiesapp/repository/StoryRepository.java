@@ -18,12 +18,12 @@ public interface StoryRepository extends JpaRepository<Story, Integer> {
     List<Story> findByAuthorId(int authorId);
 
     /**
-     * Finds all stories by a specific author and story title.
+     * Finds all stories by a specific story title.
      * 
-     * @param authorId the ID of the author
-     * @return a list of stories by the given author
+     * @param title the title of the story
+     * @return a list of stories by the given title
      */
-    List<Story> findByAuthorIdAndTitle(int authorId, String title);
+    List<Story> findByTitle(String title);
 
     /**
      * Finds all stories ordered by creation date in descending order.

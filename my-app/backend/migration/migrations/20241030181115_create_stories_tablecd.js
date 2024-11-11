@@ -8,7 +8,8 @@ export async function up(knex) {
             
             // Polymorphic relationship fields
             table.integer('author_id').unsigned().notNullable();
-            table.string('author_type').notNullable(); // 'user' or 'admin'
+            table.integer('author_role_id').notNullable().defaultTo(2);
+            table.foreign('author_role_id').references('id').inTable('roles');
             
             table.string('author_name').notNullable();
             table.timestamp('created_at').defaultTo(knex.fn.now());

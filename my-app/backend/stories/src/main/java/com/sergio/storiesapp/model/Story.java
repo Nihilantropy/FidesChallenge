@@ -118,12 +118,10 @@ public class Story {
     }
 
     // Additional logic for author type checking
-    public void setAuthorRole(Integer authorId, Integer authorRoleId, String authorName) {
+    public void setAuthorRole(Integer authorId, Integer authorRoleId, String authorName, Boolean authorVisible) {
         this.authorId = authorId;
         this.authorRoleId = authorRoleId;
         this.authorName = authorName;
-        
-        // Make the author's visibility true by default (can be customized)
-        this.authorVisible = true;
+        this.authorVisible = authorVisible;
     }
 }

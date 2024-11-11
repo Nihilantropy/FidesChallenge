@@ -25,27 +25,35 @@ public class StoryService {
     /**
      * Creates and saves a new story.
      * 
-     * @param title      the title of the story
-     * @param content    the content of the story
-     * @param authorId   the ID of the author
-     * @param authorName the name of the author
+     * @param title         the title of the story
+     * @param content       the content of the story
+     * @param authorId      the ID of the author
+     * @param authorName    the name of the author
+     * @param authorRoleId  the role ID of the author
+     * @param authorVisible the flag to check the author visibility on the story
      * @return true if the story was saved successfully, otherwise false
      */
-    public boolean createStory(String title, String content, int authorId, String authorName, Integer authorRoleId) {
-        logger.debug("Saving story: Title={}, Author ID={}, Author Name={}", title, authorId, authorName);
-
-        // Check for an existing story with the same title by this author
-        List<Story> existingStories = storyRepository.findByAuthorIdAndTitle(authorId, title);
-        if (!existingStories.isEmpty()) {
-            throw new StoryCreationException("You already have a story with this title.");
+    public boolean createStory(String title, String content, int authorId, String authorName, Integer authorRoleId, Boolean authorVisible) {
+        logger.info("Saving story: Title={}, Author ID={}, Author Name={}", title, authorId, authorName);
+        if (authorRoleId != 1 && authorRoleId != 2) {
+            logger.error("Invalid author role ID: {1 or 2}", authorRoleId);
+            throw new StoryCreationException("Invalid author role. Should either be 1 for admin or 2 for user");
         }
+        // Check for an existing story with the same title by this author
+        List<Story> existingStories = storyRepository.findByTitle(title);
+        if (!existingStories.isEmpty()) {
+            throw new StoryCreationException("There already is a story with this title.");
+        }
+        
         try {
             Story story = new Story();
             story.setTitle(title);
             story.setContent(content);
-            story.setAuthorId(authorId);
-            story.setAuthorName(authorName);
-
+            logger.info("author is visible? ", authorVisible);
+            // Set author details with role info
+            story.setAuthorRole(authorId, authorRoleId, authorName, authorVisible);
+            // Debug log the story object before saving
+            logger.info("Story details before saving: {}", story.toString());
             storyRepository.save(story);
 
             logger.info("Story saved successfully: ID={}, Title={}", story.getId(), title);
@@ -127,6 +135,8 @@ public class StoryService {
 
         return Optional.of(storyMap);
     }
+
+
 }
 
 

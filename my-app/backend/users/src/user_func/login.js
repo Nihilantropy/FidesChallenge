@@ -24,6 +24,7 @@ async function loginUser(email, password) {
 
 	// If the user is not found
 	if (!user) {
+		console.log("user not found")
 		throw new InvalidCredentialsError(); // Use the custom error
 	}
 	

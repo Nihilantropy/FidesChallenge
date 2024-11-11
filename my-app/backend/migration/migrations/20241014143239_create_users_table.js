@@ -8,7 +8,8 @@ export async function up(knex) {
             table.string('username', 50).notNullable();
             table.string('email', 100).notNullable();
             table.string('password', 255).notNullable();
-            table.integer('role_id').unsigned().defaultTo(2);
+            table.integer('role_id').unsigned().defaultTo(2).notNullable();
+            table.foreign('role_id').references('id').inTable('roles');
             table.timestamp('created_at').defaultTo(knex.fn.now());
         });
     }
