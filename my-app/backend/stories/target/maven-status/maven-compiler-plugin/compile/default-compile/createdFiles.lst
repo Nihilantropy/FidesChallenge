@@ -1,9 +1,5 @@
-com/sergio/storiesapp/exception/DatabaseException.class
-com/sergio/storiesapp/controller/HealthCheckController.class
-com/sergio/storiesapp/exception/GlobalExceptionHandler.class
 com/sergio/storiesapp/controller/StoryController.class
 com/sergio/storiesapp/StoriesApplication.class
-com/sergio/storiesapp/exception/InvalidInputException.class
 com/sergio/storiesapp/config/HealthCheckSchedulerConfig.class
-com/sergio/storiesapp/exception/StoryNotFoundException.class
+com/sergio/storiesapp/controller/HealthCheckController.class
 com/sergio/storiesapp/config/DatabaseConnectionManager.class

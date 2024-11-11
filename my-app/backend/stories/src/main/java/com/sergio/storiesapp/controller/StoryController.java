@@ -39,7 +39,6 @@ public class StoryController {
 	@PostMapping("/")
 	public ResponseEntity<String> createStory(
 			@RequestHeader(value = "Authorization", required = false) String token,
-			@RequestHeader(value = "Content type", required = false) String type,
 			@RequestBody Map<String, String> storyData) {
 
 		if (token == null || token.trim().isEmpty()) {
@@ -102,11 +101,56 @@ public class StoryController {
 	}
 
 	/**
+	 * Retrieves all stories created by the authenticated user.
+	 * 
+	 * @param token the authorization token in the request header
+	 * @return a ResponseEntity containing a list of stories with title and ID in JSON format
+	 */
+	@GetMapping("/user")
+	public ResponseEntity<Object> getUserStories(
+			@RequestHeader(value = "Authorization", required = false) String token) {
+
+		if (token == null || token.trim().isEmpty()) {
+			return new ResponseEntity<>("Authorization header is missing", HttpStatus.UNAUTHORIZED);
+		}
+
+		logger.info("Received Authorization Token for retrieving user stories: {}", token);
+
+		// Authenticate user
+		Map<String, String> userInfo = userService.authenticateUser(token);
+		if (userInfo == null) {
+			logger.error("Authentication failed: Invalid Authorization Token");
+			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
+		}
+
+		try {
+			Integer authorId = Integer.valueOf(userInfo.get("id"));
+
+			if (authorId == null) {
+				logger.error("Invalid author ID: {}", authorId);
+				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
+			}
+
+			// Fetch user stories
+			List<Map<String, Object>> userStories = storyService.getUserStoriesByAuthorId(authorId);
+
+			if (userStories.isEmpty()) {
+				return new ResponseEntity<>("No stories found for this user", HttpStatus.OK);
+			}
+
+			return new ResponseEntity<>(userStories, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error("Error retrieving user stories: {}", e.getMessage(), e);
+			return new ResponseEntity<>("An error occurred while retrieving stories", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
 	 * Gets the latest stories (up to a fixed limit).
 	 * 
 	 * @return a ResponseEntity containing the latest stories in JSON format
 	 */
-	@GetMapping("/")
+	@GetMapping("/latest")
 	public ResponseEntity<List<Map<String, Object>>> getLatestStories() {
 		final int storyLimit = 5; // The server defines the limit (5 stories)
 
@@ -128,34 +172,19 @@ public class StoryController {
 	/**
 	 * Gets a random story.
 	 * 
-	 * @return a ResponseEntity containing a random story in JSON format
+	 * @return a ResponseEntity containing a random story in JSON format or NO_CONTENT if none is available
 	 */
 	@GetMapping("/random")
 	public ResponseEntity<Map<String, Object>> getRandomStory() {
 		try {
-			Optional<Map<String, Object>> randomStory = storyService.getRandomStory();
-
-			if (randomStory.isPresent()) {
-				return new ResponseEntity<>(randomStory.get(), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No stories available
-			}
+			return storyService.getRandomStory()
+					.map(story -> new ResponseEntity<>(story, HttpStatus.OK))
+					.orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		} catch (Exception e) {
 			logger.error("Error fetching random story: {}", e.getMessage(), e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Handle any errors
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	/**
-	 * Gets a random story.
-	 * 
-	 * @return a ResponseEntity containing a random story in JSON format
-	 */
-	@GetMapping("/{title}")
-	public String getMethodName(@RequestParam String param) {
-		return new String();
-	}
-	
 
 }
 

@@ -90,7 +90,7 @@
 
 ### CORS:
   - **Allowed origin**: `http://expo-service:8081`, `http://localhost:8000`, `http://backend-users:3000`
-  - **Allowed methods**: `GET, POST`
+  - **Allowed methods**: `GET, POST, PUT, DELETE`
   - **Allowed headers**: `Content-Type, Authorization`
   - **Credentials**: `True`
 
@@ -102,7 +102,7 @@
 - **Request Type**: `POST`
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
-  - JSON `{ title, content }`
+  - JSON `{ title, content, author_visible (true/false) }`
 - **Response**:
   - JSON `{ storyId, title, content, author: { id, username } }`
 - **Return Status + JSON `{message}`**:
@@ -111,7 +111,7 @@
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
   - **500 Internal Server Error** - Internal server errors
 
-### `/` (Get Latest Stories)
+### `/latest` (Get Latest Stories)
 - **Request Type**: `GET`
 - **Expected Info**:
   - None
@@ -163,6 +163,4 @@
 - **Response**:
   - none
 - **Return Status + JSON `{message}`**:
-  - **201 Created** - Story created successfully
-  - **400 Bad Request** - Invalid input (e.g., title or content is empty)
-  - **500 Internal Server Error** - Internal server errors
+  - ?

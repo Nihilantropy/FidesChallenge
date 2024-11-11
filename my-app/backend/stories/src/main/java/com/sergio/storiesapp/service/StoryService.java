@@ -64,6 +64,19 @@ public class StoryService {
         }
     }
 
+	/**
+	 * Retrieves all stories created by a specific author.
+	 * 
+	 * @param authorId the ID of the author
+	 * @return a list of maps containing each story's ID and title
+	 */
+	public List<Map<String, Object>> getUserStoriesByAuthorId(int authorId) {
+		List<Story> stories = storyRepository.findByAuthorId(authorId);
+		return stories.stream()
+				.map(story -> Map.of("id", story.getId(), "title", story.getTitle()))
+				.collect(Collectors.toList());
+	}
+
     /**
      * Gets the latest stories up to a fixed limit.
      * 
