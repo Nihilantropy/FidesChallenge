@@ -12,6 +12,7 @@ export async function up(knex) {
             table.foreign('author_role_id').references('id').inTable('roles');
             
             table.string('author_name').notNullable();
+            table.boolean('author_visible').defaultTo(true).notNullable();
             table.timestamp('created_at').defaultTo(knex.fn.now());
         });
     }
