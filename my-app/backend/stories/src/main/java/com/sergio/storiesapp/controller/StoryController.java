@@ -40,56 +40,91 @@ public class StoryController {
 	public ResponseEntity<String> createStory(
 			@RequestHeader(value = "Authorization", required = false) String token,
 			@RequestBody Map<String, String> storyData) {
-
+	
+		// Log the start of the method
+		logger.debug("Starting createStory method");
+	
 		if (token == null || token.trim().isEmpty()) {
+			logger.error("Authorization header is missing");
 			return new ResponseEntity<>("Authorization header is missing", HttpStatus.UNAUTHORIZED);
 		}
-
+	
 		logger.info("Received Authorization Token: {}", token);
-
+	
 		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
 		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
 		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
-
+	
+		logger.debug("Story data received: title={}, content={}, author_visible={}", title, content, authorVisibleStr);
+	
 		if (title == null || content == null) {
+			logger.error("Request body data insufficient. Expected: {title, content}");
 			return new ResponseEntity<>("Request body data insufficient. Expected: {title, content}", HttpStatus.BAD_REQUEST);
 		}
-
+	
 		if (title.trim().isEmpty()) {
+			logger.error("The title field should not be empty");
 			return new ResponseEntity<>("The title field should not be empty", HttpStatus.BAD_REQUEST);
 		}
 		if (content.trim().isEmpty()) {
+			logger.error("The content field should not be empty");
 			return new ResponseEntity<>("The content field should not be empty", HttpStatus.BAD_REQUEST);
 		}
 		if (title.length() > 100) {
+			logger.error("Title cannot be longer than 100 characters");
 			return new ResponseEntity<>("Title cannot be longer than 100 characters", HttpStatus.BAD_REQUEST);
 		}
 		if (content.length() > 1500) {
+			logger.error("Content cannot be longer than 1500 characters");
 			return new ResponseEntity<>("Content cannot be longer than 1500 characters", HttpStatus.BAD_REQUEST);
 		}
-
+	
 		// Authenticate user
+		logger.debug("Attempting to authenticate user with token");
 		Map<String, String> userInfo = userService.authenticateUser(token);
 		if (userInfo == null) {
 			logger.error("Authentication failed: Invalid Authorization Token");
 			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
 		}
-
+	
+		logger.debug("User authenticated: {}", userInfo);
+	
 		try {
 			String authorName = userInfo.get("username");
-			Integer authorId = Integer.valueOf(userInfo.get("id"));
-			Integer authorRoleId = Integer.valueOf(userInfo.get("role_id"));
-
-			if (authorId == null || authorRoleId == null) {
-				logger.error("Invalid author ID or role ID: {} {}", authorId, authorRoleId);
+			String authorIdStr = userInfo.get("id");
+			String authorRoleIdStr = userInfo.get("role_id");
+	
+			logger.debug("User info: authorName={}, authorId={}, authorRoleId={}", authorName, authorIdStr, authorRoleIdStr);
+	
+			// Check if the values are present and valid
+			if (authorName == null || authorIdStr == null || authorRoleIdStr == null) {
+				logger.error("Missing or invalid user information: username={}, id={}, role_id={}", authorName, authorIdStr, authorRoleIdStr);
 				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
 			}
 
+			// Convert authorId and authorRoleId to integers
+			Integer authorId = null;
+			Integer authorRoleId = null;
+
+			try {
+				authorId = Integer.valueOf(authorIdStr);
+				authorRoleId = Integer.valueOf(authorRoleIdStr);
+			} catch (NumberFormatException e) {
+				logger.error("Failed to parse user information: id={}, role_id={}", authorIdStr, authorRoleIdStr);
+				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
+			}
+	
+			logger.debug("User info: authorName={}, authorId={}, authorRoleId={}", authorName, authorId, authorRoleId);
+	
+	
 			// Set authorVisible based on role and request data
 			Boolean authorVisible = (authorRoleId == 1) ? false : Boolean.parseBoolean(authorVisibleStr);
-
+			logger.debug("Author visible set to: {}", authorVisible);
+	
 			// Create the story
+			logger.debug("Creating the story with title={} and content={}", title, content);
 			storyService.createStory(title, content, authorId, authorName, authorRoleId, authorVisible);
+			logger.info("Story created successfully");
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
 		} catch (StoryCreationException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
@@ -185,6 +220,23 @@ public class StoryController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	/**
+     * Retrieves a single story by its ID.
+     * 
+     * @param storyId the ID of the story to retrieve
+     * @return a ResponseEntity containing the story in JSON format or a 404 status if not found
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> getStoryById(@PathVariable("id") int storyId) {
+        Optional<Map<String, Object>> storyData = storyService.getStoryById(storyId);
+        
+        if (storyData.isPresent()) {
+            return new ResponseEntity<>(storyData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Story not found
+        }
+    }
 
 }
 

@@ -111,12 +111,24 @@
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
   - **500 Internal Server Error** - Internal server errors
 
+### `/user` (Get User Stories)
+- **Request Type**: `GET`
+- **Expected Info**:
+  - Header `Authorization: Bearer <token>`
+- **Response**:
+  - JSON `[ { storyId, title, content, author: { id, username } }, ... ]`
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - A list of user stories for the authenticated user.
+  - **400 Bad Request** - Invalid author information (e.g., missing or invalid user ID).
+  - **401 Unauthorized** - Missing or invalid authorization token.
+  - **500 Internal Server Error** - Internal server error when retrieving stories.
+
 ### `/latest` (Get Latest Stories)
 - **Request Type**: `GET`
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `[{ storyId, title, content, createdAt, author: { id, username } }]`
+  - JSON `[{ storyId, title, createdAt`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - List of latest stories (up to a limit of 5)
   - **204 No Content** - No stories available
@@ -127,11 +139,23 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ storyId, title, content, createdAt, author: { id, username } }`
+  - JSON `{ storyId, title, content, createdAt, author: { id, username, author_visible }}`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - A random story
   - **204 No Content** - No stories available
   - **500 Internal Server Error** - Internal server errors
+
+### `/{Id}` (Get story by Id)
+- **Request Type**: `GET`
+- **Expected Info**:
+  - Json `{ id }`
+- **Response**:
+  - JSON `[{ storyId, title, content, author: {id, username, } createdAt`
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - List of latest stories (up to a limit of 5)
+  - **204 No Content** - No stories available
+  - **500 Internal Server Error** - Internal server errors
+
 
 ### `/healthz`
 - **Request Type**: `GET`

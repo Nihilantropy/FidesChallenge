@@ -32,13 +32,15 @@ public class UserService {
             Map<String, Object> responseBody = response.getBody();
             if (response.getStatusCode() == HttpStatus.OK && responseBody != null) {
                 // Extract the id and username from the response body
-                String userId = String.valueOf(responseBody.get("id"));  // Convert id to String if needed
+                String userId = String.valueOf(responseBody.get("id"));
                 String username = (String) responseBody.get("username");
+                String userRoleId = String.valueOf(responseBody.get("role_id"));
 
                 // Prepare user info map with extracted values
                 Map<String, String> userInfo = new HashMap<>();
                 userInfo.put("id", userId);
                 userInfo.put("username", username);
+                userInfo.put("role_id", userRoleId);
 
                 return userInfo;
             }

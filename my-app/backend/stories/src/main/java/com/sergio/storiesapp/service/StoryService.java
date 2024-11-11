@@ -1,5 +1,6 @@
 package com.sergio.storiesapp.service;
 
+import com.sergio.storiesapp.exception.InvalidStoryNameException;
 import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.model.Story;
 import com.sergio.storiesapp.repository.StoryRepository;
@@ -9,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.Random;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -35,25 +36,26 @@ public class StoryService {
 	 */
 	public boolean createStory(String title, String content, int authorId, String authorName, Integer authorRoleId, Boolean authorVisible) {
 		logger.info("Saving story: Title={}, Author ID={}, Author Name={}", title, authorId, authorName);
+		
 		if (authorRoleId != 1 && authorRoleId != 2) {
-			logger.error("Invalid author role ID: {1 or 2}", authorRoleId);
+			logger.error("Invalid author role ID: {}", authorRoleId);
 			throw new StoryCreationException("Invalid author role. Should either be 1 for admin or 2 for user");
 		}
+
 		// Check for an existing story with the same title by this author
 		List<Story> existingStories = storyRepository.findByTitle(title);
 		if (!existingStories.isEmpty()) {
-			throw new StoryCreationException("There already is a story with this title.");
+			throw new InvalidStoryNameException("There already is a story with this title.");
 		}
 		
 		try {
 			Story story = new Story();
 			story.setTitle(title);
 			story.setContent(content);
-			logger.info("author is visible? ", authorVisible);
-			// Set author details with role info
 			story.setAuthorRole(authorId, authorRoleId, authorName, authorVisible);
+			
 			// Debug log the story object before saving
-			logger.info("Story details before saving: {}", story.toString());
+			logger.info("Story details before saving: {}", story);
 			storyRepository.save(story);
 
 			logger.info("Story saved successfully: ID={}, Title={}", story.getId(), title);
@@ -73,12 +75,7 @@ public class StoryService {
 	public List<Map<String, Object>> getUserStoriesByAuthorId(int authorId) {
 		List<Story> stories = storyRepository.findByAuthorId(authorId);
 		return stories.stream()
-				.map(story -> {
-					Map<String, Object> map = new HashMap<>();
-					map.put("id", story.getId());
-					map.put("title", story.getTitle());
-					return map;
-				})
+				.map(this::mapStoryToResponse)
 				.collect(Collectors.toList());
 	}
 
@@ -116,15 +113,23 @@ public class StoryService {
 	 * @return a list of maps containing story details
 	 */
 	private List<Map<String, Object>> mapStoriesToResponse(List<Story> stories) {
-		return stories.stream().map(story -> {
-			Map<String, Object> storyMap = Map.of(
-				"id", story.getId(),
-				"title", story.getTitle(),
-				"content", story.getContent(),
-				"createdAt", story.getCreatedAt()
-			);
-			return storyMap;
-		}).collect(Collectors.toList());
+		return stories.stream()
+				.map(this::mapStoryToResponse)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Helper method to map a Story object to a structured response.
+	 * 
+	 * @param story the story to map
+	 * @return a map with story details
+	 */
+	private Map<String, Object> mapStoryToResponse(Story story) {
+		return Map.of(
+			"id", story.getId(),
+			"title", story.getTitle(),
+			"createdAt", story.getCreatedAt()
+		);
 	}
 
 	/**
@@ -148,13 +153,23 @@ public class StoryService {
 			"id", randomStory.getId(),
 			"title", randomStory.getTitle(),
 			"content", randomStory.getContent(),
+			"author_id", randomStory.getAuthorRoleId(),
+			"author_visible", randomStory.getAuthorVisible(),
 			"createdAt", randomStory.getCreatedAt()
 		);
 
 		return Optional.of(storyMap);
 	}
 
-
+	/**
+	 * Retrieves a story by its ID and maps it to a structured JSON format.
+	 * 
+	 * @param storyId the ID of the story to retrieve
+	 * @return an Optional containing the story details if found, otherwise an empty Optional
+	 */
+	public Optional<Map<String, Object>> getStoryById(int storyId) {
+		Optional<Story> storyOpt = storyRepository.findById(storyId);
+		
+		return storyOpt.map(this::mapStoryToResponse);
+	}
 }
-
-
