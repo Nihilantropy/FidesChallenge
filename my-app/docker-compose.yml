@@ -14,6 +14,7 @@ services:
       - backend-users
       - backend-stories
       - backend-tts
+      - backend-ia
       - frontend-expo
 
    # Database (MySQL) micro
@@ -97,6 +98,18 @@ services:
     depends_on:
       - frontend-expo
 
+  # IA micro
+  backend-ia:
+    container_name: ia-service
+    build:
+      context: ./backend/ia
+      dockerfile: Dockerfile
+    networks:
+      - proxy
+      - frontend-ia
+    depends_on:
+      - frontend-expo
+
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
@@ -107,6 +120,7 @@ services:
       - 8081:8081
     networks:
       - frontend-tts
+      - frontend-ia
       - proxy
     volumes:
       - ./frontend/sergio/app:/opt/my-app/app
@@ -116,6 +130,8 @@ networks:
   server-db:
     driver: bridge
   frontend-tts:
+    driver: bridge
+  frontend-ia:
     driver: bridge
   proxy:
     driver: bridge

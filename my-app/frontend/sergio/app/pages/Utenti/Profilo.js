@@ -5,7 +5,6 @@ import styles from './../../assets/style/main.js';
 const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
     const [jsonData, setJsonData] = useState([{email: '', first_name: '', last_name: '', username: ''}]);
     useEffect(() => {
-        console.log("token is: ", gJWTtoken())
         /* Fuori se non loggato */
         if (gJWTtoken() == ''){
           showPage(1);
@@ -29,7 +28,6 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
             if (status !== 200) {
                 showPage(1);
             } else {
-                //alert(data);
                 setJsonData(data);
             }
         })

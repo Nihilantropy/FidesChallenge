@@ -22,7 +22,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         else if (Motivo.length === 0) setHeight(100);
     };
 
-    function elimina() {
+    async function elimina() {
         fetch("http://localhost:8000/users/delete", {
             method: 'DELETE',
             headers: {
@@ -38,8 +38,8 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
             if (status != 204) {
                 sShowErr("Errore interno");
             }else {
-                sJWTtoken('');
                 showPage(1);
+                sJWTtoken('');
             }
         })
         .catch(error => {
@@ -53,7 +53,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
                     <View><Text style={styles.titoli}>Vuoi davvero cancellare il tuo profilo?</Text></View>
                     <View><Text style={styles.testi}>L'operazione non e reversibile</Text></View>
                     <Text>{"\n"}</Text>
-                    <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 100, height: height, width: '50%' }]} placeholder="Raccontarci cosa sia successo? *Opsionale" value={Motivo} onChangeText={handleTextChange} />
+                    <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 100, height: height, width: '50%' }]} placeholder="Raccontarci cosa sia successo? *Opzionale" value={Motivo} onChangeText={handleTextChange} />
                     <Text>{"\n"}</Text>
                     <View style={styles.rowpuro}>
                         <Pressable onPress={() => { showPage(6) }}><Text style={styles.link}>Annulla</Text></Pressable>
