@@ -4,7 +4,7 @@ from flask_cors import CORS
 import torch
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://expo-service:8081", "http://localhost:8000"]) 
 
 @app.route("/generatestory", methods=["POST"])
 def generate_story():
