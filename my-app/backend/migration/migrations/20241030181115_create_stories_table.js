@@ -2,13 +2,13 @@ export async function up(knex) {
     const hasStoriesTable = await knex.schema.hasTable('stories');
     if (!hasStoriesTable) {
         await knex.schema.createTable('stories', (table) => {
-            table.increments('id').primary();
+            table.increments('id').primary().unsigned();
             table.string('title').notNullable();
             table.text('content').notNullable();
             
             // Polymorphic relationship fields
             table.integer('author_id').unsigned().notNullable();
-            table.integer('author_role_id').notNullable().defaultTo(2);
+            table.integer('author_role_id').unsigned().notNullable().defaultTo(2);
             table.foreign('author_role_id').references('id').inTable('roles');
             
             table.string('author_name').notNullable();

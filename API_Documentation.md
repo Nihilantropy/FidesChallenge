@@ -116,7 +116,7 @@
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
 - **Response**:
-  - JSON `[ { storyId, title, content, author: { id, username } }, ... ]`
+  - JSON `{ storyId, title, createdAt }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - A list of user stories for the authenticated user.
   - **400 Bad Request** - Invalid author information (e.g., missing or invalid user ID).
@@ -128,7 +128,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `[{ storyId, title, createdAt`
+  - JSON `{ storyId, title, createdAt }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - List of latest stories (up to a limit of 5)
   - **204 No Content** - No stories available
@@ -180,7 +180,7 @@
 
 ## Endpoints:
 
-### `/`(Create Story)
+### `/speak`(Create Story)
 - **Request Type**: `POST`
 - **Expected Info**:
   - JSON `{ text }`

@@ -3,7 +3,7 @@ export async function up(knex) {
     const hasRolesTable = await knex.schema.hasTable('roles');
     if (!hasRolesTable) {
         await knex.schema.createTable('roles', (table) => {
-            table.increments('id').primary();
+            table.increments('id').primary().unsigned();
             table.string('name', 50).notNullable().unique();
         });
 
