@@ -1,8 +1,8 @@
 import React, {  useState, useEffect } from 'react';
-import { TextInput, View, Text, Pressable, ScrollView, Platform } from 'react-native';
+import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const Content_web = ({ showPage, modifica, setStory, getStory }) => {
+const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settitolo  }) => {
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
@@ -22,12 +22,13 @@ const Content_web = ({ showPage, modifica, setStory, getStory }) => {
   return (
     <ScrollView>
       <View style={styles.box}>
-        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Modifica Storia</Text></View>
+        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Nuova Storia</Text></View>
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
-          <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Annulla</Text></Pressable>
+          <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
-          <Pressable onPress={modifica}><Text style={styles.link}>Modifica</Text></Pressable>
+          <Pressable onPress={modifica_storia}><Text style={styles.link}>Racconta</Text></Pressable>
         </View>
+        <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
         <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
@@ -35,7 +36,7 @@ const Content_web = ({ showPage, modifica, setStory, getStory }) => {
   );
 };
 
-const Content_app = ({ getStory, setStory }) =>{
+const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(200);
   const handleTextChange = (text) => {
@@ -53,6 +54,7 @@ const Content_app = ({ getStory, setStory }) =>{
   return (
     <ScrollView>
       <View style={styles.box}>
+        <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
         <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
@@ -61,65 +63,96 @@ const Content_app = ({ getStory, setStory }) =>{
 };
 
 const validator = require('validator');
-const ModStory = ({ showPage, gJWTtoken, sShowPopupFB, setModificaFunction, setShowErr, gid }) => {
-  // useEffect(() => {
-  //   if (gJWTtoken() == ''){
-  //     showPage(2);
-  //     sShowPopupFB(true);
-  //   }
-  // }, [gJWTtoken, showPage, sShowPopupFB]);
+const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
+  if (gJWTtoken() == ''){
+    showPage(1);
+    sShowPopupFB(true);
+    return;
+  }
 
   useEffect(() => {
-    setModificaFunction(modifica);
-  }, [modifica]);
+    setInviaFunction(modifica_storia);
+  }, [modifica_storia]);
 
   const [story, setStory] = useState('');
   const getStory = (page) => { return story; };
-  function modifica() {
+
+  const [titolo, settitolo] = useState('');
+  const gtitolo = (page) => { return titolo; };
+
+  fetch("http://localhost:8000/stories/"+gid(), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer '+gJWTtoken()
+    }
+  })
+  .then(response => {
+    const status = response.status;
+    return response.json().then(data => ({ status, data }));
+  })
+  .then(({ status, data }) => {
+    if (status !== 200) {
+      showPage(7);
+    } else {
+      settitolo(data.title);
+      setStory(data.content);
+    }
+  })
+  .catch(error => {
+    showPage(7);
+  });
+
+  function modifica_storia() {
     /* ====== Basic Check ====== */
-    if (story === '') {
-      setShowErr("Completa tutti i campi prima di proseguire");
+    if (story === '' || titolo === '') {
+      sShowErr("Completa tutti i campi prima di proseguire");
       return;
     }
 
     if (story.length > 1500) {
-      setShowErr("Raggionto il limite di caratteri");
+      sShowErr("La storia non puo avere piu di 1500 caratteri");
+      return;
+    }
+    if (titolo.length > 60) {
+      sShowErr("Il titolo non puo avere piu di 60 caratteri");
       return;
     }
 
     /* ====== Sanitized ====== */
     const sanitizedStory = validator.escape(story);
+    const sanitizedTitle = validator.escape(titolo);
     
     /* ====== Send post ====== */
-    console.log("invio fetch = Story:"+sanitizedStory);
-    fetch("http://localhost/story/mod_story", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            storia: sanitizedStory,
-            jwt: gJWTtoken(),
-            id: gid()
-        }),
+    fetch("http://localhost:8000/stories/edit", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gJWTtoken()
+      },
+      body: JSON.stringify({
+        title: sanitizedTitle,
+        content: sanitizedStory,
+        author_visible: true
+      }),
     })
-    .then(result => {
-        if (!result) return;
-        const { status, body } = result;
-        if (status != 200) {
-          setShowErr(body.message);
-        }else{
-          showPage(7);
-        }
+    .then(response => {
+      const status = response.status;
+      return response.json().then(data => ({ status, data }));
+    })
+    .then(({ status, data }) => {
+      if (status != 201 ) {
+        sShowErr(data.message);
+      }else showPage(7);
     })
     .catch(error => {
-      setShowErr("Errore interno");
+      sShowErr("Errore interno");
     });
   }
   return (
     <View style={styles.stacca}>
-      { Platform.OS === 'web' && <Content_web showPage={showPage} modifica={modifica} setStory={setStory} getStory={getStory} /> }
-      { Platform.OS !== 'web' && <Content_app getStory={getStory} setStory={setStory} /> }
+      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} showPage={showPage} modifica_storia={modifica_storia} setStory={setStory} getStory={getStory} /> }
+      { Platform.OS !== 'web' && <Content_app gtitolo={gtitolo} settitolo={settitolo} getStory={getStory} setStory={setStory} /> }
     </View>
   );
 };
