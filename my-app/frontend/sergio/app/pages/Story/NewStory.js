@@ -1,12 +1,12 @@
 import React, {  useState, useEffect } from 'react';
-import { TextInput, View, Text, Pressable, ScrollView, Platform } from 'react-native';
+import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const Content_web = ({ showPage, invia, setStory, getStory }) => {
+const Content_web = ({ showPage,crea_storia,setStory,getStory,gtitolo,settitolo  }) => {
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
-    if (text.length <= 1000) {
+    if (text.length <= 1500) {
       setStory(text);
       setStoryText(text);
     }
@@ -26,20 +26,21 @@ const Content_web = ({ showPage, invia, setStory, getStory }) => {
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
           <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
-          <Pressable onPress={invia}><Text style={styles.link}>Racconta</Text></Pressable>
+          <Pressable onPress={crea_storia}><Text style={styles.link}>Racconta</Text></Pressable>
         </View>
+        <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1000</Text>
+        <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
     </ScrollView>
   );
 };
 
-const Content_app = ({ getStory, setStory }) =>{
+const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(200);
   const handleTextChange = (text) => {
-    if (text.length <= 1000) {
+    if (text.length <= 1500) {
       setStory(text);
       setStoryText(text);
     }
@@ -53,71 +54,83 @@ const Content_app = ({ getStory, setStory }) =>{
   return (
     <ScrollView>
       <View style={styles.box}>
+        <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1000</Text>
+        <Text style={styles.testidestra}>{story.length}/1500</Text>
       </View>
     </ScrollView>
   )
 };
 
 const validator = require('validator');
-const NewStory = ({ showPage, gJWTtoken, sShowPopupFB, setInviaFunction, setShowErr }) => {
-  // useEffect(() => {
-  //   if (gJWTtoken() == ''){
-  //     showPage(2);
-  //     sShowPopupFB(true);
-  //   }
-  // }, [gJWTtoken, showPage, sShowPopupFB]);
+const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
+  useEffect(() => {
+    if (gJWTtoken() == ''){
+      showPage(2);
+      sShowPopupFB(true);
+    }
+  }, [gJWTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
-    setInviaFunction(invia);
-  }, [invia]);
+    setInviaFunction(crea_storia);
+  }, [crea_storia]);
 
   const [story, setStory] = useState('');
   const getStory = (page) => { return story; };
-  function invia() {
+
+  const [titolo, settitolo] = useState('');
+  const gtitolo = (page) => { return titolo; };
+  
+  function crea_storia() {
     /* ====== Basic Check ====== */
-    if (story === '') {
-      setShowErr("Completa tutti i campi prima di proseguire");
+    if (story === '' || titolo === '') {
+      sShowErr("Completa tutti i campi prima di proseguire");
       return;
     }
 
-    if (story.length > 1000) {
-      setShowErr("Raggionto il limite di caratteri");
+    if (story.length > 1500) {
+      sShowErr("La storia non puo avere piu di 1500 caratteri");
+      return;
+    }
+    if (titolo.length > 60) {
+      sShowErr("Il titolo non puo avere piu di 60 caratteri");
       return;
     }
 
     /* ====== Sanitized ====== */
     const sanitizedStory = validator.escape(story);
+    const sanitizedTitle = validator.escape(titolo);
     
     /* ====== Send post ====== */
-    fetch("http://localhost/story/new_story", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            storia: sanitizedStory,
-            jwt: gJWTtoken()
-        }),
+    fetch("http://localhost:8000/stories/", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gJWTtoken()
+      },
+      body: JSON.stringify({
+        title: sanitizedTitle,
+        content: sanitizedStory,
+        author_visible: true
+      }),
     })
-    .then(result => {
-        if (!result) return;
-        const { status, body } = result;
-        if (status != 200) {
-          setShowErr(body.message);
-        }else{
-          showPage(2);
-        }
+    .then(response => {
+      const status = response.status;
+      return response.json().then(data => ({ status, data }));
+    })
+    .then(({ status, data }) => {
+      if (status != 201 ) {
+        sShowErr(data.message);
+      }else showPage(7);
     })
     .catch(error => {
-      setShowErr("Errore interno");
+      sShowErr("Errore interno");
     });
   }
   return (
     <View style={styles.stacca}>
-      { Platform.OS === 'web' && <Content_web showPage={showPage} invia={invia} setStory={setStory} getStory={getStory} /> }
-      { Platform.OS !== 'web' && <Content_app getStory={getStory} setStory={setStory} /> }
+      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} showPage={showPage} crea_storia={crea_storia} setStory={setStory} getStory={getStory} /> }
+      { Platform.OS !== 'web' && <Content_app gtitolo={gtitolo} settitolo={settitolo} getStory={getStory} setStory={setStory} /> }
     </View>
   );
 };

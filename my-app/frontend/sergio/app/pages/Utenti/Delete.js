@@ -22,7 +22,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         else if (Motivo.length === 0) setHeight(100);
     };
 
-    function elimina() {
+    async function elimina() {
         fetch("http://localhost:8000/users/delete", {
             method: 'DELETE',
             headers: {
@@ -38,8 +38,8 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
             if (status != 204) {
                 sShowErr("Errore interno");
             }else {
-                sJWTtoken('');
                 showPage(1);
+                sJWTtoken('');
             }
         })
         .catch(error => {
