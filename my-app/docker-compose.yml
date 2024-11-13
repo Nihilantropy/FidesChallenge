@@ -5,7 +5,7 @@ services:
     build:
       context: ./proxy
       dockerfile: Dockerfile
-    container_name: nginx_proxy
+    container_name: proxy-service
     ports:
       - "8000:8000"
     networks:
@@ -13,6 +13,8 @@ services:
     depends_on:
       - backend-users
       - backend-stories
+      - backend-tts
+      - backend-ia
       - frontend-expo
 
    # Database (MySQL) micro
@@ -45,6 +47,8 @@ services:
       - ./backend/migration/.env
     networks:
       - server-db
+    volumes:
+      - ./backend/migration/backup_data:/backup
     depends_on:
         - db
     
@@ -74,8 +78,8 @@ services:
     build:
       context: ./backend/stories
       dockerfile: Dockerfile
-    #volumes:
-    #  - ./backend/stories/target:/app/target:rw
+    volumes:
+      - ./backend/stories:/app:rw
     networks:
        - server-db
        - proxy
@@ -84,12 +88,25 @@ services:
   
   # Text-to-Speach micro
   backend-tts:
-    container_name: tts_service
+    container_name: tts-service
     build:
       context: ./backend/tts
       dockerfile: Dockerfile
     networks:
+      - proxy
       - frontend-tts
+    depends_on:
+      - frontend-expo
+
+  # IA micro
+  backend-ia:
+    container_name: ia-service
+    build:
+      context: ./backend/ia
+      dockerfile: Dockerfile
+    networks:
+      - proxy
+      - frontend-ia
     depends_on:
       - frontend-expo
 
@@ -99,7 +116,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    ports:
+      - 8081:8081
     networks:
+      - frontend-tts
+      - frontend-ia
       - proxy
     volumes:
       - ./frontend/sergio/app:/opt/my-app/app
@@ -110,6 +131,8 @@ networks:
     driver: bridge
   frontend-tts:
     driver: bridge
+  frontend-ia:
+    driver: bridge
   proxy:
     driver: bridge
 
@@ -117,3 +140,4 @@ networks:
 volumes:
   back-notused:
   db-data:
+  #backup_data:

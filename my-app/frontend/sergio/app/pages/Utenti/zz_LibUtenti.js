@@ -1,8 +1,10 @@
 /* ====== HASHING PASSWORD ====== */
-const bcrypt = require('bcryptjs');
-const hashPassword = (password) => {
-    const saltRounds = 10;
-    const hash = bcrypt.hashSync(password, saltRounds);
+import * as Crypto from 'expo-crypto';
+const hashPassword = async (password) => {
+    const hash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        password
+    );
     return hash;
 };
 export default hashPassword;

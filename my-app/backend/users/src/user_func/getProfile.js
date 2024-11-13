@@ -4,18 +4,17 @@ import { DBFetchQueryError, UserNotFoundError } from '../err/dist/CustomError.js
 // Function to fetch user profile information
 async function getProfile(userId) {
 	let	user;
-
 	try
 	{
 		user = await db('users')
-			.select('id', 'first_name', 'last_name', 'username', 'email', 'created_at', 'updated_at') // Specify fields to retrieve
+			.select('id', 'first_name', 'last_name', 'username', 'email', 'role_id') // Specify fields to retrieve
 			.where({ id: userId })
 			.first();
 	}
 	catch (e)
 	{
 		console.error(e);
-		throw new DBFetchQueryError(); // Or a custom error for "user not found"
+		throw new DBFetchQueryError('Error getting user profile info'); // Or a custom error for "user not found"
 	}
 
 	if (!user)

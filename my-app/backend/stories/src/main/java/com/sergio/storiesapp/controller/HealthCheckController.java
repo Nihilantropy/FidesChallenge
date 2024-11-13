@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://expo-service:8000")
+@CrossOrigin(origins = "http://expo-service:8081")
 public class HealthCheckController {
 
     @Autowired

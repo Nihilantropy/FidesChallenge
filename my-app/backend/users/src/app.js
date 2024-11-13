@@ -25,7 +25,7 @@ app.use(morgan('common'));
 app.use('/users', userRoutes);
 
 // Health check endpoint
-app.get('/healthz', healthCheckEndpoint);
+app.get('/users/healthz', healthCheckEndpoint);
 
 // Example route to check MySQL version
 app.get('/', async (req, res, next) => {

@@ -23,8 +23,31 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(StoryCreationException.class)
+    public ResponseEntity<String> handleStoryCreationException(StoryCreationException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(StoryUpdateException.class)
+    public ResponseEntity<String> handleInvalidStoryNameException(InvalidStoryNameException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedDeleteException.class) // Catch all other exceptions
+    public ResponseEntity<String> handleUnauthorizedDeleteException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    
+    }
+
+    @ExceptionHandler(DeleteStoryException.class) // Catch all other exceptions
+    public ResponseEntity<String> handleDeleteStoryException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    
+    }
+
     @ExceptionHandler(Exception.class) // Catch all other exceptions
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + ex.getMessage());
+    
     }
 }

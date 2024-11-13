@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import styles from './../../assets/style/main.js';
-import stylec from './../../assets/style/main.css';
+// import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
 
 const validator = require('validator');
@@ -14,7 +14,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
     const [confpassword, setConfpassword] = useState('');
     const [errorText, setErrorText] = useState('');
 
-    function registati() {
+    const registati = async () => {
         /* ====== Basic Check ====== */
         setErrorText("");
         if (email === '' || nome === '' || cognome === '' || nickname === '' || password === '' || confpassword === '') {
@@ -41,44 +41,40 @@ const Registati = ({ showPage,sJWTtoken }) => {
         const sanitizedNome = validator.escape(nome);
         const sanitizedCognome = validator.escape(cognome);
         const sanitizedNickname = validator.escape(nickname);
-        const hashedPassword = hashPassword(password);
+        const hashedPassword = await hashPassword(password);
         if (hashedPassword == '') {
             setErrorText("Errore interno");
             return;
         }
         /* ====== Send post ====== */
-        console.log("invio fetch = email:"+sanitizedEmail+" | nome:"+sanitizedNome+" | cognome:"+sanitizedCognome+" | nickname:"+sanitizedNickname+" | password:"+hashedPassword);
-        try {
-            fetch("http://localhost:8000/users/create", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: sanitizedEmail,
-                    first_name: sanitizedNome,
-                    last_name: sanitizedCognome,
-                    username: sanitizedNickname,
-                    password: hashedPassword
-                }),
-            })
-            .then(result => {
-                if (!result) return;
-                const { status, body } = result;
-                if (status != 201) {
-                    setErrorText(body.message);
-                }else {
-                    sJWTtoken(body.token);
-                    showPage(2);
-                }
-            })
-            // .catch(error => {
-            //         setErrorText("Errore interno un pochino");
-            // } );            
-        }catch (error) {
-            setErrorText("Errore interno + error");
-            return ;
-        }
+        fetch("http://localhost:8000/users/create", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: sanitizedEmail,
+                first_name: sanitizedNome,
+                last_name: sanitizedCognome,
+                username: sanitizedNickname,
+                password: hashedPassword
+            }),
+        })
+        .then(response => {
+            const status = response.status;
+            return response.json().then(data => ({ status, data }));
+        })
+        .then(({ status, data }) => {
+            if (status !== 201) {
+                setErrorText(data.message);
+            } else {
+                sJWTtoken(data.token);
+                showPage(2);
+            }
+        })
+        .catch(error => {
+            setErrorText("Errore interno");
+        });
     }
     return (
         <View style={styles.stacca}>
