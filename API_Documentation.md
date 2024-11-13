@@ -104,7 +104,7 @@
   - Header `Authorization: Bearer <token>`
   - JSON `{ title, content, author_visible (true/false) }`
 - **Response**:
-  - JSON `{ storyId, title, content, author: { id, username } }`
+  - NONE
 - **Return Status + JSON `{message}`**:
   - **201 Created** - Story created successfully
   - **400 Bad Request** - Invalid input (e.g., title or content is empty)
@@ -116,7 +116,7 @@
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
 - **Response**:
-  - JSON `{ storyId, title, createdAt }`
+  - JSON `{ story_id, title, created_at }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - A list of user stories for the authenticated user.
   - **400 Bad Request** - Invalid author information (e.g., missing or invalid user ID).
@@ -128,7 +128,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ storyId, title, createdAt }`
+  - JSON `{ story_id, title, created_at }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - List of latest stories (up to a limit of 5)
   - **204 No Content** - No stories available
@@ -139,9 +139,9 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ storyId, title, content, createdAt, author: { id, username, author_visible }}`
+  - JSON `{ story_id, title, content, created_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
-  - **200 OK** - A random story
+  - **200 OK** - Random story fetched succesfully
   - **204 No Content** - No stories available
   - **500 Internal Server Error** - Internal server errors
 
@@ -150,9 +150,9 @@
 - **Expected Info**:
   - Json `{ id }`
 - **Response**:
-  - JSON `[{ storyId, title, content, author: {id, username, } createdAt`
+  - JSON `{ story_id, title, content, created_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
-  - **200 OK** - List of latest stories (up to a limit of 5)
+  - **200 OK** - Story fetched succesfully
   - **204 No Content** - No stories available
   - **500 Internal Server Error** - Internal server errors
 

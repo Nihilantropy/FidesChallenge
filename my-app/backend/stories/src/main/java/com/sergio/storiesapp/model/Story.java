@@ -111,9 +111,11 @@ public class Story {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", authorId=" + authorId +
-                ", authorName='" + authorName + '\'' +
-                ", createdAt=" + createdAt +
+                ", author_id=" + authorId + '\'' +
+                ", author_role_id='" + authorRoleId + '\'' +
+                ", author_name='" + authorName + '\'' +
+                ", author_visible='" + authorVisible + '\'' +
+                ", created_at=" + createdAt +
                 '}';
     }
 

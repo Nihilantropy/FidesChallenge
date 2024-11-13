@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.sergio.storiesapp.exception.StoryCreationException;
+import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.service.StoryService;
 import com.sergio.storiesapp.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,103 +31,80 @@ public class StoryController {
 	private StoryService storyService;
 
 	/**
-	 * Creates a new story.
+	 * Creates a new story for an authenticated user.
 	 * 
-	 * @param token       the authorization token in the request header
-	 * @param storyData   the story data (title and content) in the request body
-	 * @return a ResponseEntity with appropriate status and message
+	 * @param authHeader the Authorization token (optional)
+	 * @param storyData a map containing story data with keys "title", "content", and "author_visible"
+	 * 
+	 * @return a ResponseEntity containing:
+	 *         - A success message with HTTP status 201 CREATED if the story is created successfully
+	 *         - A message with HTTP status 400 BAD_REQUEST if the Authorization header is missing or invalid, 
+	 *           or if there is invalid story data
+	 *         - A message with HTTP status 409 CONFLICT if there is a conflict (e.g., duplicate title)
+	 *         - A message with HTTP status 500 INTERNAL_SERVER_ERROR if an unexpected error occurs
 	 */
 	@PostMapping("/")
 	public ResponseEntity<String> createStory(
-			@RequestHeader(value = "Authorization", required = false) String token,
+			@RequestHeader(value = "Authorization", required = false) String authHeader,
 			@RequestBody Map<String, String> storyData) {
 	
 		// Log the start of the method
 		logger.debug("Starting createStory method");
 	
-		if (token == null || token.trim().isEmpty()) {
-			logger.error("Authorization header is missing");
-			return new ResponseEntity<>("Authorization header is missing", HttpStatus.UNAUTHORIZED);
-		}
+		// Use UserService's isValidToken to validate and extract token
+		String token = userService.isValidToken(authHeader);
+		if (token == null) {
+			 logger.error("Invalid or missing Authorization header");
+			 return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
+		 }
 	
 		logger.info("Received Authorization Token: {}", token);
 	
-		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
-		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
-		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
-	
-		logger.debug("Story data received: title={}, content={}, author_visible={}", title, content, authorVisibleStr);
-	
-		if (title == null || content == null) {
-			logger.error("Request body data insufficient. Expected: {title, content}");
-			return new ResponseEntity<>("Request body data insufficient. Expected: {title, content}", HttpStatus.BAD_REQUEST);
+		Map<String, Object>	storyInfoMap = new HashMap<>();
+
+		try {
+			storyInfoMap = storyService.mapStoryData(storyData);
 		}
-	
-		if (title.trim().isEmpty()) {
-			logger.error("The title field should not be empty");
-			return new ResponseEntity<>("The title field should not be empty", HttpStatus.BAD_REQUEST);
+		catch (StoryUpdateException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		if (content.trim().isEmpty()) {
-			logger.error("The content field should not be empty");
-			return new ResponseEntity<>("The content field should not be empty", HttpStatus.BAD_REQUEST);
-		}
-		if (title.length() > 100) {
-			logger.error("Title cannot be longer than 100 characters");
-			return new ResponseEntity<>("Title cannot be longer than 100 characters", HttpStatus.BAD_REQUEST);
-		}
-		if (content.length() > 1500) {
-			logger.error("Content cannot be longer than 1500 characters");
-			return new ResponseEntity<>("Content cannot be longer than 1500 characters", HttpStatus.BAD_REQUEST);
-		}
-	
-		// Authenticate user
+
+		// Debug print of the storyInfoMap
+		System.out.println(storyInfoMap);
+
 		logger.debug("Attempting to authenticate user with token");
-		Map<String, String> userInfo = userService.authenticateUser(token);
-		if (userInfo == null) {
+
+		Map<String, Object>	authorMap = new HashMap<>(); 
+
+		authorMap = userService.authenticateUser(token);
+		if (authorMap == null) {
 			logger.error("Authentication failed: Invalid Authorization Token");
 			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
 		}
 	
-		logger.debug("User authenticated: {}", userInfo);
+		logger.info("User authenticated: {}", authorMap);
 	
+		Map<String, Object> storyMap = new HashMap<>();
 		try {
-			String authorName = userInfo.get("username");
-			String authorIdStr = userInfo.get("id");
-			String authorRoleIdStr = userInfo.get("role_id");
-	
-			logger.debug("User info: authorName={}, authorId={}, authorRoleId={}", authorName, authorIdStr, authorRoleIdStr);
-	
-			// Check if the values are present and valid
-			if (authorName == null || authorIdStr == null || authorRoleIdStr == null) {
-				logger.error("Missing or invalid user information: username={}, id={}, role_id={}", authorName, authorIdStr, authorRoleIdStr);
-				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
+			storyMap.putAll(storyInfoMap);
+			storyMap.putAll(authorMap);
+			if (storyMap.containsKey("author_role_id") && storyMap.get("author_role_id").equals(1)) {
+				storyMap.put("author_visible", false);
 			}
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
-			// Convert authorId and authorRoleId to integers
-			Integer authorId = null;
-			Integer authorRoleId = null;
+		System.out.println(storyMap);
 
-			try {
-				authorId = Integer.valueOf(authorIdStr);
-				authorRoleId = Integer.valueOf(authorRoleIdStr);
-			} catch (NumberFormatException e) {
-				logger.error("Failed to parse user information: id={}, role_id={}", authorIdStr, authorRoleIdStr);
-				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
-			}
-	
-			logger.debug("User info: authorName={}, authorId={}, authorRoleId={}", authorName, authorId, authorRoleId);
-	
-	
-			// Set authorVisible based on role and request data
-			Boolean authorVisible = (authorRoleId == 1) ? false : Boolean.parseBoolean(authorVisibleStr);
-			logger.debug("Author visible set to: {}", authorVisible);
-	
+		try {
 			// Create the story
-			logger.debug("Creating the story with title={} and content={}", title, content);
-			storyService.createStory(title, content, authorId, authorName, authorRoleId, authorVisible);
+			logger.debug("Creating the story with title={}", storyMap.get("title"));
+			storyService.createStory(storyMap);
 			logger.info("Story created successfully");
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
-		} catch (StoryCreationException e) {
+		} catch (StoryUpdateException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT); // 409 Conflict for duplicate title
 		} catch (Exception e) {
@@ -135,44 +113,126 @@ public class StoryController {
 		}
 	}
 
-	/**
-	 * Retrieves all stories created by the authenticated user.
+
+		/**
+	 * Updates an existing story with new title, content, and author visibility status.
 	 * 
-	 * @param token the authorization token in the request header
-	 * @return a ResponseEntity containing a list of stories with title and ID in JSON format
+	 * @param storyId    the ID of the story to update, provided as a path variable
+	 * @param authHeader the Authorization header containing the user's token
+	 * @param storyData  a map containing updated story data: title, content, and author_visible
+	 * 
+	 * @return a ResponseEntity with an appropriate HTTP status and message:
+	 *         - 200 OK if the update is successful
+	 *         - 400 BAD_REQUEST if data validation fails
+	 *         - 401 UNAUTHORIZED if the user is not authenticated
+	 *         - 403 FORBIDDEN if the user is not authorized to modify the story
+	 *         - 500 INTERNAL_SERVER_ERROR if an unexpected error occurs
+	 */
+	@PutMapping("/{id}")
+	public ResponseEntity<String> updateStory(
+			@PathVariable("id") int storyId,
+			@RequestHeader(value = "Authorization", required = false) String authHeader,
+			@RequestBody Map<String, String> storyData) {
+
+		try {
+			storyService.validateStoryId(storyId);  // Validate the ID
+		} catch (IllegalArgumentException e) {
+			logger.error("Invalid story ID: {}", storyId);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return error message in the response body
+		}
+		logger.debug("Starting updateStory method for storyId: {}", storyId);
+
+		// Step 1: Validate and Extract Token
+		String token = userService.isValidToken(authHeader);
+		if (token == null) {
+			logger.error("Invalid or missing Authorization header");
+			return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
+		}
+
+		logger.info("Received Authorization Token for updating story: {}", token);
+
+		Map<String, Object>	storyInfoMap = new HashMap<>();
+
+		try {
+			storyInfoMap = storyService.mapStoryData(storyData);
+		}
+		catch (StoryUpdateException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+
+		System.out.println(storyInfoMap);
+
+		logger.debug("Attempting to authenticate user with token");
+
+		Map<String, Object>	authorMap = new HashMap<>(); 
+
+		authorMap = userService.authenticateUser(token);
+		if (authorMap == null) {
+			logger.error("Authentication failed: Invalid Authorization Token");
+			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
+		}
+
+		logger.info("User authenticated: {}", authorMap);
+
+		try {
+			// Step 4: Check Story Ownership
+			Optional<Map<String, Object>> existingStory = storyService.getStoryById(storyId);
+			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(storyInfoMap.get("authorId"))) {
+				logger.warn("Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
+				return new ResponseEntity<>("Story not found or you are not authorized to update this story", HttpStatus.FORBIDDEN);
+			}
+
+			// Step 5: Perform Update Operation
+			storyService.updateStory(storyId, storyInfoMap);
+			logger.info("Story with ID {} updated successfully by user {}", storyId, authorMap.get("author_name"));
+			return new ResponseEntity<>("Story updated successfully", HttpStatus.OK);
+
+		} catch (Exception e) {
+			logger.error("Error updating story: {}", e.getMessage(), e);
+			return new ResponseEntity<>("An error occurred while updating the story", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Retrieves the stories of a user based on their authorization token.
+	 * 
+	 * @param authHeader the Authorization token (optional)
+	 * 
+	 * @return a ResponseEntity containing:
+	 *         - A list of user stories with HTTP status 200 OK if found
+	 *         - A message with HTTP status 401 UNAUTHORIZED if the Authorization header is missing or invalid
+	 *         - A message with HTTP status 401 UNAUTHORIZED if authentication fails
+	 *         - A message with HTTP status 500 INTERNAL_SERVER_ERROR if an error occurs
 	 */
 	@GetMapping("/user")
 	public ResponseEntity<Object> getUserStories(
-			@RequestHeader(value = "Authorization", required = false) String token) {
+		@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-		if (token == null || token.trim().isEmpty()) {
-			return new ResponseEntity<>("Authorization header is missing", HttpStatus.UNAUTHORIZED);
-		}
+		// Use UserService's isValidToken to validate and extract token
+        String token = userService.isValidToken(authHeader);
+        if (token == null) {
+            logger.error("Invalid or missing Authorization header");
+            return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
+        }
 
 		logger.info("Received Authorization Token for retrieving user stories: {}", token);
 
 		// Authenticate user
-		Map<String, String> userInfo = userService.authenticateUser(token);
-		if (userInfo == null) {
+		Map<String, Object> authorMap = userService.authenticateUser(token);
+		if (authorMap == null) {
 			logger.error("Authentication failed: Invalid Authorization Token");
 			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
 		}
 
 		try {
-			Integer authorId = Integer.valueOf(userInfo.get("id"));
-
-			if (authorId == null) {
-				logger.error("Invalid author ID: {}", authorId);
-				return new ResponseEntity<>("Invalid author information", HttpStatus.BAD_REQUEST);
-			}
-
-			// Fetch user stories
+			Integer authorId = (Integer) authorMap.get("author_id");
 			List<Map<String, Object>> userStories = storyService.getUserStoriesByAuthorId(authorId);
-
+	
+			logger.info("Stories retrieved for authorId {}: {}", authorId, userStories);
 			if (userStories.isEmpty()) {
 				return new ResponseEntity<>("No stories found for this user", HttpStatus.OK);
 			}
-
+	
 			return new ResponseEntity<>(userStories, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error("Error retrieving user stories: {}", e.getMessage(), e);
@@ -181,9 +241,12 @@ public class StoryController {
 	}
 
 	/**
-	 * Gets the latest stories (up to a fixed limit).
+	 * Retrieves the latest stories up to a predefined limit.
 	 * 
-	 * @return a ResponseEntity containing the latest stories in JSON format
+	 * @return a ResponseEntity containing:
+	 *         - A list of the latest stories in JSON format with an HTTP status of 200 OK if found
+	 *         - 204 NO_CONTENT if no stories are available
+	 *         - 500 INTERNAL_SERVER_ERROR if an unexpected error occurs
 	 */
 	@GetMapping("/latest")
 	public ResponseEntity<List<Map<String, Object>>> getLatestStories() {
@@ -192,6 +255,7 @@ public class StoryController {
 		try {
 			// Fetch the latest stories
 			List<Map<String, Object>> latestStories = storyService.getLatestStories(storyLimit);
+			logger.info("Latest stories retrieved: {}", latestStories);
 
 			if (latestStories.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT); // No stories found
@@ -205,38 +269,56 @@ public class StoryController {
 	}
 
 	/**
-	 * Gets a random story.
+	 * Retrieves a random story from the available stories.
 	 * 
-	 * @return a ResponseEntity containing a random story in JSON format or NO_CONTENT if none is available
+	 * @return a ResponseEntity containing:
+	 *         - The random story data in JSON format with an HTTP status of 200 OK if found
+	 *         - 204 NO_CONTENT if no stories are available
+	 *         - 500 INTERNAL_SERVER_ERROR if an unexpected error occurs
 	 */
 	@GetMapping("/random")
 	public ResponseEntity<Map<String, Object>> getRandomStory() {
 		try {
-			return storyService.getRandomStory()
-					.map(story -> new ResponseEntity<>(story, HttpStatus.OK))
-					.orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-		} catch (Exception e) {
-			logger.error("Error fetching random story: {}", e.getMessage(), e);
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+            Optional<Map<String, Object>> story = storyService.getRandomStory();
+            story.ifPresent(s -> logger.info("Random story retrieved: {}", s));
+
+            return story.map(s -> new ResponseEntity<>(s, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
+        } catch (Exception e) {
+            logger.error("Error fetching random story: {}", e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 	}
 
 	/**
-     * Retrieves a single story by its ID.
-     * 
-     * @param storyId the ID of the story to retrieve
-     * @return a ResponseEntity containing the story in JSON format or a 404 status if not found
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getStoryById(@PathVariable("id") int storyId) {
-        Optional<Map<String, Object>> storyData = storyService.getStoryById(storyId);
-        
-        if (storyData.isPresent()) {
-            return new ResponseEntity<>(storyData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Story not found
-        }
-    }
+	 * Retrieves a story by its unique ID.
+	 * 
+	 * @param storyId the ID of the story to retrieve, provided as a path variable
+	 * 
+	 * @return a ResponseEntity containing:
+	 *         - The story data in JSON format with an HTTP status of 200 OK if found
+	 *         - 404 NOT_FOUND if the story with the specified ID does not exist
+	 */
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getStoryById(
+		@PathVariable("id") int storyId) {
 
+		// Validate the storyId before processing
+		try {
+			storyService.validateStoryId(storyId);  // Validate the ID
+		} catch (IllegalArgumentException e) {
+			logger.error("Invalid story ID: {}", storyId);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
+		}
+		
+		Optional<Map<String, Object>> storyData = storyService.getStoryById(storyId);
+		
+		if (storyData.isPresent()) {
+			logger.info("Story retrieved by ID {}: {}", storyId, storyData.get());
+			return new ResponseEntity<>(storyData.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Story not found
+		}
+	}
 }
 

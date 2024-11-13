@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
-    @ExceptionHandler(StoryCreationException.class)
+    @ExceptionHandler(StoryUpdateException.class)
     public ResponseEntity<String> handleInvalidStoryNameException(InvalidStoryNameException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
