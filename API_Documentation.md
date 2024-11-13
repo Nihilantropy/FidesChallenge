@@ -111,6 +111,30 @@
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
   - **500 Internal Server Error** - Internal server errors
 
+### `/{Id}`(Update Story)
+- **Request Type**: `PUT`
+- **Expected Info**:
+  - Header `Authorization: Bearer <token>`
+  - JSON `{ title, content, author_visible (true/false) }` if title or content are "" they won't be updated
+- **Response**:
+  - NONE
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - Story updated successfully
+  - **400 Bad Request** - Invalid input (e.g., title or content is empty)
+  - **401 Unauthorized** - Unauthorized (missing or invalid token)
+  - **500 Internal Server Error** - Internal server errors
+
+### `/{Id}`(Delete Story)
+- **Request Type**: `DELETE`
+- **Expected Info**:
+  - Header `Authorization: Bearer <token>`
+- **Response**:
+  - NONE
+- **Return Status + JSON `{message}`**:
+  - **204 No Content** - Story deleted successfully
+  - **401 Unauthorized** - Unauthorized (missing or invalid token), or user requesting id differes from story author_id (user is not the story author)
+  - **500 Internal Server Error** - Internal server errors
+
 ### `/user` (Get User Stories)
 - **Request Type**: `GET`
 - **Expected Info**:

@@ -9,6 +9,7 @@
 /app/src/main/java/com/sergio/storiesapp/exception/InvalidStoryNameException.java
 /app/src/main/java/com/sergio/storiesapp/exception/StoryCreationException.java
 /app/src/main/java/com/sergio/storiesapp/exception/StoryNotFoundException.java
+/app/src/main/java/com/sergio/storiesapp/exception/StoryUpdateException.java
 /app/src/main/java/com/sergio/storiesapp/model/Story.java
 /app/src/main/java/com/sergio/storiesapp/repository/StoryRepository.java
 /app/src/main/java/com/sergio/storiesapp/service/StoryService.java

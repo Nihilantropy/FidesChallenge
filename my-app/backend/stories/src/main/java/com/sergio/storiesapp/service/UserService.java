@@ -21,6 +21,7 @@ public class UserService {
 	 * Checks if the authorization token is valid and properly formatted.
 	 * 
 	 * @param authHeader the authorization header value
+	 * 
 	 * @return the token string if valid, or null if the format is invalid or the header is missing
 	 */
 	public String isValidToken(String authHeader) {
@@ -33,6 +34,15 @@ public class UserService {
 		return token.isEmpty() ? null : token;
 	}
 
+	/**
+	 * Validate user data.
+	 * 
+	 * @param username the name of the user
+	 * @param userId the id of the user
+	 * @param userRoleId the role id of the user (1 or 2)
+	 * 
+	 * @throws InvalidInputException
+	 */
 	public void validateUserData(String username, String userId, String userRoleId) {
 		if (username == null || username.trim().isEmpty()) {
 			throw new InvalidInputException("The username field should not be empty");

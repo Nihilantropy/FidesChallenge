@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sergio.storiesapp.exception.DeleteStoryException;
+import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
+import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
 import com.sergio.storiesapp.service.StoryService;
 import com.sergio.storiesapp.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -65,7 +68,7 @@ public class StoryController {
 		try {
 			storyInfoMap = storyService.mapStoryData(storyData);
 		}
-		catch (StoryUpdateException e) {
+		catch (InvalidInputException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
@@ -104,7 +107,7 @@ public class StoryController {
 			storyService.createStory(storyMap);
 			logger.info("Story created successfully");
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
-		} catch (StoryUpdateException e) {
+		} catch (IllegalArgumentException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT); // 409 Conflict for duplicate title
 		} catch (Exception e) {
@@ -130,16 +133,18 @@ public class StoryController {
 	 */
 	@PutMapping("/{id}")
 	public ResponseEntity<String> updateStory(
-			@PathVariable("id") int storyId,
+			@PathVariable("id") Long storyIdL,
 			@RequestHeader(value = "Authorization", required = false) String authHeader,
 			@RequestBody Map<String, String> storyData) {
 
 		try {
-			storyService.validateStoryId(storyId);  // Validate the ID
+			storyService.validateStoryId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
-			logger.error("Invalid story ID: {}", storyId);
+			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return error message in the response body
 		}
+		int	storyId = storyIdL.intValue();
+
 		logger.debug("Starting updateStory method for storyId: {}", storyId);
 
 		// Step 1: Validate and Extract Token
@@ -301,15 +306,16 @@ public class StoryController {
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getStoryById(
-		@PathVariable("id") int storyId) {
+		@PathVariable("id") Long storyIdL) {
 
 		// Validate the storyId before processing
 		try {
-			storyService.validateStoryId(storyId);  // Validate the ID
+			storyService.validateStoryId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
-			logger.error("Invalid story ID: {}", storyId);
+			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
 		}
+		int	storyId = storyIdL.intValue();
 		
 		Optional<Map<String, Object>> storyData = storyService.getStoryById(storyId);
 		
@@ -317,7 +323,49 @@ public class StoryController {
 			logger.info("Story retrieved by ID {}: {}", storyId, storyData.get());
 			return new ResponseEntity<>(storyData.get(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Story not found
+			return new ResponseEntity<>("Story not found", HttpStatus.NOT_FOUND); // Story not found
+		}
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteStoryById(
+		@RequestHeader(value = "Authorization", required = false) String authHeader,
+		@PathVariable("id") Long storyIdL) {
+			
+		// Validate the storyId before processing
+		try {
+			storyService.validateStoryId(storyIdL);  // Validate the ID
+		} catch (IllegalArgumentException e) {
+			logger.error("Invalid story ID: {}", storyIdL);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
+		}
+		int	storyId = storyIdL.intValue();
+
+		// Use UserService's isValidToken to validate and extract token
+		String token = userService.isValidToken(authHeader);
+		if (token == null) {
+			logger.error("Invalid or missing Authorization header");
+			return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
+		}
+
+		logger.info("Received Authorization Token for retrieving user stories: {}", token);
+
+		// Authenticate user
+		Map<String, Object> authorMap = userService.authenticateUser(token);
+		if (authorMap == null) {
+			logger.error("Authentication failed: Invalid Authorization Token");
+			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
+		}
+
+		try {
+			storyService.deleteStory(storyId, authorMap);
+			return new ResponseEntity<>("Story deleted succesfully", HttpStatus.NO_CONTENT);
+		}
+		catch (UnauthorizedDeleteException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		}
+		catch (DeleteStoryException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

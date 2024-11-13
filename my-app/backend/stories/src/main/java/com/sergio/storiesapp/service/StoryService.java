@@ -2,6 +2,9 @@ package com.sergio.storiesapp.service;
 
 import com.sergio.storiesapp.exception.InvalidStoryNameException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
+import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
+import com.sergio.storiesapp.exception.DeleteStoryException;
+import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.model.Story;
 import com.sergio.storiesapp.repository.StoryRepository;
 import org.slf4j.Logger;
@@ -29,26 +32,26 @@ public class StoryService {
 	 * @param title   the story title
 	 * @param content the story content
 	 * 
-	 * @throws StoryUpdateException if validation fails
+	 * @throws InvalidInputException if validation fails
 	 */
 	public void validateStoryData(String title, String content, String authorVisibleStr) {
 		if (title == null || title.trim().isEmpty()) {
-			throw new StoryUpdateException("The title field should not be empty");
+			throw new InvalidInputException("The title field should not be empty");
 		}
 		if (content == null || content.trim().isEmpty()) {
-			throw new StoryUpdateException("The content field should not be empty");
+			throw new InvalidInputException("The content field should not be empty");
 		}
 		if (authorVisibleStr == null || authorVisibleStr.trim().isEmpty()) {
-			throw new StoryUpdateException("The author_visible field should not be empty");
+			throw new InvalidInputException("The author_visible field should not be empty");
 		}
 		if (title.length() > 100) {
-			throw new StoryUpdateException("Title cannot be longer than 100 characters");
+			throw new InvalidInputException("Title cannot be longer than 100 characters");
 		}
 		if (content.length() > 1500) {
-			throw new StoryUpdateException("Content cannot be longer than 1500 characters");
+			throw new InvalidInputException("Content cannot be longer than 1500 characters");
 		}
 		if (authorVisibleStr != "true" || authorVisibleStr != "false") {
-			throw new StoryUpdateException("author_visible should be either 'true' or 'false'");
+			throw new InvalidInputException("author_visible should be either 'true' or 'false'");
 		}
 	}
 
@@ -61,7 +64,7 @@ public class StoryService {
 	 * 
 	 * @throws IllegalArgumentException if the ID is invalid
 	 */
-	public void validateStoryId(int storyId) {
+	public void validateStoryId(Long storyId) {
 		if (storyId <= 0) {
 			throw new IllegalArgumentException("Story ID must be a positive integer.");
 		}
@@ -73,10 +76,12 @@ public class StoryService {
 	/**
 	 * Helper method to map and validate the StoryData
 	 * @param storyData the Story object passed from the user request
+	 * 
 	 * @return a Map with parsed data
-	 * @throws StoryUpdateException if validation fails
+	 * 
+	 * @throws InvalidInputException if validation fails
 	 */
-	public Map<String, Object> mapStoryData(Map<String, String> storyData) throws StoryUpdateException {
+	public Map<String, Object> mapStoryData(Map<String, String> storyData) throws InvalidInputException {
 		Map<String, Object> storyMap = new HashMap<>();
 
 		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
@@ -86,8 +91,8 @@ public class StoryService {
 		try {
 			validateStoryData(title, content, authorVisibleStr); // Reuse the existing validation logic
 		}
-		catch (StoryUpdateException e) {
-			throw new StoryUpdateException(e.getMessage());
+		catch (InvalidInputException e) {
+			throw new InvalidInputException(e.getMessage());
 		}
 
 		// Set title and content in the map
@@ -116,7 +121,7 @@ public class StoryService {
 	 * 
 	 * @return true if the story is created and saved successfully
 	 * 
-	 * @throws StoryUpdateException if there is an error during the creation process, such as invalid role ID or failing to save the story
+	 * @throws IllegalArgumentException if there is an error during the creation process, such as invalid role ID or failing to save the story
 	 * @throws InvalidStoryNameException if a story with the same title already exists for the author
 	 */
 	public boolean createStory(Map<String, Object> storyMap) {
@@ -134,7 +139,7 @@ public class StoryService {
 		if (!existingStories.isEmpty()) {
 			throw new InvalidStoryNameException("There already is a story with this title.");
 		}
-		
+
 		try {
 			Story story = new Story();
 			story.setTitle(title);
@@ -142,7 +147,11 @@ public class StoryService {
 			story.setAuthorRole(authorId, authorRoleId, authorName, authorVisible);
 			
 			logger.info("Story details before saving: {}", story);
-			storyRepository.save(story);
+			try {
+				storyRepository.save(story);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(e.getMessage());
+			}
 
 			logger.info("Story saved successfully: ID={}, Title={}", story.getId(), title);
 			return true;
@@ -166,15 +175,54 @@ public class StoryService {
 		String	title = (String) storyInfoMap.get("title");
 		String	content = (String) storyInfoMap.get("content");
 		Boolean	authorVisible = (Boolean) storyInfoMap.get("author_visible");
-
-		Story story = storyRepository.findById(storyId)
-				.orElseThrow(() -> new StoryUpdateException("Story not found"));
-
-		story.setTitle(title);
-		story.setContent(content);
-		story.setAuthorVisible(authorVisible);
 		
-		storyRepository.save(story);  // Persist updated story
+		try {
+			Story story = storyRepository.findById(storyId)
+					.orElseThrow(() -> new StoryUpdateException("Story not found"));
+			// Updated title and content only if the request is not empty
+			if (title != "")
+				story.setTitle(title);
+			if (content != "")
+				story.setContent(content);
+			story.setAuthorVisible(authorVisible);
+			
+			try {
+				storyRepository.save(story);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException(e.getMessage());
+			}
+		}
+		catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+		catch (Exception e) {
+			logger.error("Failed to save story: {}", e.getMessage(), e);
+			throw new StoryUpdateException("Could not save the story. Please try again.");
+		}
+
+	}
+
+	public void deleteStory(int storyId, Map<String, Object> authorMap) {
+		Integer	authorId = (Integer) authorMap.get("author_id");
+
+		try {
+			Story story = storyRepository.findById(storyId)
+					.orElseThrow(() -> new DeleteStoryException("Story not found"));
+	
+			if (story.getAuthorId() != authorId) {
+				throw new UnauthorizedDeleteException("This user is not the author of the story. Delete request rejected");
+			}
+			logger.info("requesting user and story author match. Proceeding delete story={}", storyId);
+	
+			storyRepository.delete(story);
+		}
+		catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(e.getMessage());
+		}
+		catch (Exception e) {
+			logger.error("Failed to save story: {}", e.getMessage(), e);
+			throw new DeleteStoryException("Could not delete the story. Please try again.");
+		}
 	}
 
 	/**
