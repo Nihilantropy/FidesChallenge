@@ -3,7 +3,7 @@ export async function up(knex) {
     const hasAdminsTable = await knex.schema.hasTable('admins');
     if (!hasAdminsTable) {
         await knex.schema.createTable('admins', (table) => {
-            table.increments('id').primary();
+            table.increments('id').primary().unsigned();
             table.string('email', 100).unique().notNullable();
             table.string('password', 255).notNullable();  // Store hashed passwords only
             table.integer('role_id').unsigned().notNullable().defaultTo(1);  // Default to 'admin' role

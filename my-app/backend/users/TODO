@@ -5,12 +5,12 @@
 1. **POST `/users/create`** - **Create a New User**
    - **Description**: This route allows new users to register by submitting their details (username, email, password).
    - **Request Body**: JSON object containing fields like `username`, `email`, and `password`.
-   - **Response**: Returns the newly created user details, excluding the password.
+   - **Response**: Returns a JWT or Paseto token for the new user.
 
 2. **POST `/users/login`** - **User Login**
    - **Description**: Authenticates a user by validating their email and password, returning a token if successful.
    - **Request Body**: JSON object with `email` and `password`.
-   - **Response**: Returns a JWT or Paseto token for authenticated requests.
+   - **Response**: Returns a Paseto token for authenticated requests.
 
 3. **GET `/users/profile`** - **Get User Profile**
    - **Description**: Retrieves the profile information of the authenticated user.
@@ -19,6 +19,11 @@
 4. **DELETE `/users/delete`** - **Delete User Account**
    - **Description**: Enables a user to delete their account, removing all associated data.
    - **Response**: Status confirming deletion or an error if the user does not exist.
+
+5. **POST `/users/login-admin`** - **Admin Login**
+   - **Description**: Authenticates an admin by validating their email and password, returning a token if successful.
+   - **Request Body**: JSON object with `email` and `password`.
+   - **Response**: Returns a Paseto token for authenticated requests.
 
 ## **Plus Routes** (Optional, if time allows)
 

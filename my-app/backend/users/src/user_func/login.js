@@ -1,11 +1,7 @@
-import { V4 } from 'paseto'; // Using V4 version of Paseto for token creation
-import { Buffer } from 'buffer';
 import db from '../database.js'; // Assuming you have a configured knex instance
 import bcrypt from 'bcrypt'; // Assuming you're storing hashed passwords in the DB
-import { InvalidCredentialsError, TokenCreationError, NoCredentialError, InternalServerError, DBFetchQueryError } from '../err/dist/CustomError.js';
-import { error } from 'console';
-
-const privateKey = Buffer.from(process.env.PRIVATE_KEY.replace(/\\n/g, '\n'), 'utf-8');
+import { InvalidCredentialsError, NoCredentialError, DBFetchQueryError, TokenCreationError } from '../err/dist/CustomError.js';
+import { genToken } from '../middleware/genToken.js';
 
 async function loginUser(email, password) {
 
@@ -28,40 +24,31 @@ async function loginUser(email, password) {
 
 	// If the user is not found
 	if (!user) {
+		console.log("user not found")
 		throw new InvalidCredentialsError(); // Use the custom error
 	}
 	
 	console.log("User found:", user);  // Debug log
 
+	const passwordMatch = await bcrypt.compare(password, user.password); // Use bcrypt.compare here
+
+    if (!passwordMatch) {
+        console.error("Invalid password");
+        throw new InvalidCredentialsError(); // Use the custom error
+    }
+
+    // Generate a token
+    const payload = { id: user.id, username: user.username, role_id: user.role_id };
 	
-	const hashedPassword = await bcrypt.hash(password, 10);
-
-	// Check if the provided password matches the hashed password in the DB
-	if (hashedPassword !== user.password) {
-		console.error("invalid password");
-		throw new InvalidCredentialsError(); // Use the custom error
-	}
-
-	// If password matches, generate a Paseto token
 	try {
-		const token = await V4.sign(
-			{ id: user.id }, // Payload
-			privateKey, // Secret key
-			{ expiresIn: '1h' } // Token expiration time
-		);
-		
-	
-		if (!token) {
-			throw new TokenCreationError();
-		}
-
-		console.log("token created!");
+		const token = await genToken(payload);
+		console.log("user correctly authenticated, returning token")
 		return token;
-	
-	} catch (e) {
-		console.error("Error during token generation:", e);
-		throw new InternalServerError("Token generation failed");
 	}
+	catch (e) {
+		throw new TokenCreationError();
+	}
+    
 }
 
 // Export the loginUser function
