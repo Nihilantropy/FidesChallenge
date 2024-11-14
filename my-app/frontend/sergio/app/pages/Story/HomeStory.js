@@ -8,6 +8,7 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       setPage('');
       setPupup(true);
       sShowPopupFB(true);
+      return;
     }
   }, [azione, gJWTtoken, setPage, sShowPopupFB]);
 
@@ -121,6 +122,7 @@ const Inventa = ({ sShowErr }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         prompt: prompt
@@ -132,7 +134,7 @@ const Inventa = ({ sShowErr }) => {
     })
     .then(({ status, data }) => {
       if (status !== 200) setErrorText(data.message);
-      else setStoria(data.storia);
+      else setStoria(data.story);
     })
     .catch(error => {
       sShowErr("Scusa ma sono stanco");

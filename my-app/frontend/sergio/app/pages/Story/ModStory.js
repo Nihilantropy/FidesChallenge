@@ -124,8 +124,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     const sanitizedTitle = validator.escape(titolo);
     
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/edit", {
-      method: 'POST',
+    fetch("http://localhost:8000/stories/"+gid(), {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+gJWTtoken()
@@ -133,7 +133,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       body: JSON.stringify({
         title: sanitizedTitle,
         content: sanitizedStory,
-        author_visible: true
+        author_visible: story.author_visible
       }),
     })
     .then(response => {
@@ -141,7 +141,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       return response.json().then(data => ({ status, data }));
     })
     .then(({ status, data }) => {
-      if (status != 201 ) {
+      if (status != 200 ) {
         sShowErr(data.message);
       }else showPage(7);
     })

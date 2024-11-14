@@ -27,7 +27,7 @@ import Profilo from './app/pages/Utenti/Profilo.js';
 
 export default function App() {
   /* ====== Show Page ====== */
-  const [visiblePage, setVisiblePage] = useState(7);
+  const [visiblePage, setVisiblePage] = useState(1);
   const showPage = (page) => { setVisiblePage(page); };
   const gshowPage = (page) => { return visiblePage; };
 
@@ -87,7 +87,7 @@ export default function App() {
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
       {ShowErr !== '' && <PupupErr sShowErr={sShowErr} gShowPopupErr={gShowPopupErr} />}
-      {ShowPopupES === true && <PupupDelStory gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} />}
+      {ShowPopupES === true && <PupupDelStory gJWTtoken={gJWTtoken} gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} />}
     </View>
   );
 }
