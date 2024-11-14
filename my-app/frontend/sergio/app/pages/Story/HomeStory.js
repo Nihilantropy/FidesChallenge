@@ -3,15 +3,13 @@ import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-n
 import styles from './../../assets/style/main.js';
 
 const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sShowErr }) => {
-  useEffect(() => {
-    if (azione === 'preferito' && gJWTtoken() === '') {
-      setPage('');
-      setPupup(true);
-      sShowPopupFB(true);
-      return;
-    }
-  }, [azione, gJWTtoken, setPage, sShowPopupFB]);
-
+  if (azione === 'preferito' && gJWTtoken() === '') {
+    setPage('');
+    setPupup(true);
+    sShowPopupFB(true);
+    return;
+  }
+  
   const [stori, setStori] = useState('');
   function get_story(){
     fetch("http://localhost:8000/stories/random", {
@@ -39,7 +37,9 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       setPage('');
     });
   }
-  get_story();
+  useEffect(() => {
+    get_story();
+  }, [get_story]);
 
   const [Preferiti, setPreferiti] = useState(false);
 

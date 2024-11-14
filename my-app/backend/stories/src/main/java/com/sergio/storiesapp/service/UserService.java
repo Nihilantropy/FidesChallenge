@@ -1,5 +1,7 @@
 package com.sergio.storiesapp.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.Map;
 
 @Service
 public class UserService {
+
+	private static final Logger logger = LoggerFactory.getLogger(StoryService.class);
 
 	private final String USER_SERVICE_URL = "http://backend-users:3000/users/profile";
 
@@ -31,6 +35,7 @@ public class UserService {
 
 		// Extract the token part after "Bearer "
 		String token = authHeader.substring(7).trim();
+		logger.info("token is= {}", token);
 		return token.isEmpty() ? null : token;
 	}
 
@@ -43,17 +48,17 @@ public class UserService {
 	 * 
 	 * @throws InvalidInputException
 	 */
-	public void validateUserData(String username, String userId, String userRoleId) {
+	public void validateUserData(String username, Integer userId, Integer userRoleId) {
 		if (username == null || username.trim().isEmpty()) {
 			throw new InvalidInputException("The username field should not be empty");
 		}
-		if (userId == null || userId.trim().isEmpty()) {
+		if (userId == null) {
 			throw new InvalidInputException("The userId field should not be empty");
 		}
-		if (userRoleId == null || userRoleId.trim().isEmpty()) {
+		if (userRoleId == null) {
 			throw new InvalidInputException("The userRoleId field should not be empty");
 		}
-		if (userRoleId != "1" || userRoleId != "2") {
+		if (userRoleId != 1 && userRoleId != 2) {
 			throw new InvalidInputException("The userRoleId should either be '1' or '2'");
 		}
 	}
@@ -61,7 +66,7 @@ public class UserService {
 	public Map<String, Object> authenticateUser(String token) {
 		// Create headers with the token
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", token);
+		headers.set("Authorization", "Bearer " + token);
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 		// Create the request entity with headers
@@ -76,32 +81,23 @@ public class UserService {
 			if (response.getStatusCode() == HttpStatus.OK && responseBody != null) {
 				// Extract the id and username from the response body
 				String username = (String) responseBody.get("username");
-				String userIdStr = (String) (responseBody.get("id"));
-				String userRoleIdStr = (String) (responseBody.get("role_id"));
+				Integer userId = (Integer) responseBody.get("id");
+				Integer userRoleId = (Integer) responseBody.get("role_id");
 
 				try {
-					validateUserData(username, userIdStr, userRoleIdStr);
+					validateUserData(username, userId, userRoleId);
 				}
 				catch (InvalidInputException e) {
-					return null;
-				}
-
-				Integer	userId;
-				Integer	userRoleId;
-
-				try {
-					userId = Integer.valueOf(userIdStr);
-					userRoleId = Integer.valueOf(userRoleIdStr);
-				} catch (NumberFormatException e) {
+					logger.debug(e.getMessage());
 					return null;
 				}
 
 				// Prepare user info map with extracted values
 				Map<String, Object> userInfo = new HashMap<>();
-				userInfo.put("username", username);
-				userInfo.put("id", userId);
-				userInfo.put("role_id", userRoleId);
-
+				userInfo.put("author_name", username);
+				userInfo.put("author_id", userId);
+				userInfo.put("author_role_id", userRoleId);
+				
 				return userInfo;
 			}
 		} catch (Exception e) {

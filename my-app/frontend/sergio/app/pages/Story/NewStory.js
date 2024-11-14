@@ -106,25 +106,26 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+gJWTtoken()
+        'Authorization': 'Bearer ' + gJWTtoken()
       },
       body: JSON.stringify({
         title: sanitizedTitle,
         content: sanitizedStory,
-        author_visible: true
+        author_visible: 'true'
       }),
     })
     .then(response => {
       const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status != 201 ) {
-        sShowErr(data.message);
-      }else showPage(7);
+      if (status != 201) {
+        return response.json().then(data => {
+          sShowErr(data.message);
+        });
+      } else {
+        showPage(7);
+      }
     })
     .catch(error => {
-      sShowErr("Errore interno");
+      sShowErr("Errore interno: " + error);
     });
   }
   return (
