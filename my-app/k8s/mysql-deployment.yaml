@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: my-app-db  # Assicurati che l'immagine sia presente
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: myapp_db  # Sostituisci con il nome del tuo database
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials  # Nome del tuo Secret
+              key: password  # La chiave per la password del root
+        - name: MYSQL_USER
+          value: mysql_user  # Sostituisci con il tuo utente
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials  # Nome del tuo Secret
+              key: password  # La chiave per la password dell'utente
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc  # Collegheremo il PVC più avanti
+#va messo imagePullPolicy: Never perchè sennò cerca di prendere 
+#l'immagine da dockerhub piuttosto che quella tirata su da noi
