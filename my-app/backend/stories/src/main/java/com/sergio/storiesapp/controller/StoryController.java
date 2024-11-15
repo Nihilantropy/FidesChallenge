@@ -21,7 +21,7 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin(origins = {"http://expo-service:8081", "http://backend-users:3000"})
+@CrossOrigin(origins = {"http://localhost:8000", "http://backend-users:3000"})
 @RequestMapping("/stories")
 public class StoryController {
 
@@ -59,7 +59,7 @@ public class StoryController {
 		if (token == null) {
 			 logger.error("Invalid or missing Authorization header");
 			 return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
-		 }
+		}
 	
 		logger.info("Received Authorization Token: {}", token);
 	
@@ -99,7 +99,7 @@ public class StoryController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		System.out.println(storyMap);
+		logger.info("full story map is {}", storyMap);
 
 		try {
 			// Create the story

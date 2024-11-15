@@ -14,7 +14,7 @@ services:
       - backend-users
       - backend-stories
       - backend-tts
-      - backend-ia
+      #- backend-ia
       - frontend-expo
 
    # Database (MySQL) micro
@@ -100,15 +100,15 @@ services:
 
   # IA micro
   backend-ia:
-    container_name: ia-service
-    build:
-      context: ./backend/ia
-      dockerfile: Dockerfile
-    networks:
-      - proxy
-      - frontend-ia
-    depends_on:
-      - frontend-expo
+   container_name: ia-service
+   build:
+     context: ./backend/ia
+     dockerfile: Dockerfile
+   networks:
+     - proxy
+     - frontend-ia
+   depends_on:
+     - frontend-expo
 
   # Frontend expo micro
   frontend-expo:

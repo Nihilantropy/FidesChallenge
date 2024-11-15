@@ -62,7 +62,6 @@ const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
   )
 };
 
-const validator = require('validator');
 const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
   useEffect(() => {
     if (gJWTtoken() == ''){
@@ -97,35 +96,41 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       return;
     }
 
-    /* ====== Sanitized ====== */
-    const sanitizedStory = validator.escape(story);
-    const sanitizedTitle = validator.escape(titolo);
-    
     /* ====== Send post ====== */
     fetch("http://localhost:8000/stories/", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+gJWTtoken()
+        'Authorization': 'Bearer ' + gJWTtoken()
       },
       body: JSON.stringify({
-        title: sanitizedTitle,
-        content: sanitizedStory,
-        author_visible: true
+        title: titolo,
+        content: story,
+        author_visible: 'true'
       }),
     })
     .then(response => {
       const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status != 201 ) {
-        sShowErr(data.message);
-      }else showPage(7);
-    })
-    .catch(error => {
+      if (status !== 201) {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          return response.json().then(data => {
+            sShowErr(data.message);
+          });
+        } else {
+          return response.text().then(message => {
+            sShowErr(message || "Errore sconosciuto");
+          });
+        }
+      } else {
+        showPage(7);
+      }
+   })
+   .catch(error => {
+      console.log(error);
       sShowErr("Errore interno");
-    });
+   });
+   
   }
   return (
     <View style={styles.stacca}>
