@@ -9,7 +9,7 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
     sShowPopupFB(true);
     return;
   }
-  
+
   const [stori, setStori] = useState('');
   const [disponibili, setdisponibili] = useState(1);
   async function get_story(){
@@ -83,7 +83,8 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
           </View>
           <Text style={styles.titoli}>{stori.title}</Text>
           <Text>{"\n"}</Text>
-          <Text style={styles.testi}>{stori.content}</Text>
+          <Text style={[styles.testi, styles.sinistra]}>{stori.content}</Text>
+          { stori.author_visible == true && (<View style={{ alignSelf: 'flex-end' }}><Text style={styles.testi}>Storia by {stori.author_name}</Text></View>) }
           <Text>{"\n\n"}</Text>
           <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),get_story()}}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
           <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>

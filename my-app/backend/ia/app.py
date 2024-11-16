@@ -7,7 +7,7 @@ app = Flask(__name__)
 generator = pipeline("text-generation", model="gpt2")
 
 @app.route('/generatestory', methods=['POST'])
-def generate_story():
+def generatestory():
     data = request.get_json()
     prompt = data.get("prompt", "Di che sei stanco")
 
