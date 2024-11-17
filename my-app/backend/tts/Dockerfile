@@ -1,15 +1,22 @@
-# Use the official Python base image from Docker Hub
-FROM python:3.13-slim
+# Usa un'immagine Python come base
+FROM python:3.9
 
-# Set the working directory in the container
+# Imposta la directory di lavoro
 WORKDIR /app
 
-COPY . .
+# Copia tutti i file
+COPY tts_server.py pulizia.sh /app/
 
-# Install any dependencies if a requirements file is provided (uncomment if you have one)
-RUN pip install gtts flask flask_cors
+RUN apt-get update && \
+    apt-get install -y cron dos2unix && \
+    echo "*/0 0 * * * sh /app/pulizia.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/your-cron-job && \
+    echo "" >> /etc/cron.d/your-cron-job && \
+    chmod 0644 /etc/cron.d/your-cron-job && \
+    dos2unix /app/pulizia.sh && chmod +x /app/pulizia.sh && \
+    pip install gtts flask flask_cors
 
+# Espone la porta 5000 per Flask
 EXPOSE 5000
 
-# Default command (optional)
-CMD ["python3", "tts_server.py"]
+# Comando per avviare l'app e il cron job
+CMD service cron start && python3 tts_server.py

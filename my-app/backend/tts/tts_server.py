@@ -10,13 +10,18 @@ CORS(app, origins=["http://expo-service:8081", "http://localhost:8000"])  # Allo
 def speak():
     data = request.get_json()
     text = data.get('text', '')
+    id = data.get('id', 0)
     language = data.get('language', 'it')
+
+    file_path = str(id)+".mp3"
+    if os.path.exists(file_path):
+        # Ritorna diretto
+        return send_file(file_path, as_attachment=True)
     
     # Generate text-to-speech audio
     tts = gTTS(text=text, lang=language)
-    tts.save("zz_tts_output.mp3")
-    
-    return send_file("zz_tts_output.mp3", as_attachment=True)
+    tts.save(file_path)
+    return send_file(file_path, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')
