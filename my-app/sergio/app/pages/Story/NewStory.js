@@ -2,7 +2,7 @@ import React, {  useState, useEffect } from 'react';
 import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settitolo  }) => {
+const Content_web = ({ showPage,crea_storia,setStory,getStory,gtitolo,settitolo  }) => {
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
@@ -26,7 +26,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settit
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
           <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
-          <Pressable onPress={modifica_storia}><Text style={styles.link}>Racconta</Text></Pressable>
+          <Pressable onPress={crea_storia}><Text style={styles.link}>Racconta</Text></Pressable>
         </View>
         <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
@@ -63,47 +63,25 @@ const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
 };
 
 const validator = require('validator');
-const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
-  if (gJWTtoken() == ''){
-    showPage(1);
-    sShowPopupFB(true);
-    return;
-  }
+const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
+  useEffect(() => {
+    if (gJWTtoken() == ''){
+      showPage(2);
+      sShowPopupFB(true);
+    }
+  }, [gJWTtoken, showPage, sShowPopupFB]);
 
   useEffect(() => {
-    setInviaFunction(modifica_storia);
-  }, [modifica_storia]);
+    setInviaFunction(crea_storia);
+  }, [crea_storia]);
 
   const [story, setStory] = useState('');
   const getStory = (page) => { return story; };
 
   const [titolo, settitolo] = useState('');
   const gtitolo = (page) => { return titolo; };
-
-  fetch("http://localhost:8000/stories/"+gid(), {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer '+gJWTtoken()
-    }
-  })
-  .then(response => {
-    const status = response.status;
-    return response.json().then(data => ({ status, data }));
-  })
-  .then(({ status, data }) => {
-    if (status !== 200) {
-      showPage(7);
-    } else {
-      settitolo(data.title);
-      setStory(data.content);
-    }
-  })
-  .catch(error => {
-    showPage(7);
-  });
-
-  function modifica_storia() {
+  
+  function crea_storia() {
     /* ====== Basic Check ====== */
     if (story === '' || titolo === '') {
       sShowErr("Completa tutti i campi prima di proseguire");
@@ -124,8 +102,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     const sanitizedTitle = validator.escape(titolo);
     
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/"+gid(), {
-      method: 'PUT',
+    fetch("http://localhost:8000/stories/", {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '+gJWTtoken()
@@ -133,7 +111,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       body: JSON.stringify({
         title: sanitizedTitle,
         content: sanitizedStory,
-        author_visible: story.author_visible
+        author_visible: true
       }),
     })
     .then(response => {
@@ -141,7 +119,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       return response.json().then(data => ({ status, data }));
     })
     .then(({ status, data }) => {
-      if (status != 200 ) {
+      if (status != 201 ) {
         sShowErr(data.message);
       }else showPage(7);
     })
@@ -151,9 +129,9 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
   }
   return (
     <View style={styles.stacca}>
-      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} showPage={showPage} modifica_storia={modifica_storia} setStory={setStory} getStory={getStory} /> }
+      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} showPage={showPage} crea_storia={crea_storia} setStory={setStory} getStory={getStory} /> }
       { Platform.OS !== 'web' && <Content_app gtitolo={gtitolo} settitolo={settitolo} getStory={getStory} setStory={setStory} /> }
     </View>
   );
 };
-export default ModStory;
+export default NewStory;
