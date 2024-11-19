@@ -21,5 +21,4 @@ spec:
   - name: expo-19002   # Nome per la porta del servizio 19002
     protocol: TCP
     port: 19002
-    targetPort: 19002
-  type: ClusterIP         # Tipo di servizio, potrebbe essere LoadBalancer su un cloud provider
+    targetPort: 19002 
