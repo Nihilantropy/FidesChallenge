@@ -1,6 +1,6 @@
 package com.sergio.storiesapp.service;
 
-import com.sergio.storiesapp.exception.InvalidStoryNameException;
+import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
@@ -125,7 +125,6 @@ public class StoryService {
 	 * @return true if the story is created and saved successfully
 	 * 
 	 * @throws IllegalArgumentException if there is an error during the creation process, such as invalid role ID or failing to save the story
-	 * @throws InvalidStoryNameException if a story with the same title already exists for the author
 	 */
 	public boolean createStory(Map<String, Object> storyMap) {
 
@@ -140,7 +139,7 @@ public class StoryService {
 		// Check for an existing story with the same title by this author
 		List<Story> existingStories = storyRepository.findByTitle(title);
 		if (!existingStories.isEmpty()) {
-			throw new InvalidStoryNameException("There already is a story with this title.");
+			throw new IllegalArgumentException("There already is a story with this title.");
 		}
 
 		try {
@@ -160,7 +159,7 @@ public class StoryService {
 			return true;
 		} catch (Exception e) {
 			logger.error("Failed to save story: {}", e.getMessage(), e);
-			throw new StoryUpdateException("Could not save the story. Please try again.");
+			throw new StoryCreationException("Could not save the story. Please try again.");
 		}
 	}
 

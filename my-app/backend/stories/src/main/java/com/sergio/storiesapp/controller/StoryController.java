@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
 import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
@@ -109,7 +110,10 @@ public class StoryController {
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT); // 409 Conflict for duplicate title
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		} catch (StoryCreationException e) {
+			logger.warn("Story creation failed: " + e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Error creating story: " + e.getMessage(), e);
 			return new ResponseEntity<>("An error occurred while creating the story", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,7 +121,10 @@ public class StoryController {
 	}
 
 
-		/**
+
+	// TODO Check if the new story title already exist in the db
+
+	/**
 	 * Updates an existing story with new title, content, and author visibility status.
 	 * 
 	 * @param storyId    the ID of the story to update, provided as a path variable
