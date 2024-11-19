@@ -2,6 +2,18 @@ MAKEFLAGS += -s
 
 all: stop prune start show
 
+kube:
+	-./mvnw clean packeg
+	docker-compose build
+	-kubectl apply -f ./k8s
+	-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+	-kubectl get pod
+	-kubectl get svc
+	-kubectl get secret
+	-kubectl get ingress
+	-kubectl get pods -n ingress-nginx
+	-curl http://sergio.local
+
 start:
 	clear
 	-./mvnw clean packeg

@@ -50,7 +50,7 @@ public class StoryService {
 		if (content.length() > 1500) {
 			throw new InvalidInputException("Content cannot be longer than 1500 characters");
 		}
-		if (authorVisibleStr != "true" || authorVisibleStr != "false") {
+		if (!"true".equals(authorVisibleStr) && !"false".equals(authorVisibleStr)) {
 			throw new InvalidInputException("author_visible should be either 'true' or 'false'");
 		}
 	}
@@ -88,12 +88,16 @@ public class StoryService {
 		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
 		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
 
+		
 		try {
 			validateStoryData(title, content, authorVisibleStr); // Reuse the existing validation logic
 		}
 		catch (InvalidInputException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
+		logger.info("title is={}", title);
+		logger.info("content is={}", content);
+		logger.info("authorVisibleStr is={}", authorVisibleStr);
 
 		// Set title and content in the map
 		storyMap.put("title", title);

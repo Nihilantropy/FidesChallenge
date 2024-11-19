@@ -39,7 +39,9 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       setPage('');
     });
   }
-  get_story();
+  useEffect(() => {
+    get_story();
+  }, [get_story]);
 
   const [Preferiti, setPreferiti] = useState(false);
 
