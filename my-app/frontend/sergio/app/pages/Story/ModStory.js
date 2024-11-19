@@ -22,7 +22,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settit
   return (
     <ScrollView>
       <View style={styles.box}>
-        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Modifica Storia</Text></View>
+        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Nuova Storia</Text></View>
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
           <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>

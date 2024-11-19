@@ -109,6 +109,7 @@
   - **201 Created** - Story created successfully
   - **400 Bad Request** - Invalid input (e.g., title or content is empty)
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
+  - **401 Conflict** - There already is a story with this title.
   - **500 Internal Server Error** - Internal server errors
 
 ### `/{Id}`(Update Story)
