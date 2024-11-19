@@ -186,7 +186,7 @@ public class StoryController {
 			logger.info("existing story author is {}", existingStory.get().get("author_id"));
 			logger.info("story info map author is {}", authorMap.get("author_id"));
 			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(authorMap.get("author_id"))) {
-				logger.info("--------------------------------------------------------------Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
+				logger.info("Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
 				return new ResponseEntity<>("Story not found or you are not authorized to update this story", HttpStatus.FORBIDDEN);
 			}
 			else
@@ -195,7 +195,7 @@ public class StoryController {
 			// Step 5: Perform Update Operation
 			storyService.updateStory(storyId, storyInfoMap);
 			logger.info("Story with ID {} updated successfully by user {}", storyId, authorMap.get("author_name"));
-			return new ResponseEntity<>("Story updated successfully", HttpStatus.OK);
+			return new ResponseEntity<>("Story updated successfully", HttpStatus.NO_CONTENT);
 
 		} catch (Exception e) {
 			logger.error("Error updating story: {}", e.getMessage(), e);
