@@ -165,9 +165,9 @@ public class StoryController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
-		System.out.println(storyInfoMap);
+		logger.info("Story info map is {}", storyInfoMap);
 
-		logger.debug("Attempting to authenticate user with token");
+		logger.info("Attempting to authenticate user with token");
 
 		Map<String, Object>	authorMap = new HashMap<>(); 
 
@@ -182,10 +182,15 @@ public class StoryController {
 		try {
 			// Step 4: Check Story Ownership
 			Optional<Map<String, Object>> existingStory = storyService.getStoryById(storyId);
-			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(storyInfoMap.get("authorId"))) {
-				logger.warn("Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
+			logger.info("Existing story is {}", existingStory);
+			logger.info("existing story author is {}", existingStory.get().get("author_id"));
+			logger.info("story info map author is {}", authorMap.get("author_id"));
+			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(authorMap.get("author_id"))) {
+				logger.info("--------------------------------------------------------------Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
 				return new ResponseEntity<>("Story not found or you are not authorized to update this story", HttpStatus.FORBIDDEN);
 			}
+			else
+				logger.info("control passed");
 
 			// Step 5: Perform Update Operation
 			storyService.updateStory(storyId, storyInfoMap);
@@ -235,7 +240,7 @@ public class StoryController {
 	
 			logger.info("Stories retrieved for authorId {}: {}", authorId, userStories);
 			if (userStories.isEmpty()) {
-				return new ResponseEntity<>("No stories found for this user", HttpStatus.OK);
+				return new ResponseEntity<>("No stories found for this user", HttpStatus.NO_CONTENT);
 			}
 	
 			return new ResponseEntity<>(userStories, HttpStatus.OK);
