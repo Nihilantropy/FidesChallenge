@@ -96,8 +96,7 @@ public class StoryService {
 			throw new InvalidInputException(e.getMessage());
 		}
 		logger.info("title is={}", title);
-		logger.info("content is={}", content);
-		logger.info("authorVisibleStr is={}", authorVisibleStr);
+		logger.info("content is={}", content); 
 
 		// Set title and content in the map
 		storyMap.put("title", title);
@@ -105,7 +104,7 @@ public class StoryService {
 
 		// Set authorVisible based on role and request data
 		Boolean authorVisible = Boolean.parseBoolean(authorVisibleStr);
-		logger.info("authorVisible as boolean is: ", authorVisible);
+		logger.info("authorVisible as boolean is: {}", authorVisible);
 
 		// Set author_visible in the map
 		storyMap.put("author_visible", authorVisible);
@@ -333,4 +332,10 @@ public class StoryService {
 			"created_at", story.getCreatedAt()
 		);
 	}
+
+	/**
+	 * Return an empy response if no story are found.
+	 * 
+	 * return 
+	 */
 }
