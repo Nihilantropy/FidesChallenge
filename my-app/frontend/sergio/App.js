@@ -107,7 +107,7 @@ export default function App() {
       {/* ====== Popup ====== */}
       {ShowPopupFB === true && <PupupFunBlock sShowPopupFB={sShowPopupFB} showPage={showPage} />}
       {ShowErr !== '' && <PupupErr sShowErr={sShowErr} gShowPopupErr={gShowPopupErr} />}
-      {ShowPopupES === true && <PupupDelStory gJWTtoken={gJWTtoken} gJWTtoken={gJWTtoken} gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} />}
+      {ShowPopupES === true && <PupupDelStory gJWTtoken={gJWTtoken} gid={gid} sShowPopupES={sShowPopupES} sShowErr={sShowErr} />}
     </View>
   );
 }
