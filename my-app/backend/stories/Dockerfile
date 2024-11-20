@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Copy the wait-for-it.sh script
 COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
-
+COPY . /app
 # Make sure the wait-for-it script is executable
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 

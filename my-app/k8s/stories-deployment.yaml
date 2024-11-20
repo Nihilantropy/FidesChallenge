@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: stories-microservice
-        image: my-app-backend-stories:latest  # Assicurati che l'immagine contenga wait-for-it.sh
+        image: my-app-backend-stories:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 8080
         env:

@@ -2,11 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-proxy-service
-  namespace: default
 spec:
-  type: ClusterIP  # Cambiato da LoadBalancer a ClusterIP
+  type: ClusterIP  # Tipo ClusterIP, per accesso solo all'interno del cluster
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP  # Non è necessario specificare `nodePort` qui
   selector:
     app: nginx-proxy
