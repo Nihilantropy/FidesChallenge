@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.18.11",
+    "@expo/metro-runtime": "~3.2.3",
     "expo": "~51.0.28",
     "expo-av": "^14.0.7",
     "expo-crypto": "^13.0.2",
@@ -19,10 +20,10 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.5",
+    "react-native-encrypted-storage": "^4.0.3",
     "react-native-qrcode-svg": "^6.3.12",
     "react-native-web": "~0.19.10",
-    "validator": "^13.12.0",
-    "@expo/metro-runtime": "~3.2.3"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

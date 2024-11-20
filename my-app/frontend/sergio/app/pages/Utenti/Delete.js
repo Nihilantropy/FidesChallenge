@@ -1,6 +1,8 @@
 import React, {useState} from "react";
-import { View,Text,Pressable,ScrollView,TextInput } from 'react-native';
+import { View,Text,Pressable,ScrollView,TextInput,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+
+const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
 const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
     /* Fuori se non loggato */
@@ -32,18 +34,22 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         })
         .then(response => {
             const status = response.status;
-            return response.json().then(data => ({ status, data }));
-        })
-        .then(({ status, data }) => {
             if (status != 204) {
                 sShowErr("Errore interno");
-            }else {
-                showPage(1);
+                removeToken();
                 sJWTtoken('');
+                showPage(1);
+            }else {
+                removeToken();
+                sJWTtoken('');
+                showPage(1);
             }
         })
         .catch(error => {
+            removeToken();
             sShowErr("Errore interno");
+            sJWTtoken('');
+            showPage(1);
         });
     }
     return (

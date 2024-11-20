@@ -16,6 +16,8 @@ services:
       - backend-tts
       #- backend-ia
       - frontend-expo
+    volumes:
+      - proxy_vol:/var/log/nginx/
 
    # Database (MySQL) micro
   db:
@@ -97,18 +99,20 @@ services:
       - frontend-tts
     depends_on:
       - frontend-expo
+    volumes:
+      - tts_server_vol:/app
 
   # IA micro
-  #backend-ia:
-  #  container_name: ia-service
-  #  build:
-  #    context: ./backend/ia
-  #    dockerfile: Dockerfile
-  #  networks:
-  #    - proxy
-  #    - frontend-ia
-  #  depends_on:
-  #    - frontend-expo
+  backend-ia:
+   container_name: ia-service
+   build:
+     context: ./backend/ia
+     dockerfile: Dockerfile
+   networks:
+     - proxy
+     - frontend-ia
+   depends_on:
+     - frontend-expo
 
   # Frontend expo micro
   frontend-expo:
@@ -140,4 +144,20 @@ networks:
 volumes:
   back-notused:
   db-data:
-  #backup_data:
+  # backup_data:
+
+  proxy_vol:
+    name: proxy_vol
+    driver: local
+    driver_opts:
+      device: ./proxy/log
+      o: bind
+      type: none
+
+  tts_server_vol:
+    name: tts_server_vol
+    driver: local
+    driver_opts:
+      device: ./backend/tts
+      o: bind
+      type: none

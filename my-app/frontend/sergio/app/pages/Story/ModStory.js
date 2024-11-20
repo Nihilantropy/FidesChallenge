@@ -2,15 +2,9 @@ import React, {  useState, useEffect } from 'react';
 import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settitolo  }) => {
-  const [story, setStoryText] = useState(getStory());
+const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo  }) => {
   const [height, setHeight] = useState(300);
-  const handleTextChange = (text) => {
-    if (text.length <= 1500) {
-      setStory(text);
-      setStoryText(text);
-    }
-  };
+  const handleTextChange = (text) => {if (text.length <= 1500) {setStory(text);}};
   const handleContentSizeChange = (e) => {
     const newHeight = e.nativeEvent.contentSize.height;
     if (story.length > 0 && newHeight > 300) {
@@ -22,7 +16,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settit
   return (
     <ScrollView>
       <View style={styles.box}>
-        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Nuova Storia</Text></View>
+        <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Modifica Storia</Text></View>
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
           <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
@@ -36,15 +30,9 @@ const Content_web = ({ showPage,modifica_storia,setStory,getStory,gtitolo,settit
   );
 };
 
-const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
-  const [story, setStoryText] = useState(getStory());
+const Content_app = ({ setStory,gtitolo,settitolo,story }) =>{
   const [height, setHeight] = useState(200);
-  const handleTextChange = (text) => {
-    if (text.length <= 1500) {
-      setStory(text);
-      setStoryText(text);
-    }
-  };
+  const handleTextChange = (text) => {if (text.length <= 1500) {setStory(text);}};
   const handleContentSizeChange = (e) => {
     const newHeight = e.nativeEvent.contentSize.height;
     if (newHeight > 200) {
@@ -62,7 +50,6 @@ const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
   )
 };
 
-const validator = require('validator');
 const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
   if (gJWTtoken() == ''){
     showPage(1);
@@ -80,28 +67,36 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
   const [titolo, settitolo] = useState('');
   const gtitolo = (page) => { return titolo; };
 
-  fetch("http://localhost:8000/stories/"+gid(), {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer '+gJWTtoken()
+  const [author_visible, setauthor_visible] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      fetch("http://localhost:8000/stories/"+gid(), {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+gJWTtoken()
+        }
+      })
+      .then(response => {
+        const status = response.status;
+        if (status != 200) {
+          showPage(7);
+        } else {
+          return response.json().then(data => {
+            settitolo(data.title);
+            setStory(data.content);
+            setauthor_visible(data.author_visible);
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        showPage(7);
+      });
     }
-  })
-  .then(response => {
-    const status = response.status;
-    return response.json().then(data => ({ status, data }));
-  })
-  .then(({ status, data }) => {
-    if (status !== 200) {
-      showPage(7);
-    } else {
-      settitolo(data.title);
-      setStory(data.content);
-    }
-  })
-  .catch(error => {
-    showPage(7);
-  });
+    fetchData();
+  }, []);
 
   function modifica_storia() {
     /* ====== Basic Check ====== */
@@ -118,10 +113,6 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       sShowErr("Il titolo non puo avere piu di 60 caratteri");
       return;
     }
-
-    /* ====== Sanitized ====== */
-    const sanitizedStory = validator.escape(story);
-    const sanitizedTitle = validator.escape(titolo);
     
     /* ====== Send post ====== */
     fetch("http://localhost:8000/stories/"+gid(), {
@@ -131,28 +122,37 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
         'Authorization': 'Bearer '+gJWTtoken()
       },
       body: JSON.stringify({
-        title: sanitizedTitle,
-        content: sanitizedStory,
-        author_visible: story.author_visible
+        title: titolo,
+        content: story,
+        author_visible: author_visible
       }),
     })
     .then(response => {
       const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status != 200 ) {
-        sShowErr(data.message);
-      }else showPage(7);
-    })
-    .catch(error => {
+      if (status !== 204) {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          return response.json().then(data => {
+            sShowErr(data.message);
+          });
+        } else {
+          return response.text().then(message => {
+            sShowErr(message || "Errore sconosciuto");
+          });
+        }
+      } else {
+        showPage(7);
+      }
+   })
+   .catch(error => {
+      console.log(error);
       sShowErr("Errore interno");
-    });
+   });
   }
   return (
     <View style={styles.stacca}>
-      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} showPage={showPage} modifica_storia={modifica_storia} setStory={setStory} getStory={getStory} /> }
-      { Platform.OS !== 'web' && <Content_app gtitolo={gtitolo} settitolo={settitolo} getStory={getStory} setStory={setStory} /> }
+      { Platform.OS === 'web' && <Content_web gtitolo={gtitolo} settitolo={settitolo} story={story} showPage={showPage} modifica_storia={modifica_storia} setStory={setStory} getStory={getStory} /> }
+      { Platform.OS !== 'web' && <Content_app gtitolo={gtitolo} settitolo={settitolo} story={story} setStory={setStory} /> }
     </View>
   );
 };
