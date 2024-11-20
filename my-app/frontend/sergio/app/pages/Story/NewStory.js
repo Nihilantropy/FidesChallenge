@@ -6,7 +6,7 @@ const Content_web = ({ showPage,crea_storia,setStory,getStory,gtitolo,settitolo 
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(300);
   const handleTextChange = (text) => {
-    if (text.length <= 1500) {
+    if (text.length <= 3000) {
       setStory(text);
       setStoryText(text);
     }
@@ -30,7 +30,7 @@ const Content_web = ({ showPage,crea_storia,setStory,getStory,gtitolo,settitolo 
         </View>
         <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1500</Text>
+        <Text style={styles.testidestra}>{story.length}/3000</Text>
       </View>
     </ScrollView>
   );
@@ -40,7 +40,7 @@ const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
   const [story, setStoryText] = useState(getStory());
   const [height, setHeight] = useState(200);
   const handleTextChange = (text) => {
-    if (text.length <= 1500) {
+    if (text.length <= 3000) {
       setStory(text);
       setStoryText(text);
     }
@@ -56,13 +56,12 @@ const Content_app = ({ getStory,setStory,gtitolo,settitolo }) =>{
       <View style={styles.box}>
         <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1500</Text>
+        <Text style={styles.testidestra}>{story.length}/3000</Text>
       </View>
     </ScrollView>
   )
 };
 
-const validator = require('validator');
 const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr }) => {
   useEffect(() => {
     if (gJWTtoken() == ''){
@@ -88,8 +87,8 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       return;
     }
 
-    if (story.length > 1500) {
-      sShowErr("La storia non puo avere piu di 1500 caratteri");
+    if (story.length > 3000) {
+      sShowErr("La storia non puo avere piu di 3000 caratteri");
       return;
     }
     if (titolo.length > 60) {
@@ -97,35 +96,41 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       return;
     }
 
-    /* ====== Sanitized ====== */
-    const sanitizedStory = validator.escape(story);
-    const sanitizedTitle = validator.escape(titolo);
-    
     /* ====== Send post ====== */
     fetch("http://localhost:8000/stories/", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+gJWTtoken()
+        'Authorization': 'Bearer ' + gJWTtoken()
       },
       body: JSON.stringify({
-        title: sanitizedTitle,
-        content: sanitizedStory,
-        author_visible: true
+        title: titolo,
+        content: story,
+        author_visible: 'true'
       }),
     })
     .then(response => {
       const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status != 201 ) {
-        sShowErr(data.message);
-      }else showPage(7);
-    })
-    .catch(error => {
+      if (status !== 201) {
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          return response.json().then(data => {
+            sShowErr(data.message);
+          });
+        } else {
+          return response.text().then(message => {
+            sShowErr(message || "Errore sconosciuto");
+          });
+        }
+      } else {
+        showPage(7);
+      }
+   })
+   .catch(error => {
+      console.log(error);
       sShowErr("Errore interno");
-    });
+   });
+   
   }
   return (
     <View style={styles.stacca}>

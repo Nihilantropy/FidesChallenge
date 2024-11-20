@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
 import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin(origins = {"http://expo-service:8081", "http://backend-users:3000"})
+@CrossOrigin(origins = {"http://localhost:8000", "http://backend-users:3000"})
 @RequestMapping("/stories")
 public class StoryController {
 
@@ -59,7 +60,7 @@ public class StoryController {
 		if (token == null) {
 			 logger.error("Invalid or missing Authorization header");
 			 return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
-		 }
+		}
 	
 		logger.info("Received Authorization Token: {}", token);
 	
@@ -99,7 +100,7 @@ public class StoryController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		System.out.println(storyMap);
+		logger.info("full story map is {}", storyMap);
 
 		try {
 			// Create the story
@@ -109,7 +110,10 @@ public class StoryController {
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
 		} catch (IllegalArgumentException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT); // 409 Conflict for duplicate title
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		} catch (StoryCreationException e) {
+			logger.warn("Story creation failed: " + e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Error creating story: " + e.getMessage(), e);
 			return new ResponseEntity<>("An error occurred while creating the story", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,7 +121,10 @@ public class StoryController {
 	}
 
 
-		/**
+
+	// TODO Check if the new story title already exist in the db
+
+	/**
 	 * Updates an existing story with new title, content, and author visibility status.
 	 * 
 	 * @param storyId    the ID of the story to update, provided as a path variable
@@ -165,9 +172,9 @@ public class StoryController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
-		System.out.println(storyInfoMap);
+		logger.info("Story info map is {}", storyInfoMap);
 
-		logger.debug("Attempting to authenticate user with token");
+		logger.info("Attempting to authenticate user with token");
 
 		Map<String, Object>	authorMap = new HashMap<>(); 
 
@@ -182,15 +189,20 @@ public class StoryController {
 		try {
 			// Step 4: Check Story Ownership
 			Optional<Map<String, Object>> existingStory = storyService.getStoryById(storyId);
-			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(storyInfoMap.get("authorId"))) {
-				logger.warn("Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
+			logger.info("Existing story is {}", existingStory);
+			logger.info("existing story author is {}", existingStory.get().get("author_id"));
+			logger.info("story info map author is {}", authorMap.get("author_id"));
+			if (existingStory.isEmpty() || !existingStory.get().get("author_id").equals(authorMap.get("author_id"))) {
+				logger.info("Story with ID {} not found or not owned by user {}", storyId, storyInfoMap.get("authorId"));
 				return new ResponseEntity<>("Story not found or you are not authorized to update this story", HttpStatus.FORBIDDEN);
 			}
+			else
+				logger.info("control passed");
 
 			// Step 5: Perform Update Operation
 			storyService.updateStory(storyId, storyInfoMap);
 			logger.info("Story with ID {} updated successfully by user {}", storyId, authorMap.get("author_name"));
-			return new ResponseEntity<>("Story updated successfully", HttpStatus.OK);
+			return new ResponseEntity<>("Story updated successfully", HttpStatus.NO_CONTENT);
 
 		} catch (Exception e) {
 			logger.error("Error updating story: {}", e.getMessage(), e);
@@ -235,7 +247,7 @@ public class StoryController {
 	
 			logger.info("Stories retrieved for authorId {}: {}", authorId, userStories);
 			if (userStories.isEmpty()) {
-				return new ResponseEntity<>("No stories found for this user", HttpStatus.OK);
+				return new ResponseEntity<>("No stories found for this user", HttpStatus.NO_CONTENT);
 			}
 	
 			return new ResponseEntity<>(userStories, HttpStatus.OK);

@@ -4,12 +4,13 @@
 /app/src/main/java/com/sergio/storiesapp/controller/HealthCheckController.java
 /app/src/main/java/com/sergio/storiesapp/controller/StoryController.java
 /app/src/main/java/com/sergio/storiesapp/exception/DatabaseException.java
+/app/src/main/java/com/sergio/storiesapp/exception/DeleteStoryException.java
 /app/src/main/java/com/sergio/storiesapp/exception/GlobalExceptionHandler.java
 /app/src/main/java/com/sergio/storiesapp/exception/InvalidInputException.java
-/app/src/main/java/com/sergio/storiesapp/exception/InvalidStoryNameException.java
 /app/src/main/java/com/sergio/storiesapp/exception/StoryCreationException.java
 /app/src/main/java/com/sergio/storiesapp/exception/StoryNotFoundException.java
 /app/src/main/java/com/sergio/storiesapp/exception/StoryUpdateException.java
+/app/src/main/java/com/sergio/storiesapp/exception/UnauthorizedDeleteException.java
 /app/src/main/java/com/sergio/storiesapp/model/Story.java
 /app/src/main/java/com/sergio/storiesapp/repository/StoryRepository.java
 /app/src/main/java/com/sergio/storiesapp/service/StoryService.java

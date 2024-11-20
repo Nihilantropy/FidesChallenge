@@ -2,26 +2,23 @@ import React from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import styles from './../assets/style/main.js';
 
-const PupupDelStory = ({ sShowPopupES,sShowErr,gid }) => {
+const PupupDelStory = ({ sShowPopupES,sShowErr,gid,gJWTtoken }) => {
   function elimina() {
-    fetch("http://localhost/story/delete", {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: gid()
-        }),
+    fetch("http://localhost:8000/stories/"+gid(), {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+gJWTtoken()
+      }
     })
-    .then(result => {
-        if (!result) return;
-        const { status, body } = result;
-        if (status != 200) {
-          sShowPopupES(false);
-          sShowErr("Errore interno");
-        }else {
-          sShowPopupES(false);
-        }
+    .then(response => {
+      const status = response.status;
+      if (status != 204) {
+        sShowPopupES(false);
+        sShowErr("Errore interno");
+      } else {
+        sShowPopupES(false);
+      }
     })
     .catch(error => {
       sShowPopupES(false);

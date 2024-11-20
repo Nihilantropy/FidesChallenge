@@ -1,6 +1,6 @@
 package com.sergio.storiesapp.service;
 
-import com.sergio.storiesapp.exception.InvalidStoryNameException;
+import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
@@ -47,10 +47,10 @@ public class StoryService {
 		if (title.length() > 100) {
 			throw new InvalidInputException("Title cannot be longer than 100 characters");
 		}
-		if (content.length() > 1500) {
-			throw new InvalidInputException("Content cannot be longer than 1500 characters");
+		if (content.length() > 3000) {
+			throw new InvalidInputException("Content cannot be longer than 3000 characters");
 		}
-		if (authorVisibleStr != "true" || authorVisibleStr != "false") {
+		if (!"true".equals(authorVisibleStr) && !"false".equals(authorVisibleStr)) {
 			throw new InvalidInputException("author_visible should be either 'true' or 'false'");
 		}
 	}
@@ -88,12 +88,15 @@ public class StoryService {
 		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
 		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
 
+		
 		try {
 			validateStoryData(title, content, authorVisibleStr); // Reuse the existing validation logic
 		}
 		catch (InvalidInputException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
+		logger.info("title is={}", title);
+		logger.info("content is={}", content); 
 
 		// Set title and content in the map
 		storyMap.put("title", title);
@@ -101,7 +104,7 @@ public class StoryService {
 
 		// Set authorVisible based on role and request data
 		Boolean authorVisible = Boolean.parseBoolean(authorVisibleStr);
-		logger.info("authorVisible as boolean is: ", authorVisible);
+		logger.info("authorVisible as boolean is: {}", authorVisible);
 
 		// Set author_visible in the map
 		storyMap.put("author_visible", authorVisible);
@@ -122,7 +125,6 @@ public class StoryService {
 	 * @return true if the story is created and saved successfully
 	 * 
 	 * @throws IllegalArgumentException if there is an error during the creation process, such as invalid role ID or failing to save the story
-	 * @throws InvalidStoryNameException if a story with the same title already exists for the author
 	 */
 	public boolean createStory(Map<String, Object> storyMap) {
 
@@ -137,7 +139,7 @@ public class StoryService {
 		// Check for an existing story with the same title by this author
 		List<Story> existingStories = storyRepository.findByTitle(title);
 		if (!existingStories.isEmpty()) {
-			throw new InvalidStoryNameException("There already is a story with this title.");
+			throw new IllegalArgumentException("There already is a story with this title.");
 		}
 
 		try {
@@ -157,7 +159,7 @@ public class StoryService {
 			return true;
 		} catch (Exception e) {
 			logger.error("Failed to save story: {}", e.getMessage(), e);
-			throw new StoryUpdateException("Could not save the story. Please try again.");
+			throw new StoryCreationException("Could not save the story. Please try again.");
 		}
 	}
 
