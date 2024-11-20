@@ -16,28 +16,31 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
         }
 
         /* Ricerca info */
-        fetch("http://localhost:8000/users/profile", {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+gJWTtoken()
-            }
-        })
-        .then(response => {
-            const status = response.status;
-            if (status == 200) {
-                return response.json().then(data => {
-                    setJsonData(data);
-                });
-            } else if (status == 204){
-                setdisponibili(0);
-            } else {
+        const getdata = async () => {
+            fetch("http://localhost:8000/users/profile", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+gJWTtoken()
+                }
+            })
+            .then(response => {
+                const status = response.status;
+                if (status == 200) {
+                    return response.json().then(data => {
+                        setJsonData(data);
+                    });
+                } else if (status == 204){
+                    setdisponibili(0);
+                } else {
+                    showPage(1);
+                }
+            })
+            .catch(error => {
                 showPage(1);
-            }
-        })
-        .catch(error => {
-            showPage(1);
-        });
+            });
+        }
+        getdata();
     }, [gJWTtoken, showPage, sShowPopupFB, setJsonData]);
 
     return (
