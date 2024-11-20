@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 
 # Load environment variables from .env file
-set -a
-. ./.env 
-set +a
+set -o allexport
+source .env
+set +o allexport
 
 # Define variables using environment variables
 BACKUP_DIR="/backup"

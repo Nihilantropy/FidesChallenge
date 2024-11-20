@@ -118,12 +118,15 @@ router.delete('/delete', cors(routeCorsOptions), async (req, res) => {
 	console.log("Authentication passed!");
 
 	const userId = payload.id
-	// Use catchErrorTyped to handle potential errors without try-catch
+
+	console.log("deleting user...")
 	const [err] = await catchErrorTyped(deleteUser(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
 	}
+
+	console.log("user deleted succesfully")
 
 	res.status(204).json({ message: 'User account deleted successfully' });
 });

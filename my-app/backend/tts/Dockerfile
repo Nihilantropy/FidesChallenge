@@ -5,7 +5,7 @@ FROM python:3.9
 WORKDIR /app
 
 # Copia tutti i file
-COPY tts_server.py pulizia.sh /app/
+COPY . /app
 
 RUN apt-get update && \
     apt-get install -y cron dos2unix && \

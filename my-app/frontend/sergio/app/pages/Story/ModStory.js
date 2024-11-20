@@ -129,7 +129,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     })
     .then(response => {
       const status = response.status;
-      if (status !== 201) {
+      if (status !== 204) {
         const contentType = response.headers.get("Content-Type");
         if (contentType && contentType.includes("application/json")) {
           return response.json().then(data => {

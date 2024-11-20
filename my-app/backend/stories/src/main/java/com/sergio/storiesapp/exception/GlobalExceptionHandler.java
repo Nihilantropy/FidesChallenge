@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(StoryUpdateException.class)
-    public ResponseEntity<String> handleInvalidStoryNameException(InvalidStoryNameException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<String> handleStoryUpdateException(StoryUpdateException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
-
+    
     @ExceptionHandler(UnauthorizedDeleteException.class) // Catch all other exceptions
     public ResponseEntity<String> handleUnauthorizedDeleteException(Exception ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
