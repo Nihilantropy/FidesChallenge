@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: users-config
-data:
-  NODE_ENV: "development"
-  PORT: "3000"
-  PRIVATE_KEY: "your_private_key_here"  # Aggiungi qui la tua chiave privata
