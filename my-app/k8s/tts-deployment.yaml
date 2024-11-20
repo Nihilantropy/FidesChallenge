@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tts-app
+  labels:
+    app: tts-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tts-app
+  template:
+    metadata:
+      labels:
+        app: tts-app
+    spec:
+      containers:
+        - name: tts-container
+          image: my-app-backend-tts
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_ENV
+              value: "production"  # Imposta il livello di ambiente, se necessario

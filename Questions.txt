@@ -1,0 +1,5 @@
+Problem:
+	1 - The story service requires an authorization to POST and PUT (create and update) stories. Now the client provide his token to identify,
+		the token is then sent to the users services that gives back the ok + the user info we need for the story (id and username).
+		This process takes a few http request. how can we simplify that? is it possibile to move the authorization in the nginx proxy?
+		is it better to try to decode the token directly in the stories-app?

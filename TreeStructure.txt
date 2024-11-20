@@ -1,0 +1,61 @@
+.
+├── backend
+│   ├── db
+│   │   ├── Dockerfile
+│   │   ├── initdb.d
+│   │   │   ├── 01_create_users_table.sql
+│   │   │   ├── 02-init-roles.sql
+│   │   │   └── 03-init-seed.sql
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   └── src
+│   │       ├── database.js
+│   │       ├── healthcheck.js
+│   │       ├── knexfile.js
+│   │       └── migrations
+│   │           └── 20241014143239_create_users_table.js
+│   └── users
+│       ├── Dockerfile
+│       ├── generateKeys.js
+│       ├── package.json
+│       ├── package-lock.json
+│       ├── README.md
+│       ├── src
+│       │   ├── app.js
+│       │   ├── database.js
+│       │   ├── err
+│       │   │   ├── catchError.ts
+│       │   │   ├── CustomError.ts
+│       │   │   └── dist
+│       │   │       ├── catchError.js
+│       │   │       └── CustomError.js
+│       │   ├── index.js
+│       │   ├── knexfile.js
+│       │   ├── middleware
+│       │   │   └── auth.js
+│       │   ├── user_func
+│       │   │   ├── createUser.js
+│       │   │   ├── deleteUser.js
+│       │   │   ├── getProfile.js
+│       │   │   └── login.js
+│       │   └── users.js
+│       ├── test
+│       │   └── sample.js
+│       └── tsconfig.json
+├── docker-compose.yaml
+└── frontend
+    └── client
+        └── myapp
+            ├── App.js
+            ├── app.json
+            ├── assets
+            │   ├── adaptive-icon.png
+            │   ├── favicon.png
+            │   ├── icon.png
+            │   └── splash.png
+            ├── babel.config.js
+            ├── Dockerfile
+            ├── package.json
+            └── package-lock.json
+
+17 directories, 42 files
