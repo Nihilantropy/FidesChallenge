@@ -1,9 +1,12 @@
 import React, {useEffect,useState} from "react";
-import { View, Text, Pressable, ScrollView } from 'react-native';
+import { View, Text, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+
+const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
 const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
     const [jsonData, setJsonData] = useState([{email: '', first_name: '', last_name: '', username: ''}]);
+    const [disponibili, setdisponibili] = useState(1);
     useEffect(() => {
         /* Fuori se non loggato */
         if (gJWTtoken() == ''){
@@ -22,13 +25,14 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
         })
         .then(response => {
             const status = response.status;
-            return response.json().then(data => ({ status, data }));
-        })
-        .then(({ status, data }) => {
-            if (status !== 200) {
-                showPage(1);
+            if (status == 200) {
+                return response.json().then(data => {
+                    setJsonData(data);
+                });
+            } else if (status == 204){
+                setdisponibili(0);
             } else {
-                setJsonData(data);
+                showPage(1);
             }
         })
         .catch(error => {
@@ -38,21 +42,26 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
 
     return (
         <View style={styles.stacca}>
-            <ScrollView>
-                <View style={styles.centro}>
-                    <View style={styles.box2}>
-                        <View>
-                            <Text style={styles.testi}>Email: {jsonData.email}</Text>
-                            <Text style={styles.testi}>Nome Cognome: {jsonData.first_name} {jsonData.last_name}</Text>
-                            <Text style={styles.testi}>Nickname: {jsonData.username}</Text>
+            { disponibili == 0 && (
+                <View style={styles.box}><Text style={styles.titoli}>Non mi hai raccontato nessuna storia</Text></View>
+            )}
+            { disponibili == 1 && (
+                <ScrollView>
+                    <View style={styles.centro}>
+                        <View style={styles.box2}>
+                            <View>
+                                <Text style={styles.testi}>Email: {jsonData.email}</Text>
+                                <Text style={styles.testi}>Nome Cognome: {jsonData.first_name} {jsonData.last_name}</Text>
+                                <Text style={styles.testi}>Nickname: {jsonData.username}</Text>
+                            </View>
+                            <Text style={styles.titoli}>{"\n"}</Text>
+                            <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Mostra le mie storie</Text></Pressable>
+                            <Pressable onPress={() => showPage(9)}><Text style={styles.link}>Elimina il mio account</Text></Pressable>
+                            <Pressable onPress={() => {removeToken(),sJWTtoken(''),showPage(1)}}><Text style={styles.link}>Esci</Text></Pressable>
                         </View>
-                        <Text style={styles.titoli}>{"\n"}</Text>
-                        <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Mostra le mie storie</Text></Pressable>
-                        <Pressable onPress={() => showPage(9)}><Text style={styles.link}>Elimina il mio account</Text></Pressable>
-                        <Pressable onPress={() => {sJWTtoken(''),showPage(1)}}><Text style={styles.link}>Esci</Text></Pressable>
                     </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            )}
         </View>
     );
 }

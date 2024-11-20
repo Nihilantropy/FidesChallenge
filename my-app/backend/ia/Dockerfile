@@ -1,17 +1,18 @@
-# Usa un'immagine di base con Python
+# Usa un'immagine Python come base
 FROM python:3.9-slim
 
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia il file Python e il file di requirements nella directory di lavoro
-COPY ia.py /app/ia.py
+# Copia i file di requirements e installa le dipendenze
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Installa le librerie necessarie
-RUN pip install --no-cache-dir flask flask_cors transformers torch
+# Copia il file app.py nell'immagine
+COPY app.py .
 
 # Espone la porta 5000 per Flask
 EXPOSE 5001
 
-# Avvia l'app Flask
-CMD ["python", "ia.py"]
+# Comando per avviare l'app
+CMD ["python", "app.py"]

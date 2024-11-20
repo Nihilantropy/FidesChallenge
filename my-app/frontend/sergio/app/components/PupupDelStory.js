@@ -13,10 +13,7 @@ const PupupDelStory = ({ sShowPopupES,sShowErr,gid,gJWTtoken }) => {
     })
     .then(response => {
       const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status !== 204) {
+      if (status != 204) {
         sShowPopupES(false);
         sShowErr("Errore interno");
       } else {
