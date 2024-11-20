@@ -47,8 +47,8 @@ public class StoryService {
 		if (title.length() > 100) {
 			throw new InvalidInputException("Title cannot be longer than 100 characters");
 		}
-		if (content.length() > 1500) {
-			throw new InvalidInputException("Content cannot be longer than 1500 characters");
+		if (content.length() > 3000) {
+			throw new InvalidInputException("Content cannot be longer than 3000 characters");
 		}
 		if (!"true".equals(authorVisibleStr) && !"false".equals(authorVisibleStr)) {
 			throw new InvalidInputException("author_visible should be either 'true' or 'false'");

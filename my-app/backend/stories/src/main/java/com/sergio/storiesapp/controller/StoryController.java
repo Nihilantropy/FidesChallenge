@@ -120,10 +120,6 @@ public class StoryController {
 		}
 	}
 
-
-
-	// TODO Check if the new story title already exist in the db
-
 	/**
 	 * Updates an existing story with new title, content, and author visibility status.
 	 * 
