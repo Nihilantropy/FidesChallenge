@@ -5,7 +5,11 @@ FROM python:3.9
 WORKDIR /app
 
 # Copia tutti i file
+<<<<<<< HEAD
 COPY tts_server.py pulizia.sh /app/
+=======
+COPY . /app
+>>>>>>> origin/fullapp
 
 RUN apt-get update && \
     apt-get install -y cron dos2unix && \
@@ -19,4 +23,8 @@ RUN apt-get update && \
 EXPOSE 5000
 
 # Comando per avviare l'app e il cron job
+<<<<<<< HEAD
 CMD service cron start && python3 tts_server.py
+=======
+CMD service cron start && python3 tts_server.py
+>>>>>>> origin/fullapp

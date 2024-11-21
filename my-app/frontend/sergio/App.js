@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Platform } from 'react-native';
 import styles from './app/assets/style/main.js';
 
@@ -25,16 +25,47 @@ import Delete from './app/pages/Utenti/Delete.js';
 import Accesso from './app/pages/Utenti/Accesso.js';
 import Profilo from './app/pages/Utenti/Profilo.js';
 
+const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./app/libreri/Storage/Web') : require('./app/libreri/Storage/Mobile');
+
 export default function App() {
+  /* ====== Autentificazione utente ====== */
+  const [JWTtoken, setJWTtoken] = useState('');
+  const sJWTtoken = (page) => { setJWTtoken(page); };
+  const gJWTtoken = (page) => { return JWTtoken; };
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const token = await getToken();
+        if (token) {
+          fetch("http://localhost:8000/users/profile", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }
+          })
+          .then(response => {
+              const status = response.status;
+              if (status == 200) {
+                sJWTtoken(token);
+              } else if (status == 401){
+                removeToken();
+              }
+          })
+        }
+      } catch (error) {
+        console.error('Errore durante il controllo del token:', error);
+      }
+    };
+    checkToken();
+  }, []);
+
   /* ====== Show Page ====== */
   const [visiblePage, setVisiblePage] = useState(1);
   const showPage = (page) => { setVisiblePage(page); };
   const gshowPage = (page) => { return visiblePage; };
 
-  /* ====== Autentificazione utente ====== */
-  const [JWTtoken, setJWTtoken] = useState('');
-  const sJWTtoken = (page) => { setJWTtoken(page); };
-  const gJWTtoken = (page) => { return JWTtoken; };
 
   /* ====== Popup Funzionalità bloccate ====== */
   const [ShowPopupFB, setShowPopupFB] = useState(false);
@@ -80,7 +111,7 @@ export default function App() {
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} sShowErr={sShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 9 && <Delete gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 10 && <LeggiStory gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 10 && <LeggiStory sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
 
       { Platform.OS === 'web' && <FooterWeb /> }
 

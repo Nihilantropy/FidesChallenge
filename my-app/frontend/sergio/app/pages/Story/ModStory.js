@@ -4,7 +4,7 @@ import styles from './../../assets/style/main.js';
 
 const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo  }) => {
   const [height, setHeight] = useState(300);
-  const handleTextChange = (text) => {if (text.length <= 1500) {setStory(text);}};
+  const handleTextChange = (text) => {if (text.length <= 3000) {setStory(text);}};
   const handleContentSizeChange = (e) => {
     const newHeight = e.nativeEvent.contentSize.height;
     if (story.length > 0 && newHeight > 300) {
@@ -24,7 +24,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo
         </View>
         <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1500</Text>
+        <Text style={styles.testidestra}>{story.length}/3000</Text>
       </View>
     </ScrollView>
   );
@@ -32,7 +32,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo
 
 const Content_app = ({ setStory,gtitolo,settitolo,story }) =>{
   const [height, setHeight] = useState(200);
-  const handleTextChange = (text) => {if (text.length <= 1500) {setStory(text);}};
+  const handleTextChange = (text) => {if (text.length <= 3000) {setStory(text);}};
   const handleContentSizeChange = (e) => {
     const newHeight = e.nativeEvent.contentSize.height;
     if (newHeight > 200) {
@@ -44,7 +44,7 @@ const Content_app = ({ setStory,gtitolo,settitolo,story }) =>{
       <View style={styles.box}>
         <TextInput spellCheck={false} placeholder="Titolo" style={styles.credenziali} value={gtitolo()} onChangeText={(text) => settitolo(text)}/>
         <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 200, height: height }]} placeholder="Scrivi qui la tua storia..." value={story} onChangeText={handleTextChange} />
-        <Text style={styles.testidestra}>{story.length}/1500</Text>
+        <Text style={styles.testidestra}>{story.length}/3000</Text>
       </View>
     </ScrollView>
   )
@@ -105,8 +105,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
       return;
     }
 
-    if (story.length > 1500) {
-      sShowErr("La storia non puo avere piu di 1500 caratteri");
+    if (story.length > 3000) {
+      sShowErr("La storia non puo avere piu di 3000 caratteri");
       return;
     }
     if (titolo.length > 60) {
@@ -129,7 +129,7 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     })
     .then(response => {
       const status = response.status;
-      if (status !== 201) {
+      if (status !== 204) {
         const contentType = response.headers.get("Content-Type");
         if (contentType && contentType.includes("application/json")) {
           return response.json().then(data => {

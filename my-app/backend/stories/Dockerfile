@@ -10,6 +10,14 @@ WORKDIR /app
 # Copy the wait-for-it.sh script
 COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
 COPY . /app
+<<<<<<< HEAD
+=======
+
+RUN ./mvnw clean package
+
+COPY ./target/stories-microservice-0.0.1-SNAPSHOT.jar /app/stories-microservice.jar
+
+>>>>>>> origin/fullapp
 # Make sure the wait-for-it script is executable
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 

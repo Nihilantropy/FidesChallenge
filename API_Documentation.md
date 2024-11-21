@@ -109,6 +109,7 @@
   - **201 Created** - Story created successfully
   - **400 Bad Request** - Invalid input (e.g., title or content is empty)
   - **401 Unauthorized** - Unauthorized (missing or invalid token)
+  - **401 Conflict** - There already is a story with this title.
   - **500 Internal Server Error** - Internal server errors
 
 ### `/{Id}`(Update Story)
@@ -140,7 +141,7 @@
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
 - **Response**:
-  - JSON `{ story_id, title, created_at }`
+  - JSON `{ title, id, created_at }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - A list of user stories for the authenticated user.
   - **400 Bad Request** - Invalid author information (e.g., missing or invalid user ID).
@@ -152,7 +153,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ story_id, title, created_at }`
+  - JSON `{ title, id, created_at }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - List of latest stories (up to a limit of 5)
   - **204 No Content** - No stories available
@@ -163,7 +164,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ story_id, title, content, created_at, author_id, author_role_id, author_name, author_visible }`
+  - JSON `{ title, id, content, created_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - Random story fetched succesfully
   - **204 No Content** - No stories available
@@ -172,9 +173,9 @@
 ### `/{Id}` (Get story by Id)
 - **Request Type**: `GET`
 - **Expected Info**:
-  - Json `{ id }`
+  - None
 - **Response**:
-  - JSON `{ story_id, title, content, created_at, author_id, author_role_id, author_name, author_visible }`
+  - JSON `{ title, id, content, created_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - Story fetched succesfully
   - **204 No Content** - No stories available

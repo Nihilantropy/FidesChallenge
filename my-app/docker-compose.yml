@@ -14,7 +14,6 @@ services:
       - backend-users
       - backend-stories
       - backend-tts
-      - backend-ia
       - frontend-expo
     volumes:
       - proxy_vol:/var/log/nginx/
@@ -103,16 +102,16 @@ services:
       - tts_server_vol:/app
 
   # IA micro
-  backend-ia:
-   container_name: ia-service
-   build:
-     context: ./backend/ia
-     dockerfile: Dockerfile
-   networks:
-     - proxy
-     - frontend-ia
-   depends_on:
-     - frontend-expo
+  # backend-ia:
+  #  container_name: ia-service
+  #  build:
+  #    context: ./backend/ia
+  #    dockerfile: Dockerfile
+  #  networks:
+  #    - proxy
+  #    - frontend-ia
+  #  depends_on:
+  #    - frontend-expo
 
   # Frontend expo micro
   frontend-expo:
@@ -158,6 +157,12 @@ volumes:
     name: tts_server_vol
     driver: local
     driver_opts:
+<<<<<<< HEAD
       device: ./backend/tts/sound
       o: bind
       type: none
+=======
+      device: ./backend/tts
+      o: bind
+      type: none
+>>>>>>> origin/fullapp

@@ -17,4 +17,8 @@ def generatestory():
     return jsonify({"story": story})
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run(debug=True, port=5001, host='0.0.0.0')
+=======
+    app.run(debug=True, port=5001, host='0.0.0.0')
+>>>>>>> origin/fullapp

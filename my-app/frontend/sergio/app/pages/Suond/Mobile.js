@@ -2,7 +2,7 @@ import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 
 let sound;
-export const setupPlayer = async (blob) => {
+export const setupPlayer = async (blob, setStato) => {
   try {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
@@ -12,6 +12,7 @@ export const setupPlayer = async (blob) => {
     await FileSystem.writeAsStringAsync(filePath, base64Data, {encoding: FileSystem.EncodingType.Base64,});
     sound = new Audio.Sound();
     await sound.loadAsync({ uri: filePath }, { shouldPlay: false });
+    sound.setOnPlaybackStatusUpdate((status) => {if (status.didJustFinish && !status.isLooping) {setStato('play');}});
   } catch (error) {;}
 };
 

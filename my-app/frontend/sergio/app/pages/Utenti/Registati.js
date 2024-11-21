@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
 // import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
+
+const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
 const validator = require('validator');
 const Registati = ({ showPage,sJWTtoken }) => {
@@ -68,6 +70,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
             if (status !== 201) {
                 setErrorText(data.message);
             } else {
+                storeToken(data.token);
                 sJWTtoken(data.token);
                 showPage(2);
             }
