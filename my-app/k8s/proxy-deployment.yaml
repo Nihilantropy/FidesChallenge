@@ -12,15 +12,6 @@ spec:
       labels:
         app: nginx-proxy
     spec:
-      initContainers:
-      - name: copy-nginx-config
-        image: busybox
-        command: ['sh', '-c', 'cp /config/nginx.conf /etc/nginx/nginx.conf']
-        volumeMounts:
-        - name: nginx-config-content
-          mountPath: /config
-        - name: nginx-config
-          mountPath: /etc/nginx
       containers:
       - name: nginx-container
         image: my-app-proxy
