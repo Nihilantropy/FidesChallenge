@@ -9,6 +9,7 @@ import com.sergio.storiesapp.exception.DeleteStoryException;
 import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
+import com.sergio.storiesapp.service.Sanitizer;
 import com.sergio.storiesapp.service.StoryService;
 import com.sergio.storiesapp.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -142,7 +143,7 @@ public class StoryController {
 			@RequestBody Map<String, String> storyData) {
 
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return error message in the response body
@@ -325,7 +326,7 @@ public class StoryController {
 
 		// Validate the storyId before processing
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
@@ -349,7 +350,7 @@ public class StoryController {
 			
 		// Validate the storyId before processing
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
