@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-proxy
+  namespace: frontend-ns
 spec:
-  replicas: 1  
   selector:
     matchLabels:
       app: nginx-proxy
@@ -13,8 +13,8 @@ spec:
         app: nginx-proxy
     spec:
       containers:
-      - name: nginx-container
+      - name: nginx
         image: my-app-proxy
         imagePullPolicy: Never
         ports:
-          - containerPort: 8000
+        - containerPort: 8000

@@ -1,12 +1,15 @@
+# Nginx Proxy Service (typically in its own namespace or in frontend namespace)
 apiVersion: v1
 kind: Service
 metadata:
   name: nginx-proxy-service
+  namespace: frontend-ns  # o potrebbe essere in un namespace dedicato come 'proxy-ns'
 spec:
-  type: LoadBalancer  # Tipo ClusterIP, per accesso solo all'interno del cluster
+  type: LoadBalancer
   ports:
     - port: 8000
       targetPort: 8000
-      protocol: TCP  # Non è necessario specificare `nodePort` qui
+      nodePort: 31161
+      protocol: TCP
   selector:
     app: nginx-proxy
