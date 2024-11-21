@@ -27,7 +27,7 @@ spec:
           containerPort: 19002
         env:
         - name: PORT
-          value: "19000"        # Può essere modificato secondo necessità
+          value: "8081"        # Può essere modificato secondo necessità
 
 #minikube image load <nome dell'immagine:tag> dopo aver avviato la pod
 #essendo che fa i capricci a trovare effettivamente l'immagine la forzo io

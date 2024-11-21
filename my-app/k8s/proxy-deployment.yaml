@@ -12,6 +12,24 @@ spec:
       labels:
         app: nginx-proxy
     spec:
+      volumes:
+      - name: nginx-config
+        emptyDir: {}
+      - name: nginx-config-content
+        configMap:
+          name: nginx-proxy-config
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+      initContainers:
+      - name: copy-nginx-config
+        image: busybox
+        command: ['sh', '-c', 'cp /config/nginx.conf /etc/nginx/nginx.conf']
+        volumeMounts:
+        - name: nginx-config-content
+          mountPath: /config
+        - name: nginx-config
+          mountPath: /etc/nginx
       containers:
       - name: nginx-container
         image: my-app-proxy
@@ -19,10 +37,6 @@ spec:
         ports:
           - containerPort: 8000
         volumeMounts:
-          - mountPath: /etc/nginx/nginx.conf  # Monta la configurazione in /etc/nginx/nginx.conf
+          - mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
-            name: nginx-config-volume
-      volumes:
-        - name: nginx-config-volume
-          configMap:
             name: nginx-config

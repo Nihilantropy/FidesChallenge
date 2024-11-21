@@ -3,22 +3,14 @@ MAKEFLAGS += -s
 all: stop prune start show
 
 kube:
-<<<<<<< HEAD
-=======
-	-./mvnw clean package
-	docker-compose build
->>>>>>> origin/fullapp
 	-kubectl apply -f ./k8s
+	-kubectl create configmap nginx-proxy-config --from-file=./proxy/nginx/nginx.conf
 	-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
 	-kubectl get pod
 	-kubectl get svc
 	-kubectl get secret
 	-kubectl get ingress
 	-kubectl get pods -n ingress-nginx
-<<<<<<< HEAD
-=======
-	-curl http://sergio.local
->>>>>>> origin/fullapp
 
 start:
 	clear
