@@ -9,6 +9,7 @@ import com.sergio.storiesapp.exception.DeleteStoryException;
 import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
+import com.sergio.storiesapp.service.Sanitizer;
 import com.sergio.storiesapp.service.StoryService;
 import com.sergio.storiesapp.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,8 @@ public class StoryController {
 		Map<String, Object>	storyInfoMap = new HashMap<>();
 
 		try {
-			storyInfoMap = storyService.mapStoryData(storyData);
+			// The flag specify if we are mapping a story for create or update (true == create, false == update)
+			storyInfoMap = storyService.mapStoryData(storyData, true);
 		}
 		catch (InvalidInputException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -120,10 +122,6 @@ public class StoryController {
 		}
 	}
 
-
-
-	// TODO Check if the new story title already exist in the db
-
 	/**
 	 * Updates an existing story with new title, content, and author visibility status.
 	 * 
@@ -145,7 +143,7 @@ public class StoryController {
 			@RequestBody Map<String, String> storyData) {
 
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return error message in the response body
@@ -166,7 +164,8 @@ public class StoryController {
 		Map<String, Object>	storyInfoMap = new HashMap<>();
 
 		try {
-			storyInfoMap = storyService.mapStoryData(storyData);
+			// The flag specify if we are mapping a story for create or update (true == create, false == update)
+			storyInfoMap = storyService.mapStoryData(storyData, false);
 		}
 		catch (StoryUpdateException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -203,7 +202,12 @@ public class StoryController {
 			storyService.updateStory(storyId, storyInfoMap);
 			logger.info("Story with ID {} updated successfully by user {}", storyId, authorMap.get("author_name"));
 			return new ResponseEntity<>("Story updated successfully", HttpStatus.NO_CONTENT);
-
+		} catch (IllegalArgumentException e) {
+			logger.warn("Story creation failed: " + e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		} catch (StoryUpdateException e) {
+			logger.warn("Story creation failed: " + e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			logger.error("Error updating story: {}", e.getMessage(), e);
 			return new ResponseEntity<>("An error occurred while updating the story", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -322,7 +326,7 @@ public class StoryController {
 
 		// Validate the storyId before processing
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails
@@ -346,7 +350,7 @@ public class StoryController {
 			
 		// Validate the storyId before processing
 		try {
-			storyService.validateStoryId(storyIdL);  // Validate the ID
+			Sanitizer.sanitizeUserId(storyIdL);  // Validate the ID
 		} catch (IllegalArgumentException e) {
 			logger.error("Invalid story ID: {}", storyIdL);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);  // Return bad request if validation fails

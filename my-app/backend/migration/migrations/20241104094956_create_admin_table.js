@@ -9,11 +9,13 @@ export async function up(knex) {
             table.integer('role_id').unsigned().notNullable().defaultTo(1);  // Default to 'admin' role
             table.foreign('role_id').references('id').inTable('roles');
             table.timestamp('created_at').defaultTo(knex.fn.now());
+            table.timestamp('updated_at').nullable();
+            table.timestamp('removed_at').nullable();
         });
     }
 }
 
 export async function down(knex) {
     // Drop the admins table if it exists
-    return knex.schema.dropTableIfExists('admins');
+    await knex.schema.dropTableIfExists('admins');
 }

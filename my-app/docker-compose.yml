@@ -48,8 +48,8 @@ services:
       - ./backend/migration/.env
     networks:
       - server-db
-    volumes:
-      - ./backend/migration/backup_data:/backup
+    #volumes:
+    #  - ./backend/migration/backup_data:/backup
     depends_on:
         - db
     

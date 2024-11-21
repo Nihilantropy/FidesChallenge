@@ -1,9 +1,10 @@
 import knexModule from 'knex';
-import knexConfig from './knexfile.js'; // Ensure to use .js for ES modules
+import knexConfig from '../knexfile.js'; // Ensure to use .js for ES modules
 import { healthCheck } from './healthcheck.js';
 import { exec } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { dropTables } from './destroyTable.js'
 
 // Get the current directory of the module
 const __filename = fileURLToPath(import.meta.url);
@@ -41,6 +42,13 @@ const runMigrations = async () => {
         // Backup the database
         await backupDatabase();
         console.log('Backup completed, proceeding with migrations...');
+
+        console.log('Rolling back migrations...');
+        // Rollback all migrations
+        await knex.migrate.rollback();
+        
+        // comment this to prevent table destruction before creation
+        await dropTables();
 
         // Run migrations
         await knex.migrate.latest();
