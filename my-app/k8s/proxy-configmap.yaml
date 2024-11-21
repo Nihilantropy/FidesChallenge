@@ -2,56 +2,64 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-config
-  namespace: default
 data:
   nginx.conf: |
-    events{}
-    
+    events { }
+
     http {
-        upstream backend-users {
-            server users-service:3000;  # Nome del servizio Kubernetes per il backend degli utenti
-        }
+        # Keepalive
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
 
-        upstream backend-stories {
-            server tts-service:5000;  # Nome del servizio Kubernetes per il backend delle storie (se TTS è quello che intendi)
-        }
+        # Log personalizzati
+        log_format custom_logs '$remote_addr - $remote_user [$time_local] '
+                               '"$request" $status $body_bytes_sent '
+                               '"$http_referer" "$http_user_agent" "$request_body"';
+        access_log /var/log/nginx/access.log custom_logs;
 
-        upstream frontend-expo {
-            server frontend-expo-service:8081;  # Nome del servizio Kubernetes per il frontend Expo
-        }
+        # Protezione API: Limiti
+        limit_req_zone $binary_remote_addr zone=users_limit:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=stories_limit:10m rate=5r/s;
+        limit_req_zone $binary_remote_addr zone=tts_limit:10m rate=2r/s;
 
         server {
-            listen 80;
+            listen 8000;
 
-            # Proxy to frontend
+            # Frontend (React Native App)
             location / {
-                proxy_pass http://frontend-expo;  # Riferimento al servizio Kubernetes del frontend Expo
+                proxy_pass http://frontend-expo-service:8081;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
 
-                # WebSocket support for Expo
+                # Protezione
+                limit_req zone=users_limit burst=20 delay=5;
+
+                # Supporto WebSocket
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection "upgrade";
             }
 
-            # Proxy to users service
+            # API Utenti
             location /users/ {
-                proxy_pass http://backend-users;  # Riferimento al servizio Kubernetes per gli utenti
+                proxy_pass http://users-service:3000;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
 
-                # Set CORS headers
+                # Protezione
+                limit_req zone=users_limit burst=20 delay=5;
+
+                # CORS
                 add_header Access-Control-Allow-Origin $http_origin always;
                 add_header Access-Control-Allow-Credentials true;
                 add_header Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS";
                 add_header Access-Control-Allow-Headers "Content-Type, Authorization";
 
-                # Handle OPTIONS method
+                # Handle OPTIONS
                 if ($request_method = OPTIONS) {
                     add_header Content-Length 0;
                     add_header Content-Type text/plain;
@@ -59,35 +67,24 @@ data:
                 }
             }
 
-            location /users/healthz {
-                proxy_pass http://users-service/users/healthz;  # Endpoint di salute per il servizio users
-                proxy_set_header Host $host;
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-
-                # Set CORS headers
-                add_header Access-Control-Allow-Origin $http_origin always;
-                add_header Access-Control-Allow-Credentials true;
-                add_header Access-Control-Allow-Methods "GET";
-                add_header Access-Control-Allow-Headers "Content-Type";
-            }
-
-            # Proxy to stories service
+            # API Storie
             location /stories/ {
-                proxy_pass http://backend-stories;  # Riferimento al servizio Kubernetes per le storie (assumendo che TTS sia il servizio giusto)
+                proxy_pass http://stories-microservice:8080;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
 
-                # Set CORS headers
+                # Protezione
+                limit_req zone=stories_limit burst=10 delay=2;
+
+                # CORS
                 add_header Access-Control-Allow-Origin $http_origin always;
                 add_header Access-Control-Allow-Credentials true;
                 add_header Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS";
                 add_header Access-Control-Allow-Headers "Content-Type, Authorization";
 
-                # Handle OPTIONS method
+                # Handle OPTIONS
                 if ($request_method = OPTIONS) {
                     add_header Content-Length 0;
                     add_header Content-Type text/plain;
@@ -95,21 +92,34 @@ data:
                 }
             }
 
-            location /stories/healthz {
-                proxy_pass http://tts-service/stories/healthz;  # Endpoint di salute per il servizio TTS (se è quello giusto per le storie)
+            # API TTS
+            location /speak {
+                proxy_pass http://tts-service:5000;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
 
-                # Set CORS headers
-                add_header Access-Control-Allow-Origin $http_origin always;
+                # Protezione
+                limit_req zone=tts_limit burst=5 delay=2;
+
+                # Buffering
+                proxy_buffering on;
+                proxy_buffers 8 32k;
+                proxy_buffer_size 64k;
+
+                # Timeout
+                proxy_read_timeout 300s;
+                proxy_send_timeout 300s;
+
+                # CORS
+                add_header Access-Control-Allow-Origin *;
                 add_header Access-Control-Allow-Credentials true;
-                add_header Access-Control-Allow-Methods "GET";
+                add_header Access-Control-Allow-Methods "POST";
                 add_header Access-Control-Allow-Headers "Content-Type";
             }
 
-            # Default 404 for unmatched routes
+            # Default 404
             error_page 404 /404.html;
             location = /404.html {
                 internal;

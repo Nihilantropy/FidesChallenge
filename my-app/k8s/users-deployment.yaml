@@ -14,35 +14,51 @@ spec:
     spec:
       containers:
       - name: users-container
-        image: my-app-backend-users
-        imagePullPolicy: Never
+        image: my-app-backend-users  # Sostituire con immagine reale
+        imagePullPolicy: IfNotPresent  # Modificato per maggiore flessibilità
         ports:
         - containerPort: 3000
         env:
         - name: NODE_ENV
-          value: "production" # Ambiente
+          value: "production"
         - name: PORT
           value: "3000"
-        - name: DB_USER
+        - name: MYSQL_HOST
+          value: "mysql-service"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: myapp_db
+        - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials # Nome del Secret per le credenziali DB
+              name: db-credentials
+              key: root_password  # Corretto dalla precedente configurazione
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
               key: username
-        - name: DB_PASSWORD
+        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: db-credentials  # Nome del Secret per le credenziali DB
+              name: db-credentials
               key: password
         - name: PRIVATE_KEY
           valueFrom:
             secretKeyRef:
-              name: user-secret   # Nome del Secret
-              key: PRIVATE_KEY    # Nome della chiave nel Secret
+              name: user-secret
+              key: PRIVATE_KEY
+        - name: PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: user-secret
+              key: PUBLIC_KEY
         volumeMounts:
-        - mountPath: /config # Monta il volume della config map (opzionale)
+        - mountPath: /config
           name: config-volume
         command: ["npm", "start"]
       volumes:
-        - name: config-volume # Volume con ConfigMap (opzionale)
+        - name: config-volume
           configMap:
             name: users-config
