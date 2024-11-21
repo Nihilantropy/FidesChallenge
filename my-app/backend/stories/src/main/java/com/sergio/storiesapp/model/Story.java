@@ -38,6 +38,12 @@ public class Story {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "updated_at", nullable = true)
+    private LocalDateTime updatedAt = null;
+
+    @Column(name = "removed_at", nullable = true)
+    private LocalDateTime removedAt = null;
+
     // Getters and setters
 
     public Integer getId() {
@@ -104,6 +110,22 @@ public class Story {
         this.createdAt = createdAt;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getRemovedAt() {
+        return updatedAt;
+    }
+
+    public void setRemovedAt(LocalDateTime removedAt) {
+        this.removedAt = removedAt;
+    }
+
     // Optional: override toString() for easier debugging
     @Override
     public String toString() {
@@ -115,12 +137,14 @@ public class Story {
                 ", author_role_id='" + authorRoleId + '\'' +
                 ", author_name='" + authorName + '\'' +
                 ", author_visible='" + authorVisible + '\'' +
-                ", created_at=" + createdAt +
+                ", created_at=" + createdAt + '\'' +
+                ", updated_at=" + updatedAt + '\'' +
+                ", removed_at=" + removedAt +
                 '}';
     }
 
     // Additional logic for author type checking
-    public void setAuthorRole(Integer authorId, Integer authorRoleId, String authorName, Boolean authorVisible) {
+    public void setAuthor(Integer authorId, Integer authorRoleId, String authorName, Boolean authorVisible) {
         this.authorId = authorId;
         this.authorRoleId = authorRoleId;
         this.authorName = authorName;

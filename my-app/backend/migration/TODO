@@ -1,0 +1,11 @@
+
+Optimization	Description	Use Case
+| **Optimization**                  | **Description**                                                                                       | **Use Case**                           |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------|----------------------------------------|
+| **1. Add Indexes**                | Create a composite index on `story_id` and `removed_at` for faster filtering.                         | Essential for all setups.              |
+| **2. Use COUNT(1)**               | Replace `COUNT(*)` with `COUNT(1)` for efficiency and clarity.                                        | Standard practice for faster counts.   |
+| **3. Partitioning**               | Partition the table by `story_id` to split data into manageable chunks.                               | Useful for very large tables.          |
+| **4. Caching with Redis**         | Cache like counts for frequent queries and update the cache on data changes.                          | Ideal for high-traffic queries.        |
+| **5. Materialized Views**         | Pre-compute and store aggregated like counts for periodic analytics.                                  | Best for aggregated analytics data.    |
+| **6. Combine Strategies**         | Use indexes, caching, and views together for balanced performance and scalability.                    | For large-scale systems.               |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------|----------------------------------------|

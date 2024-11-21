@@ -1,6 +1,7 @@
 package com.sergio.storiesapp.service;
 
 import com.sergio.storiesapp.exception.StoryCreationException;
+import com.sergio.storiesapp.exception.StoryNotFoundException;
 import com.sergio.storiesapp.exception.StoryUpdateException;
 import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Service
 public class StoryService {
@@ -31,15 +33,20 @@ public class StoryService {
 	 * 
 	 * @param title   the story title
 	 * @param content the story content
+	 * @param authorVisibleStr the author visible string ("true"/"false")
+	 * @param flag A flag to check if the validation is being made for a POST or a PUT request
 	 * 
 	 * @throws InvalidInputException if validation fails
 	 */
-	public void validateStoryData(String title, String content, String authorVisibleStr) {
-		if (title == null || title.trim().isEmpty()) {
-			throw new InvalidInputException("The title field should not be empty");
-		}
-		if (content == null || content.trim().isEmpty()) {
-			throw new InvalidInputException("The content field should not be empty");
+	public void validateStoryData(String title, String content, String authorVisibleStr, Boolean flag) {
+		
+		if (flag == true) {
+			if (title == null || title.trim().isEmpty()) {
+				throw new InvalidInputException("The title field should not be empty");
+			}
+			if (content == null || content.trim().isEmpty()) {
+				throw new InvalidInputException("The content field should not be empty");
+			}
 		}
 		if (authorVisibleStr == null || authorVisibleStr.trim().isEmpty()) {
 			throw new InvalidInputException("The author_visible field should not be empty");
@@ -56,24 +63,6 @@ public class StoryService {
 	}
 
 	/**
-	 * Validates the given story ID.
-	 * 
-	 * Ensures the story ID is positive and does not exceed Integer.MAX_VALUE.
-	 * 
-	 * @param storyId the ID of the story to validate
-	 * 
-	 * @throws IllegalArgumentException if the ID is invalid
-	 */
-	public void validateStoryId(Long storyId) {
-		if (storyId <= 0) {
-			throw new IllegalArgumentException("Story ID must be a positive integer.");
-		}
-		if (storyId > Integer.MAX_VALUE) {
-			throw new IllegalArgumentException("Story ID exceeds maximum allowed value.");
-		}
-	}
-
-	/**
 	 * Helper method to map and validate the StoryData
 	 * @param storyData the Story object passed from the user request
 	 * 
@@ -81,7 +70,7 @@ public class StoryService {
 	 * 
 	 * @throws InvalidInputException if validation fails
 	 */
-	public Map<String, Object> mapStoryData(Map<String, String> storyData) throws InvalidInputException {
+	public Map<String, Object> mapStoryData(Map<String, String> storyData, Boolean flag) throws InvalidInputException {
 		Map<String, Object> storyMap = new HashMap<>();
 
 		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
@@ -90,7 +79,7 @@ public class StoryService {
 
 		
 		try {
-			validateStoryData(title, content, authorVisibleStr); // Reuse the existing validation logic
+			validateStoryData(title, content, authorVisibleStr, flag);
 		}
 		catch (InvalidInputException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -146,7 +135,9 @@ public class StoryService {
 			Story story = new Story();
 			story.setTitle(title);
 			story.setContent(content);
-			story.setAuthorRole(authorId, authorRoleId, authorName, authorVisible);
+			story.setAuthor(authorId, authorRoleId, authorName, authorVisible);
+			story.setUpdatedAt(null);
+			story.setRemovedAt(null);
 			
 			logger.info("Story details before saving: {}", story);
 			try {
@@ -178,6 +169,12 @@ public class StoryService {
 		String	content = (String) storyInfoMap.get("content");
 		Boolean	authorVisible = (Boolean) storyInfoMap.get("author_visible");
 		
+		// Check for an existing story with the same title by this author
+		List<Story> existingStories = storyRepository.findByTitle(title);
+		if (!existingStories.isEmpty()) {
+			throw new IllegalArgumentException("There already is a story with this title.");
+		}
+
 		try {
 			Story story = storyRepository.findById(storyId)
 					.orElseThrow(() -> new StoryUpdateException("Story not found"));
@@ -187,6 +184,7 @@ public class StoryService {
 			if (content != "")
 				story.setContent(content);
 			story.setAuthorVisible(authorVisible);
+			story.setUpdatedAt(LocalDateTime.now());
 			
 			try {
 				storyRepository.save(story);
@@ -204,6 +202,21 @@ public class StoryService {
 
 	}
 
+
+	/**
+	 * Soft deletes a story by marking it as removed with the current timestamp.
+	 * 
+	 * @param storyId the ID of the story to delete
+	 * @param authorMap a map containing the author's ID to verify the requester
+	 * 
+	 * @throws DeleteStoryException if the story with the given ID is not found or if the delete request is unauthorized
+	 * @throws UnauthorizedDeleteException if the requester is not the author of the story
+	 * @throws IllegalArgumentException when an IllegalArgumentException is cought
+	 * 
+	 * Note: This method does not perform a hard delete, but instead sets the <code>removedAt</code> timestamp,
+	 * allowing for potential recovery of the story in the future. Soft deleting the story ensures data integrity
+	 * while providing the possibility of restoring the story by nullifying the <code>removedAt</code> field if needed.
+	 */
 	public void deleteStory(int storyId, Map<String, Object> authorMap) {
 		Integer	authorId = (Integer) authorMap.get("author_id");
 
@@ -215,8 +228,9 @@ public class StoryService {
 				throw new UnauthorizedDeleteException("This user is not the author of the story. Delete request rejected");
 			}
 			logger.info("requesting user and story author match. Proceeding delete story={}", storyId);
-	
-			storyRepository.delete(story);
+
+			story.setRemovedAt(LocalDateTime.now());
+			storyRepository.save(story);
 		}
 		catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(e.getMessage());
@@ -228,7 +242,8 @@ public class StoryService {
 	}
 
 	/**
-	 * Retrieves a list of stories for a specific author by their ID.
+	 * Retrieves a list of stories for a specific author by their ID, excluding stories
+	 * that have been soft deleted (where removed_at is not null).
 	 * 
 	 * @param authorId the ID of the author
 	 * @return a list of stories mapped to basic information for the specified author
@@ -236,12 +251,14 @@ public class StoryService {
 	public List<Map<String, Object>> getUserStoriesByAuthorId(int authorId) {
 		List<Story> stories = storyRepository.findByAuthorId(authorId);
 		return stories.stream()
+				.filter(story -> story.getRemovedAt() == null)  // Exclude deleted stories
 				.map(this::mapBasicStoryInfoToResponse)
 				.collect(Collectors.toList());
 	}
 
 	/**
-	 * Retrieves the latest stories up to the specified limit.
+	 * Retrieves the latest stories up to the specified limit, excluding stories that
+	 * have been soft deleted (where removed_at is not null).
 	 * 
 	 * @param limit the maximum number of stories to retrieve
 	 * @return a list of stories, mapped to basic information, up to the limit
@@ -253,20 +270,80 @@ public class StoryService {
 
 		List<Story> stories = fetchStories(limit);
 		return stories.stream()
+				.filter(story -> story.getRemovedAt() == null)  // Exclude deleted stories
 				.map(this::mapBasicStoryInfoToResponse)
 				.collect(Collectors.toList());
 	}
 
+
 	/**
-	 * Retrieves a limited number of stories, ordered by creation date.
+	 * Retrieves a random story from the database, excluding soft-deleted stories.
+	 * 
+	 * @return an Optional containing the story details if found, or empty if no stories exist
+	 */
+	public Optional<Map<String, Object>> getRandomStory() {
+		List<Story> allStories = storyRepository.findAll().stream()
+				.filter(story -> story.getRemovedAt() == null)  // Exclude deleted stories
+				.collect(Collectors.toList());
+		
+		if (allStories.isEmpty()) {
+			return Optional.empty();
+		}
+
+		Random random = new Random();
+		Story randomStory = allStories.get(random.nextInt(allStories.size()));
+
+		return Optional.of(mapStoryToResponse(randomStory));
+	}
+
+	/**
+	 * Retrieves a limited number of stories, ordered by creation date, excluding stories
+	 * that have been soft deleted (where removed_at is not null).
 	 * 
 	 * @param limit the maximum number of stories to fetch
 	 * @return a list of stories, up to the specified limit
 	 */
 	private List<Story> fetchStories(int limit) {
 		return storyRepository.findAllByOrderByCreatedAtDesc().stream()
+				.filter(story -> story.getRemovedAt() == null)  // Exclude deleted stories
 				.limit(limit)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Retrieves all stories that have been soft deleted, i.e., where removed_at is not null.
+	 * 
+	 * @return a list of stories that have been soft deleted
+	 */
+	public List<Story> getDeletedStories() {
+		return storyRepository.findAll().stream()
+				.filter(story -> story.getRemovedAt() != null)  // Only include deleted stories
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Deletes a story permanently from the database (hard delete).
+	 * 
+	 * @param storyId the ID of the story to delete
+	 * 
+	 * @throws StoryNotFoundException  if the story with the given ID is not found
+	 * @throws DeleteStoryException if an error occurs while deleting the story
+	 */
+	public void deleteStoryPermanently(int storyId) {
+		try {
+			// Check if the story exists first
+			Story story = storyRepository.findById(storyId)
+					.orElseThrow(() -> new StoryNotFoundException("Story not found"));
+
+			// Log the deletion for auditing purposes
+			logger.info("Permanently deleting story with ID: {}", story.getId());
+
+			// Delete the story permanently from the database
+			storyRepository.deleteById(storyId);
+		} catch (Exception e) {
+			logger.error("Failed to delete story permanently: {}", e.getMessage(), e);
+			throw new DeleteStoryException("Could not permanently delete the story. Please try again.");
+		}
 	}
 
 	/**
@@ -284,31 +361,14 @@ public class StoryService {
 	}
 
 	/**
-	 * Retrieves a random story from the database.
-	 * 
-	 * @return an Optional containing the story details if found, or empty if no stories exist
-	 */
-	public Optional<Map<String, Object>> getRandomStory() {
-		List<Story> allStories = storyRepository.findAll();
-		
-		if (allStories.isEmpty()) {
-			return Optional.empty();
-		}
-
-		Random random = new Random();
-		Story randomStory = allStories.get(random.nextInt(allStories.size()));
-
-		return Optional.of(mapStoryToResponse(randomStory));
-	}
-
-	/**
-	 * Retrieves a story by its ID.
+	 * Retrieves a story by its ID, excluding soft-deleted stories.
 	 * 
 	 * @param storyId the ID of the story to retrieve
 	 * @return an Optional containing a map with the story details if found, or an empty Optional if not
 	 */
 	public Optional<Map<String, Object>> getStoryById(int storyId) {
-		Optional<Story> storyOpt = storyRepository.findById(storyId);
+		Optional<Story> storyOpt = storyRepository.findById(storyId)
+				.filter(story -> story.getRemovedAt() == null);  // Exclude deleted stories
 		
 		return storyOpt.map(this::mapStoryToResponse);
 	}

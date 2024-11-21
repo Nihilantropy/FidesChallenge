@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ path: '../.env' }); // Load environment variables from .env file
+dotenv.config({ path: '.env' }); // Load environment variables from .env file
 
 export default {
   development: {
