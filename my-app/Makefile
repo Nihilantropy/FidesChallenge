@@ -3,7 +3,6 @@ MAKEFLAGS += -s
 all: stop prune start show
 
 kube:
-	-./mvnw clean package
 	docker-compose build
 	-kubectl apply -f ./k8s
 	-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml

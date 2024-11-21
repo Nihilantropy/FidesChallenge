@@ -65,10 +65,11 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
         })
       });
       if (!response.ok){throw new Error(response.statusText);}
-      await setupPlayer(await response.blob());
+      await setupPlayer(await response.blob(), setStato);
       setStato('play');
       playAudio();
     } catch (error) {
+      console.log(error);
       sShowErr("Errore nella lettura");
       setStato('unset');
     }
@@ -90,7 +91,7 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
           <Text style={[styles.testi, styles.sinistra]}>{stori.content}</Text>
           { stori.author_visible == true && (<View style={{ alignSelf: 'flex-end' }}><Text style={styles.testi}>Storia by {stori.author_name}</Text></View>) }
           <Text>{"\n\n"}</Text>
-          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),get_story()}}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
+          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),get_story(),setVelocita('x1')}}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
           <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
             {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(stori.content,stori.id)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
             {statorip == 'play' && (
@@ -170,7 +171,7 @@ const Inventa = ({ sShowErr }) => {
         body: JSON.stringify({ text: text, language: 'it' })
       });
       if (!response.ok){throw new Error(response.statusText);}
-      await setupPlayer(await response.blob());
+      await setupPlayer(await response.blob(), setStato);
       setStato('play');
       playAudio();
     } catch (error) {
