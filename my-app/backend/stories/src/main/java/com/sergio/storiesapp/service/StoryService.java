@@ -31,15 +31,20 @@ public class StoryService {
 	 * 
 	 * @param title   the story title
 	 * @param content the story content
+	 * @param authorVisibleStr the author visible string ("true"/"false")
+	 * @param flag A flag to check if the validation is being made for a POST or a PUT request
 	 * 
 	 * @throws InvalidInputException if validation fails
 	 */
-	public void validateStoryData(String title, String content, String authorVisibleStr) {
-		if (title == null || title.trim().isEmpty()) {
-			throw new InvalidInputException("The title field should not be empty");
-		}
-		if (content == null || content.trim().isEmpty()) {
-			throw new InvalidInputException("The content field should not be empty");
+	public void validateStoryData(String title, String content, String authorVisibleStr, Boolean flag) {
+		
+		if (flag == true) {
+			if (title == null || title.trim().isEmpty()) {
+				throw new InvalidInputException("The title field should not be empty");
+			}
+			if (content == null || content.trim().isEmpty()) {
+				throw new InvalidInputException("The content field should not be empty");
+			}
 		}
 		if (authorVisibleStr == null || authorVisibleStr.trim().isEmpty()) {
 			throw new InvalidInputException("The author_visible field should not be empty");
@@ -81,7 +86,7 @@ public class StoryService {
 	 * 
 	 * @throws InvalidInputException if validation fails
 	 */
-	public Map<String, Object> mapStoryData(Map<String, String> storyData) throws InvalidInputException {
+	public Map<String, Object> mapStoryData(Map<String, String> storyData, Boolean flag) throws InvalidInputException {
 		Map<String, Object> storyMap = new HashMap<>();
 
 		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
@@ -90,7 +95,7 @@ public class StoryService {
 
 		
 		try {
-			validateStoryData(title, content, authorVisibleStr); // Reuse the existing validation logic
+			validateStoryData(title, content, authorVisibleStr, flag);
 		}
 		catch (InvalidInputException e) {
 			throw new InvalidInputException(e.getMessage());
@@ -178,6 +183,12 @@ public class StoryService {
 		String	content = (String) storyInfoMap.get("content");
 		Boolean	authorVisible = (Boolean) storyInfoMap.get("author_visible");
 		
+		// Check for an existing story with the same title by this author
+		List<Story> existingStories = storyRepository.findByTitle(title);
+		if (!existingStories.isEmpty()) {
+			throw new IllegalArgumentException("There already is a story with this title.");
+		}
+
 		try {
 			Story story = storyRepository.findById(storyId)
 					.orElseThrow(() -> new StoryUpdateException("Story not found"));

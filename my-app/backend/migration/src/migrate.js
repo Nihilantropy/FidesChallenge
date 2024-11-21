@@ -1,5 +1,5 @@
 import knexModule from 'knex';
-import knexConfig from './knexfile.js'; // Ensure to use .js for ES modules
+import knexConfig from '../knexfile.js'; // Ensure to use .js for ES modules
 import { healthCheck } from './healthcheck.js';
 import { exec } from 'child_process';
 import path from 'path';

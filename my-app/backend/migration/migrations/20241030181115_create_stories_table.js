@@ -21,5 +21,5 @@ export async function up(knex) {
 
 export async function down(knex) {
     // Drop the stories table if it exists
-    return knex.schema.dropTableIfExists('stories');
+    await knex.schema.dropTableIfExists('stories');
 }
