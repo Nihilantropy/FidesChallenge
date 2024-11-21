@@ -14,6 +14,10 @@ COPY . /app
 RUN ./mvnw clean package
 
 COPY ./target/stories-microservice-0.0.1-SNAPSHOT.jar /app/stories-microservice.jar
+
+RUN ./mvnw clean package
+
+COPY ./target/stories-microservice-0.0.1-SNAPSHOT.jar /app/stories-microservice.jar
 # Make sure the wait-for-it script is executable
 RUN chmod +x /usr/local/bin/wait-for-it.sh
 

@@ -38,10 +38,21 @@ export default function App() {
       try {
         const token = await getToken();
         if (token) {
-          console.log('Utente loggato');
-          sJWTtoken(token);
-        } else {
-          console.log('Utente non loggato');
+          fetch("http://localhost:8000/users/profile", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }
+          })
+          .then(response => {
+              const status = response.status;
+              if (status == 200) {
+                sJWTtoken(token);
+              } else if (status == 401){
+                removeToken();
+              }
+          })
         }
       } catch (error) {
         console.error('Errore durante il controllo del token:', error);
@@ -100,7 +111,7 @@ export default function App() {
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} sShowErr={sShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 9 && <Delete gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 10 && <LeggiStory gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 10 && <LeggiStory sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
 
       { Platform.OS === 'web' && <FooterWeb /> }
 

@@ -16,5 +16,5 @@ export async function up(knex) {
 
 export async function down(knex) {
     // Drop the roles table if it exists
-    return knex.schema.dropTableIfExists('roles');
+    await knex.schema.dropTableIfExists('roles');
 }

@@ -6,6 +6,8 @@ data:
   nginx.conf: |
     events { }
 
+    events { }
+
     http {
         # Keepalive
         proxy_http_version 1.1;
@@ -23,6 +25,7 @@ data:
         limit_req_zone $binary_remote_addr zone=tts_limit:10m rate=2r/s;
 
         server {
+            listen 8000;
             listen 8000;
 
             # Frontend (React Native App)
@@ -61,6 +64,10 @@ data:
 
                 # Handle OPTIONS
                 if ($request_method = OPTIONS) {
+                    add_header Access-Control-Allow-Origin $http_origin always;
+                    add_header Access-Control-Allow-Credentials true;
+                    add_header Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS";
+                    add_header Access-Control-Allow-Headers "Content-Type, Authorization";
                     add_header Content-Length 0;
                     add_header Content-Type text/plain;
                     return 204;
