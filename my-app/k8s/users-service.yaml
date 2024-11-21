@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: backend-users
 spec:
-  type: ClusterIP 
-  ports:
-    - port: 3000
-      targetPort: 3000
-      protocol: TCP
   selector:
-    app: users-app
+    app: users-app  # Questo deve corrispondere alla label nel deployment
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP

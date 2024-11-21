@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: nginx-proxy-service
 spec:
-  type: ClusterIP  # Tipo ClusterIP, per accesso solo all'interno del cluster
+  type: LoadBalancer  # Tipo ClusterIP, per accesso solo all'interno del cluster
   ports:
     - port: 8000
       targetPort: 8000

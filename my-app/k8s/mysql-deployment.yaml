@@ -5,7 +5,7 @@ metadata:
   labels:
     app: mysql
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: mysql
@@ -17,7 +17,7 @@ spec:
       containers:
       - name: mysql
         image: my-app-db  # Assicurati che l'immagine sia presente
-        imagePullPolicy: IfNotPresent  # More flexible pull policy
+        imagePullPolicy: Never  # More flexible pull policy
         ports:
         - containerPort: 3306
         env:

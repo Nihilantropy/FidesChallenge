@@ -12,15 +12,6 @@ spec:
       labels:
         app: nginx-proxy
     spec:
-      volumes:
-      - name: nginx-config
-        emptyDir: {}
-      - name: nginx-config-content
-        configMap:
-          name: nginx-proxy-config
-          items:
-          - key: nginx.conf
-            path: nginx.conf
       initContainers:
       - name: copy-nginx-config
         image: busybox
@@ -36,7 +27,3 @@ spec:
         imagePullPolicy: Never
         ports:
           - containerPort: 8000
-        volumeMounts:
-          - mountPath: /etc/nginx/nginx.conf
-            subPath: nginx.conf
-            name: nginx-config

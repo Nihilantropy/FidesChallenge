@@ -8,7 +8,7 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-    origin: ['http://expo-service:8081', 'http://localhost:8000'], // Add Nginx proxy origin
+    origin: ['http://expo-service:8081', 'http://localhost:8000', 'http://nginx-proxy-service:8000'], // Add Nginx proxy origin
     methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed

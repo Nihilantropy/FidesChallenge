@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx  # This must match the ingress class if you're using a controller
   rules:
   - host: localhost
     http:
@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nginx-proxy-service
+            name: nginx-proxy-service  # Reference to your NGINX proxy service
             port:
-              number: 8000
+              number: 8000  # Matches the port in the nginx-proxy-service definition
