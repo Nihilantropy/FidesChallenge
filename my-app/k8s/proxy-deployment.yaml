@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-proxy
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: nginx-proxy
+  template:
+    metadata:
+      labels:
+        app: nginx-proxy
+    spec:
+      containers:
+      - name: nginx-container
+        image: my-app-proxy
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8000
+        volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf  # Monta la configurazione in /etc/nginx/nginx.conf
+            subPath: nginx.conf
+            name: nginx-config-volume
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config

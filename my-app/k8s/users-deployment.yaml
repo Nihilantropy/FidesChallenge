@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-app
+spec:
+  replicas: 1  # Numero di repliche/pod
+  selector:
+    matchLabels:
+      app: users-app
+  template:
+    metadata:
+      labels:
+        app: users-app
+    spec:
+      containers:
+      - name: users-container
+        image: my-app-backend-users  # Sostituire con immagine reale
+        imagePullPolicy: IfNotPresent  # Modificato per maggiore flessibilità
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        - name: MYSQL_HOST
+          value: "mysql-service"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: myapp_db
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: root_password  # Corretto dalla precedente configurazione
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password
+        - name: PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: user-secret
+              key: PRIVATE_KEY
+        - name: PUBLIC_KEY
+          valueFrom:
+            secretKeyRef:
+              name: user-secret
+              key: PUBLIC_KEY
+        volumeMounts:
+        - mountPath: /config
+          name: config-volume
+        command: ["npm", "start"]
+      volumes:
+        - name: config-volume
+          configMap:
+            name: users-config
