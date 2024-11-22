@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: migrate-job
+  name: migration-backend-deployment
 spec:
   template:
     spec:
       containers:
-      - name: migrate
-        image: my-app-backend-migration:latest
+      - name: migration-container
+        image: my-app_backend-migration:latest
         imagePullPolicy: Never
       restartPolicy: Never
   backoffLimit: 1

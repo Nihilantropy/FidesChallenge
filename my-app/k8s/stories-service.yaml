@@ -3,10 +3,13 @@ kind: Service
 metadata:
   name: backend-stories
   namespace: backend-ns
+  labels:
+    app: stories-app
 spec:
   selector:
-    app: backend-stories
+    app: stories-app
   ports:
     - port: 8080
+      targetPort: 8080
       protocol: TCP
-  type: ClusterIP
+  type: ClusterIP # Ensures internal cluster-only access

@@ -3,12 +3,13 @@ kind: Service
 metadata:
   name: mysql-service
   namespace: database-ns
+  labels:
+    app: mysql-app
 spec:
   selector:
-    app: mysql
+    app: mysql-app
   ports:
     - protocol: TCP
       port: 3306
       targetPort: 3306
-  type: ClusterIP
-  # MYSQL_HOST: "mysql-service.database-ns" va messo questo nelle globali
+  type: ClusterIP # Ensures internal cluster communication

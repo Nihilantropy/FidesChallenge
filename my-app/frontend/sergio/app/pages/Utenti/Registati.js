@@ -49,7 +49,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
             return;
         }
         /* ====== Send post ====== */
-        fetch("http://localhost:8000/users/create", {
+        fetch("http://users-service:3000/users/create", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

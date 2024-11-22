@@ -1,15 +1,12 @@
-# Nginx Proxy Service (typically in its own namespace or in frontend namespace)
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-proxy-service
-  namespace: frontend-ns  # o potrebbe essere in un namespace dedicato come 'proxy-ns'
+  name: proxy-service
+  namespace: proxy-ns
 spec:
-  type: LoadBalancer
+  selector:
+    app: proxy-app
   ports:
     - port: 8000
       targetPort: 8000
-      nodePort: 31161
-      protocol: TCP
-  selector:
-    app: nginx-proxy
+  type: LoadBalancer  # Expose the proxy to external traffic

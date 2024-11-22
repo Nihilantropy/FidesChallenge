@@ -3,9 +3,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
   namespace: database-ns
+  labels:
+    app: mysql
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi  # Puoi aumentare questa dimensione se necessario
+      storage: 5Gi # Increased to accommodate growing database needs
+  storageClassName: standard # Specify a storage class for consistent performance
