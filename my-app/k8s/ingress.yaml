@@ -2,14 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: my-app-ingress
-  namespace: default
+  namespace: frontend-ns
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
     nginx.ingress.kubernetes.io/cors-allow-origin: "*"
     nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
-  ingressClassName: nginx  # This must match the ingress class if you're using a controller
+  ingressClassName: nginx
   rules:
   - host: localhost
     http:
@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nginx-proxy-service  # Reference to your NGINX proxy service
+            name: nginx-proxy-service
             port:
-              number: 8000  # Matches the port in the nginx-proxy-service definition
+              number: 8000

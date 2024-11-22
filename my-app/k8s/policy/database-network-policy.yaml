@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-network-policy
+  namespace: database-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: backend-ns
+    - podSelector:
+        matchLabels:
+          role: backend
+    ports:
+    - protocol: TCP
+      port: 3306
+      # Allow connections from backend services
+    - protocol: TCP
+      port: 8080  # backend-stories
+    - protocol: TCP
+      port: 5000  # backend-tts
+    - protocol: TCP
+      port: 3000  # backend-users

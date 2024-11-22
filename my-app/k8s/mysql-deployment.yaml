@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-deployment
+  namespace: database-ns
   labels:
     app: mysql
 spec:
@@ -20,28 +21,3 @@ spec:
         imagePullPolicy: Never  # More flexible pull policy
         ports:
         - containerPort: 3306
-        env:
-        - name: MYSQL_DATABASE
-          value: myapp_db
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: root_password
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: username
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: password
-        volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc

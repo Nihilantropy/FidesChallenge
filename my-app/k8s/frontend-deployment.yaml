@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-expo
+  namespace: frontend-ns
 spec:
   replicas: 1
   selector:
@@ -25,7 +26,3 @@ spec:
           containerPort: 19001
         - name: expo-19002  # Nome per la porta 19002
           containerPort: 19002
-        env:
-        - name: PORT
-          value: "8081"        # Può essere modificato secondo necessità
-

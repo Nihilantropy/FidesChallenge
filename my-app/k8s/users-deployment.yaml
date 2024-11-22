@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users-app
+  namespace: backend-ns
 spec:
   replicas: 1
   selector:
@@ -19,48 +20,3 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
-          name: http  # Aggiunto nome alla porta per chiarezza
-        env:
-        - name: NODE_ENV
-          value: "production"
-        - name: PORT
-          value: "3000"
-        - name: MYSQL_HOST
-          value: "mysql-service"
-        - name: MYSQL_PORT
-          value: "3306"
-        - name: MYSQL_DATABASE
-          value: myapp_db
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: root_password
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: username
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: password
-        - name: PRIVATE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: user-secret
-              key: PRIVATE_KEY
-        - name: PUBLIC_KEY
-          valueFrom:
-            secretKeyRef:
-              name: user-secret
-              key: PUBLIC_KEY
-        volumeMounts:
-        - mountPath: /config
-          name: config-volume
-        command: ["npm", "start"]
-      volumes:
-        - name: config-volume
-          configMap:
-            name: users-config

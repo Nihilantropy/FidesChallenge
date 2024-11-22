@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-proxy
+  namespace: frontend-ns
 spec:
-  replicas: 1  
   selector:
     matchLabels:
       app: nginx-proxy
@@ -12,18 +12,9 @@ spec:
       labels:
         app: nginx-proxy
     spec:
-      initContainers:
-      - name: copy-nginx-config
-        image: busybox
-        command: ['sh', '-c', 'cp /config/nginx.conf /etc/nginx/nginx.conf']
-        volumeMounts:
-        - name: nginx-config-content
-          mountPath: /config
-        - name: nginx-config
-          mountPath: /etc/nginx
       containers:
-      - name: nginx-container
+      - name: nginx
         image: my-app-proxy
         imagePullPolicy: Never
         ports:
-          - containerPort: 8000
+        - containerPort: 8000

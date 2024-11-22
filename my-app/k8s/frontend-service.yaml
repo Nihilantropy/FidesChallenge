@@ -2,24 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-expo
+  namespace: frontend-ns
 spec:
   selector:
     app: frontend-expo
   ports:
-  - name: http         # Nome per la porta del servizio 8081
-    protocol: TCP
-    port: 8081          # Porta di accesso del servizio
-    targetPort: 8081    # Porta del container
-  - name: expo-19000   # Nome per la porta del servizio 19000
-    protocol: TCP
-    port: 19000
-    targetPort: 19000
-  - name: expo-19001   # Nome per la porta del servizio 19001
-    protocol: TCP
-    port: 19001
-    targetPort: 19001
-  - name: expo-19002   # Nome per la porta del servizio 19002
-    protocol: TCP
-    port: 19002
-    targetPort: 19002
-  type: ClusterIP         # Tipo di servizio, potrebbe essere LoadBalancer su un cloud provider
+    - name: http
+      port: 8081
+      targetPort: 8081
+    - name: expo-dev
+      port: 19000
+      targetPort: 19000
+  type: ClusterIP

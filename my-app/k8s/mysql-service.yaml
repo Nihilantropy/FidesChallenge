@@ -2,8 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service
-  labels:
-    app: mysql
+  namespace: database-ns
 spec:
   selector:
     app: mysql
@@ -11,4 +10,5 @@ spec:
     - protocol: TCP
       port: 3306
       targetPort: 3306
-  type: ClusterIP      
+  type: ClusterIP
+  # MYSQL_HOST: "mysql-service.database-ns" va messo questo nelle globali
