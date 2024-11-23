@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tts-app
+  name: tts-backend-deployment
   namespace: backend-ns
   labels:
     app: tts-app
@@ -21,4 +21,6 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
-            
+          envFrom:
+            - secretRef:
+                name: db-credentials

@@ -6,7 +6,7 @@ metadata:
   labels:
     app: mysql
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -17,7 +17,23 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: my-app-db  # Assicurati che l'immagine sia presente
-        imagePullPolicy: Never  # More flexible pull policy
+        image: my-app-db
+        imagePullPolicy: Never
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpassword
+        - name: MYSQL_DATABASE
+          value: myapp_db
+        - name: MYSQL_USER
+          value: mysql_user
+        - name: MYSQL_PASSWORD
+          value: userpassword
+      volumes:
+      - name: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-pvc

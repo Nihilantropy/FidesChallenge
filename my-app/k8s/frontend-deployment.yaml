@@ -1,28 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-expo
+  name: expo-frontend-deployment
   namespace: frontend-ns
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend-expo
+      app: frontend-app
   template:
     metadata:
       labels:
-        app: frontend-expo
+        app: frontend-app
     spec:
       containers:
-      - name: expo-service
-        image: my-app-frontend-expo:latest # Sostituisci con il nome completo dell'immagine se necessario
+      - name: expo-container
+        image: my-app-frontend-expo:latest 
         imagePullPolicy: Never
         ports:
-        - name: http       # Nome per la porta 8081
-          containerPort: 8081   # Porta esposta nel Dockerfile
-        - name: expo-19000  # Nome per la porta 19000
-          containerPort: 19000   # Porta per Expo
-        - name: expo-19001  # Nome per la porta 19001
-          containerPort: 19001
-        - name: expo-19002  # Nome per la porta 19002
-          containerPort: 19002
+        - containerPort: 8081
+        env:
+        - name: BACKEND_USERS_URL
+          value: users-backend-service.backend-ns.svc.cluster.local:3000

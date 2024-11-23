@@ -1,23 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: stories-microservice
+  name: stories-backend-deployment
   namespace: backend-ns
   labels:
-    app: stories-microservice
+    app: stories-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: stories-microservice
+      app: stories-app
   template:
     metadata:
       labels:
-        app: stories-microservice
+        app: stories-app
+        service: stories-backend-service
     spec:
       containers:
-      - name: stories-microservice
+      - name: stories-container
         image: my-app-backend-stories:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8080
+        envFrom:
+          - secretRef:
+              name: db-credentials

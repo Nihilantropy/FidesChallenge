@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-proxy
-  namespace: frontend-ns
+  name: nginx-proxy-deployment
+  namespace: proxy-ns
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: nginx-proxy
+      app: proxy-app
   template:
     metadata:
       labels:
-        app: nginx-proxy
+        app: proxy-app
     spec:
       containers:
-      - name: nginx
-        image: my-app-proxy
+      - name: proxy-container
+        image: my-app-proxy:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8000

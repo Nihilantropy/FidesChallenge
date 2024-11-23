@@ -14,10 +14,8 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          name: backend-ns
+          name: frontend-ns
     - podSelector:
         matchLabels:
-          role: backend
-    ports:
-    - protocol: TCP
-      port: 3306
+          role: frontend
+

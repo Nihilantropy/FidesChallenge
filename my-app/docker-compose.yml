@@ -157,6 +157,6 @@ volumes:
     name: tts_server_vol
     driver: local
     driver_opts:
-      device: ./backend/tts/sound
+      device: ./backend/tts
       o: bind
       type: none

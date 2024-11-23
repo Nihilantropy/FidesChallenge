@@ -10,8 +10,6 @@ WORKDIR /app
 # Copy the wait-for-it.sh script
 COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
 COPY . /app
-<<<<<<< HEAD
-=======
 
 RUN ./mvnw clean package
 

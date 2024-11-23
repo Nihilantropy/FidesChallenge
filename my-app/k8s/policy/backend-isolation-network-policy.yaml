@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: backend-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: users-app
+  policyTypes:
+    - Ingress
+  ingress: [] # Deny all ingress traffic by default

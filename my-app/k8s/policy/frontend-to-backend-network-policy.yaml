@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-to-backend-policy
+  namespace: backend-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: frontend-ns
+      ports:
+        - protocol: TCP
+          port: 3000 # users
+        - protocol: TCP
+          port: 8080 # stories
+        - protocol: TCP
+          port: 5000 # tts
+        - protocol: TCP
+          port: 5001 # ia
