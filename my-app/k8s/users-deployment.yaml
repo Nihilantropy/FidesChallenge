@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users-backend-deployment
-  namespace: backend-ns
   labels:
     app: users-app
 spec:
@@ -25,3 +24,5 @@ spec:
           envFrom:
             - secretRef:
                 name: db-credentials
+            - secretRef:
+                name: users-key

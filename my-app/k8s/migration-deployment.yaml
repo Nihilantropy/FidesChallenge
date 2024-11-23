@@ -9,5 +9,8 @@ spec:
       - name: migration-container
         image: my-app-backend-migration:latest
         imagePullPolicy: Never
+        envFrom:
+          - secretRef:
+              name: db-credentials
       restartPolicy: Never
-  backoffLimit: 1
+  backoffLimit: 2

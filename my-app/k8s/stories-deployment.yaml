@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: stories-backend-deployment
-  namespace: backend-ns
   labels:
     app: stories-app
 spec:

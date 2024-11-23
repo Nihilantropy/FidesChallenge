@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tts-backend-service
-  namespace: backend-ns
+  name: backend-tts
 spec:
   selector:
     app: tts-app

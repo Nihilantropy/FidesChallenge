@@ -17,7 +17,7 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
 
         /* Ricerca info */
         const getdata = async () => {
-            fetch("http://users-backend-service.backend-ns.svc.cluster.local:3000", {
+            fetch("http://localhost:8000/users/profile", {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

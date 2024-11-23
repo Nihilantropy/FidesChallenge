@@ -25,7 +25,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
     };
 
     async function elimina() {
-        fetch("http://users-backend-service.backend-ns.svc.cluster.local:3000", {
+        fetch("http://localhost:8000/users/delete", {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

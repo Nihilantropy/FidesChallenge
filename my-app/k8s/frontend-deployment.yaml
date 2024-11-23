@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: expo-frontend-deployment
-  namespace: frontend-ns
 spec:
   replicas: 1
   selector:
@@ -19,6 +18,3 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8081
-        env:
-        - name: BACKEND_USERS_URL
-          value: users-backend-service.backend-ns.svc.cluster.local:3000

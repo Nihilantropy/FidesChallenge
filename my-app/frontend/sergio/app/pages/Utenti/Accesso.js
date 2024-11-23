@@ -33,7 +33,7 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         }
         
         /* ====== Send post ====== */
-        fetch("http://users-backend-service.backend-ns.svc.cluster.local:3000", {
+        fetch("http://localhost:8000/users/login", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
