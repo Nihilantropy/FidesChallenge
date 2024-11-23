@@ -1,23 +1,30 @@
-export const storeToken = async (token) => {
+import Cookies from 'js-cookie';
+
+export const storeToken = (token) => {
     try {
-        localStorage.setItem('token', token);
+        Cookies.set('token', token, {
+            /*secure: true, abiklita https */
+            sameSite: 'strict',
+            expires: 1/24,
+        });
     } catch (error) {
-        console.error('Errore nel salvataggio sicuro del token:', error);
+        console.error('Errore nel salvataggio del token nei cookie:', error);
     }
 };
 
-export const getToken = async () => {
+export const getToken = () => {
     try {
-        return localStorage.getItem('token');
+        return Cookies.get('token');
     } catch (error) {
-        console.error('Errore nel recupero sicuro del token:', error);
+        console.error('Errore nel recupero del token dai cookie:', error);
+        return null;
     }
 };
-  
-export const removeToken = async () => {
+
+export const removeToken = () => {
     try {
-        localStorage.removeItem('token');
+        Cookies.remove('token');
     } catch (error) {
-        console.error('Errore nella rimozione sicura del token:', error);
+        console.error('Errore nella rimozione del token dai cookie:', error);
     }
 };

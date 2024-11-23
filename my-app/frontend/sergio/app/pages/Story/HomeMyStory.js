@@ -10,33 +10,44 @@ const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES }) => {
       showPage(1);
     }
 
-    fetch("http://localhost:8000/stories/user", {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+gJWTtoken()
-      }
-    })
-    .then(response => {
-      const status = response.status;
-      return response.json().then(data => ({ status, data }));
-    })
-    .then(({ status, data }) => {
-      if (status == 200) {
-        setStorie(data);
-      } else if (status == 204) {
-        setdisponibili(0);
-      } else {
+    async function my_story(){
+      fetch("http://localhost:8000/stories/user", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+gJWTtoken()
+        }
+      })
+      .then(response => {
+        const status = response.status;
+        if (status == 200) {
+          return response.json().then(data => {
+            setStorie(data);
+          });
+        } else if (status == 204){
+          setdisponibili(0);
+        } else {
+          showPage(1);
+        }
+      })
+      .catch(error => {
         showPage(1);
-      }
-    })
-    .catch(error => {
-      showPage(1);
-    });
+      });
+    }
+    my_story();
   }, [gJWTtoken, showPage]);
 
   return (
     <View style={styles.stacca}>
+      { disponibili == 0 && (
+        <ScrollView>
+          <View style={styles.box}>
+            <Text style={styles.titoli}>Non mi hai ancora raccontatato nessuna storia</Text>
+            <Text>{"\n"}</Text>
+            <Pressable onPress={() => showPage(3)}><Text style={[styles.testi,styles.link]}>Racconta una storia</Text></Pressable>
+          </View>
+        </ScrollView>
+      )}
       { disponibili == 1 && (
         <ScrollView>
           <View style={styles.box}><Text style={styles.testi}>Le storie che hai raccontato a Sergio</Text></View>
@@ -49,11 +60,6 @@ const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES }) => {
               </View>
             </View>
           ))}
-        </ScrollView>
-      )}
-      { disponibili == 0 && (
-        <ScrollView>
-          <View style={styles.box}><Text style={styles.testi}>Non mi hai ancora raccontatato nessuna storia</Text></View>
         </ScrollView>
       )}
     </View>

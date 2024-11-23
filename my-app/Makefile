@@ -15,7 +15,6 @@ kube:
 
 start:
 	clear
-	-./mvnw clean package
 	-docker compose -f docker-compose.yml up -d --remove-orphans --build
 
 show:

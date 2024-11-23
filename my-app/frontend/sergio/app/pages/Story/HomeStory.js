@@ -113,10 +113,11 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
 
 const Inventa = ({ sShowErr }) => {
   const [prompt, setprompt] = useState('');
+  const [genera, setgenera] = useState(1);
   const [Storia, setStoria] = useState('');
   const [height, setHeight] = useState(50);
   const handleTextChange = (text) => {
-    if (text.length <= 1000) {
+    if (text.length <= 150) {
       setprompt(text);
     }
   };
@@ -128,22 +129,23 @@ const Inventa = ({ sShowErr }) => {
       setHeight(50);
     }
   };
-  async function inventa_func() {
-    if (prompt == ''){
+  async function inventa_func(prompt2) {
+    if (prompt2 == ''){
       sShowErr("La richiesta non puo essere vuota");
       return;
     }
-    if (prompt.length > 1000) {
-      sShowErr("La richiesta non puo avere piu di 1000 caratteri");
+    if (prompt2.length > 150) {
+      sShowErr("La richiesta non puo avere piu di 150 caratteri");
       return;
     }
+    setgenera(2);
     fetch("http://localhost:8000/generatestory", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        prompt: prompt
+        prompt: prompt2
       }),
     })
     .then(response => {
@@ -151,11 +153,17 @@ const Inventa = ({ sShowErr }) => {
       return response.json().then(data => ({ status, data }));
     })
     .then(({ status, data }) => {
-      if (status !== 200) setErrorText(data.message);
-      else setStoria(data.story);
+      if (status !== 200){
+        sShowErr("Scusa ma sono stanco");
+        setgenera(1);
+        console.log(data.error);
+      }else{
+        setStoria(data.story);
+        setgenera(3);
+      }
     })
     .catch(error => {
-      console.log(error);
+      setgenera(1);
       sShowErr("Scusa ma sono stanco");
     });
   }
@@ -163,12 +171,16 @@ const Inventa = ({ sShowErr }) => {
   // Funzioni per audio
   const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../Suond/Web') : require('./../Suond/Mobile');
   const [statorip, setStato] = useState('unset');
-  async function speakText(text) {
+  async function speakText(text,id) {
     try {
       const response = await fetch("http://localhost:8000/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text, language: 'it' })
+        body: JSON.stringify({
+          text: text,
+          language: 'it',
+          id: id
+        })
       });
       if (!response.ok){throw new Error(response.statusText);}
       await setupPlayer(await response.blob(), setStato);
@@ -182,36 +194,46 @@ const Inventa = ({ sShowErr }) => {
   const [Velocita, setVelocita] = useState('x1');
   return (
     <View style={styles.box}>
-      {Storia == '' && (
-        <View style={[{width: '80%'}]}>
+      {Storia == '' && genera==1 && (
+        <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
           <Text style={[styles.titoli, {alignSelf: 'center'}]}>Dimmi come vorresti la storia</Text>
           <Text>{"\n"}{"\n"}</Text>
           <View style={styles.rowpuro}>
             <View style={[{width: '80%'}]}>
               <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} value={prompt} style={[styles.textarea, { minHeight: 50, height: height, width: '100%' }]} placeholder="Scrivi qui la tua richiesta" onChangeText={handleTextChange} />
-              <Text style={styles.testidestra}>{prompt.length}/1000</Text>
+              <Text style={styles.testidestra}>{prompt.length}/150</Text>
             </View>
             <Text>    </Text>
-            <Pressable onPress={inventa_func}><Image style={styles.foto3} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRUlEQVR4nO2Zz0oDMRDGv7nUzPZFRDzpQZBMFrxq8aGk4EvV+jT+OVZ7jwQU64q62bWdpMwH33Ez88uXycIuYDKZTKYSxZBrpnDPJGumEHdrWTPJkhFm4yBIbnfffPgJaj4miViSG/irAWmk46TfPH9N5W4AiLzqNx66fhmSSCzRMBDST4EtEdiMRDtaZDPyu7RvJ7ZbqyPtnWdLpCPtnecaE3GQ883aDq2vFKT1fetDG8SRPDWQk7T7fY4OlwiSICbwR2ndBv60ShBH4XmK9jitOUF76Cg8VAfivkHI41/PoEQQhj/LLrxPIA5BigLJnQ/uYRWQbcBACyT3+uWSQT5g0svwAHJRNQj/k7Enn0xXQ0CWBTQeO17kgyDMCmg8brqBXGaDvKcy126eP32DMUo/V9J/CZ2ZkVRzMTgJk8lkMmHLegMyNGo5jgUOwwAAAABJRU5ErkJggg==' }} /></Pressable>
+            <Pressable onPress={() => inventa_func(prompt)}><Image style={styles.foto3} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABRUlEQVR4nO2Zz0oDMRDGv7nUzPZFRDzpQZBMFrxq8aGk4EvV+jT+OVZ7jwQU64q62bWdpMwH33Ez88uXycIuYDKZTKYSxZBrpnDPJGumEHdrWTPJkhFm4yBIbnfffPgJaj4miViSG/irAWmk46TfPH9N5W4AiLzqNx66fhmSSCzRMBDST4EtEdiMRDtaZDPyu7RvJ7ZbqyPtnWdLpCPtnecaE3GQ883aDq2vFKT1fetDG8SRPDWQk7T7fY4OlwiSICbwR2ndBv60ShBH4XmK9jitOUF76Cg8VAfivkHI41/PoEQQhj/LLrxPIA5BigLJnQ/uYRWQbcBACyT3+uWSQT5g0svwAHJRNQj/k7Enn0xXQ0CWBTQeO17kgyDMCmg8brqBXGaDvKcy126eP32DMUo/V9J/CZ2ZkVRzMTgJk8lkMmHLegMyNGo5jgUOwwAAAABJRU5ErkJggg==' }} /></Pressable>
           </View>
         </View>
       )}
-      {Storia != '' && (
-        <View style={[{width: '80%'}]}>
+      {Storia == '' && genera==2 && (
+        <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
+          <Text style={[styles.titoli, {alignSelf: 'center'}]}>Un attimo, sto pensando alla tua storia</Text>
+          <Text>{"\n"}{"\n"}</Text>
+        </View>
+      )}
+      {Storia != '' && genera==3 && (
+        <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
           <Text style={[styles.titoli, {alignSelf: 'center'}]}>Ecco la tua storia...</Text>
           <Text>{"\n"}</Text>
           <Text style={styles.testi}>{Storia}</Text>
           <Text>{"\n"}{"\n"}</Text>
-          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),setStoria('')}}><Text style={styles.testi}>Voglio un'altra storia</Text></Pressable>
+          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),setStoria(''),setgenera(1);}}><Text style={styles.testi}>Voglio un'altra storia</Text></Pressable>
+          <Text>{"\n"}</Text>
           <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-            {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(stori.content)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-            {statorip == 'play' && (<Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXklEQVR4nO3SoRHAMAwEQRmmqfTflUO+AIN30O6MoIBGNwMAP3rWu0/m1n6NQ8JH2qQV0mqTVkirTVohrTZphbTapBXSapNWSKtNWiGtNmmFtNqkFdJqk1ZICwDmng90pWTGMlhjngAAAABJRU5ErkJggg==' }} /></Pressable>)}
+            {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(Storia,-1)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
+            {statorip == 'play' && (
+              <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
+                <Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXklEQVR4nO3SoRHAMAwEQRmmqfTflUO+AIN30O6MoIBGNwMAP3rWu0/m1n6NQ8JH2qQV0mqTVkirTVohrTZphbTapBXSapNWSKtNWiGtNmmFtNqkFdJqk1ZICwDmng90pWTGMlhjngAAAABJRU5ErkJggg==' }} /></Pressable>
+                {Velocita == 'x1' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1.5),setVelocita('x1.5')}}><Text style={styles.testi}>x1</Text></Pressable>)}
+                {Velocita == 'x1.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(2),setVelocita('x2')}}><Text style={styles.testi}>x1.5</Text></Pressable>)}
+                {Velocita == 'x2' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(0.5),setVelocita('x0.5')}}><Text style={styles.testi}>x2</Text></Pressable>)}
+                {Velocita == 'x0.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1),setVelocita('x1')}}><Text style={styles.testi}>x0.5</Text></Pressable>)}
+              </View>
+            )}
             {statorip == 'pause' && (<Pressable style={styles.testi} onPress={() => {playAudio(),setStato('play')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-            <Text>        </Text>
-            {Velocita == 'x1' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1.5),setVelocita('x1.5')}}><Text style={styles.testi}>x1</Text></Pressable>)}
-            {Velocita == 'x1.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(2),setVelocita('x2')}}><Text style={styles.testi}>x1.5</Text></Pressable>)}
-            {Velocita == 'x2' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(0.5),setVelocita('x0.5')}}><Text style={styles.testi}>x2</Text></Pressable>)}
-            {Velocita == 'x0.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1),setVelocita('x1')}}><Text style={styles.testi}>x0.5</Text></Pressable>)}
           </View>
         </View>
       )}
