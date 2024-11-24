@@ -18,3 +18,6 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8081
+        env:
+        - name: BACKEND_USERS_URL
+          value: users-backend-service.backend-ns.svc.cluster.local:3000

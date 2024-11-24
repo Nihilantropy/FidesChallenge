@@ -3,14 +3,9 @@ MAKEFLAGS += -s
 all: stop prune start show
 
 kube:
-	@echo off
-	rem Applica le risorse Kubernetes
-	kubectl apply -f ./k8s/mysql
-	rem Aspetta 40 secondi
-	timeout /t 40
-	kubectl apply -f ./k8s
-	rem Applica il file di ingress
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+	-kubectl apply -f ./k8s
+	-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
 
 start:
 	clear
