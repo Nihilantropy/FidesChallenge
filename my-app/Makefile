@@ -4,8 +4,6 @@ all: stop prune start show
 
 kube:
 	-kubectl apply -f ./k8s
-	-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
-
 
 start:
 	clear
