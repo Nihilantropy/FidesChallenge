@@ -29,3 +29,12 @@ https documentation:
 https://en.wikipedia.org/wiki/HTTP
 https://umbraco.com/knowledge-base/http-status-codes/
 
+
+### Kubernetes docs:
+
+**ingress nginx** https://kubernetes.github.io/ingress-nginx/deploy/#microk8s
+
+
+
+
+

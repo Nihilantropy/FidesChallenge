@@ -2,7 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-stories
-  namespace: backend-ns
   labels:
     app: stories-app
 spec:
@@ -12,4 +11,4 @@ spec:
     - port: 8080
       targetPort: 8080
       protocol: TCP
-  type: ClusterIP # Ensures internal cluster-only access
+  type: ClusterIP

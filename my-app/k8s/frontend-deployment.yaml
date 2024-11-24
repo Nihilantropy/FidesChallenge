@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: expo-frontend-deployment
-  namespace: frontend-ns
 spec:
   replicas: 1
   selector:
@@ -15,7 +14,7 @@ spec:
     spec:
       containers:
       - name: expo-container
-        image: my-app_frontend-expo:latest # Sostituisci con il nome completo dell'immagine se necessario
+        image: my-app_frontend-expo:latest 
         imagePullPolicy: Never
         ports:
         - containerPort: 8081
