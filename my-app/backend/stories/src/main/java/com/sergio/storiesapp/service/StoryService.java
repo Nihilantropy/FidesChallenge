@@ -157,8 +157,6 @@ public class StoryService {
 			story.setTitle(title);
 			story.setContent(content);
 			story.setAuthor(authorId, authorRoleId, authorName, authorVisible);
-			story.setUpdatedAt(null);
-			story.setRemovedAt(null);
 			
 			logger.info("Story details before saving: {}", story);
 			try {
@@ -218,7 +216,7 @@ public class StoryService {
 			}
 			story.setUpdatedAt(LocalDateTime.now());
 			
-			storyRepository.saveAndFlush(story);
+			storyRepository.save(story);
 
 		}
 		catch (IllegalArgumentException e) {
@@ -386,6 +384,7 @@ public class StoryService {
 			"id", story.getId(),
 			"title", story.getTitle(),
 			"created_at", story.getCreatedAt(),
+			"updated_at", story.getUpdatedAt(),
 			"author_visible", story.getAuthorVisible()
 		);
 	}
@@ -418,7 +417,8 @@ public class StoryService {
 			"author_role_id", story.getAuthorRoleId(),
 			"author_name", story.getAuthorName(),
 			"author_visible", story.getAuthorVisible(),
-			"created_at", story.getCreatedAt()
+			"created_at", story.getCreatedAt(),
+			"updated_at", story.getUpdatedAt()
 		);
 	}
 }
