@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable, ScrollView,Platform } from 'react-nat
 import styles from './../../assets/style/main.js';
 // import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
+import '../../components/global.js'
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -33,7 +34,8 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         }
         
         /* ====== Send post ====== */
-        fetch("http://localhost:8000/users/login", {
+        const api_url = global.url_users + "login";
+        fetch(api_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

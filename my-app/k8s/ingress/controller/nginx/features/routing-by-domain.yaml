@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-app-ingress
+  name: proxy-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: "50m"
@@ -17,6 +17,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: nginx-proxy-service
+            name: proxy-service
             port:
               number: 8000

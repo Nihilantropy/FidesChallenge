@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-native';
 import styles from './../../assets/style/main.js';
+import '../../components/global.js'
 
 const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sShowErr }) => {
   if (azione === 'preferito' && gJWTtoken() === '') {
@@ -13,7 +14,8 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const [stori, setStori] = useState('');
   const [disponibili, setdisponibili] = useState(1);
   async function get_story(){
-    fetch("http://localhost:8000/stories/random", {
+    const api_url = global.url_stories + "random";
+    fetch(api_url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -55,7 +57,8 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const [statorip, setStato] = useState('unset');
   async function speakText(text,id) {
     try {
-      const response = await fetch("http://localhost:8000/speak", {
+      const api_url = global.url_tts + "speak";
+      const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -137,7 +140,8 @@ const Inventa = ({ sShowErr }) => {
       sShowErr("La richiesta non puo avere piu di 1000 caratteri");
       return;
     }
-    fetch("http://localhost:8000/generatestory", {
+    const api_url = global.url_ai + "generatestory";
+    fetch(api_url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -165,7 +169,8 @@ const Inventa = ({ sShowErr }) => {
   const [statorip, setStato] = useState('unset');
   async function speakText(text) {
     try {
-      const response = await fetch("http://localhost:8000/speak", {
+      const api_url = global.url_tts + "speak";
+      const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: text, language: 'it' })

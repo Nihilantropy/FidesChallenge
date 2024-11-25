@@ -1,6 +1,7 @@
 import React, {  useState, useEffect } from 'react';
 import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+import '../../components/global.js'
 
 const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo  }) => {
   const [height, setHeight] = useState(300);
@@ -71,7 +72,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
 
   useEffect(() => {
     const fetchData = async () => {
-      fetch("http://localhost:8000/stories/"+gid(), {
+      const api_url = global.url_stories + gid();
+      fetch(api_url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +117,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     }
     
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/"+gid(), {
+    const api_url = global.url_stories + gid();
+    fetch(api_url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

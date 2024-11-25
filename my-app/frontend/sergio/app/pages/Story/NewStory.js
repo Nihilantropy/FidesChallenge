@@ -1,6 +1,7 @@
 import React, {  useState, useEffect } from 'react';
 import { TextInput,View,Text,Pressable,ScrollView,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+import '../../components/global.js'
 
 const Content_web = ({ showPage,crea_storia,setStory,getStory,gtitolo,settitolo  }) => {
   const [story, setStoryText] = useState(getStory());
@@ -96,8 +97,10 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       return;
     }
 
+
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/", {
+    const api_url = global.url_stories;
+    fetch(api_url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

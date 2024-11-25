@@ -14,8 +14,8 @@ export async function up(knex) {
             table.string('author_name').notNullable();
             table.boolean('author_visible').defaultTo(true).notNullable();
             table.timestamp('created_at').defaultTo(knex.fn.now());
-            table.timestamp('updated_at').nullable();
-            table.timestamp('removed_at').nullable();
+            table.timestamp('updated_at').notNullable().defaultTo(0)
+            table.timestamp('removed_at').notNullable().defaultTo(0)
         });
     }
 }

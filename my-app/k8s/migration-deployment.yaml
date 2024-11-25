@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: migration-container
-        image: my-app-backend-migration:latest
+        image: my-app_backend-migration:latest
         imagePullPolicy: Never
         envFrom:
           - secretRef:

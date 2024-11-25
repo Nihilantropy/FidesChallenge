@@ -14,9 +14,11 @@ NGINX_INGRESS_PATH = ./k8s/ingress/controller/nginx/
 
 # Default kube target
 kube:
-	@echo "Specify what you want to do: \
-	- make kube-start -- start all the pods \
-	- make kube-stop -- stop all the pods \
+	@echo "Specify what you want to do:\n \
+	- make kube-start -- start all the pods\n \
+	- make kube-stop -- stop all the pods\n \
+	- make kube-delete -- delete all pods in default namespace\n \
+	- make kube-import -- build images from docker-compose and import them into microk8s registry\n \
 	- make kube-reset -- reset the entire cluster"
 
 # Stops all running pods in the cluster by scaling deployments to 0
@@ -36,10 +38,18 @@ kube-start:
 # Create a new node and enable necessary add-ons
 kube-reset:
 	@echo "Resetting cluster..."
-	$(MICROK8S_CMD) reset --destroy-storage
+	$(MICROK8S_CMD) reset
 	@echo "Cluster correctly reset"
 	@echo "Initializing MicroK8s and enabling add-ons..."
 	@make kube-init
+
+kube-delete:
+	@echo "Deleting all PODS in the default namespace..."
+	@kubectl delete pod --all -n default
+	@kubectl delete job --all -n default
+	@kubectl delete pv mysql-pv
+	@echo "Done!"
+
 
 kube-init:
 	$(MICROK8S_CMD) start
@@ -47,9 +57,7 @@ kube-init:
 	$(MICROK8S_CMD) enable dashboard 
 	$(MICROK8S_CMD) enable helm
 	$(MICROK8S_CMD) enable cert-manager
-	$(MICROK8S_CMD) enable host-access 
 	$(MICROK8S_CMD) enable observability
-	$(MICROK8S_CMD) enable community
 	@echo "MicroK8s setup complete."
 	@make apply
 	@echo "All Done!"
@@ -62,7 +70,7 @@ kube-import:
 		while read -r image; do \
 			found=true; \
 			echo "Processing image: $$image"; \
-			tarfile=$$(echo $$image | sed 's|/|_|g' | sed 's|:|_|g').tar; \
+			tarfile=$$(echo $$image | sed 's|/|-|g' | sed 's|:|_|g' | sed 's|_|-|g').tar; \
 			echo "Saving $$image to $$tarfile..."; \
 			if ! docker save $$image > $$tarfile; then \
 				echo "Error: Failed to save image $$image" >&2; \
@@ -94,6 +102,9 @@ ingress:
 		--version ${NGINX_INGRESS_CHART_VERSION} \
 		--namespace ingress-nginx \
 		> ${NGINX_INGRESS_PATH}/manifests/nginx-ingress.${NGINX_INGRESS_APP_VERSION}.yaml
+	@helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
+		--namespace ingress-nginx \
+  		--set controller.admissionWebhooks.certManager=false
 	@kubectl create namespace ingress-nginx --dry-run=client -o yaml | kubectl apply -f -
 	@kubectl apply -f ${NGINX_INGRESS_PATH}/manifests/nginx-ingress.${NGINX_INGRESS_APP_VERSION}.yaml
 	@echo "Applying routing-by-domain"
@@ -130,8 +141,6 @@ status:
 	$(MICROK8S_CMD) status
 	$(KUBECTL_CMD) get nodes
 	$(KUBECTL_CMD) get pods --all-namespaces
-	$(KUBECTL_CMD) describe nodes
-	$(KUBECTL_CMD) describe pods --all-namespaces
 
 # Debugging information
 debug:
@@ -139,6 +148,8 @@ debug:
 	$(MICROK8S_CMD) inspect
 	$(MICROK8S_CMD) kubectl get events --all-namespaces
 	$(MICROK8S_CMD) kubectl describe services --all-namespaces
+	$(KUBECTL_CMD) describe nodes
+	$(KUBECTL_CMD) describe pods --all-namespaces
 
 # Targets
 .PHONY: kube kube-start kube-stop kube-reset status namespaces policies apply debug
@@ -183,5 +194,5 @@ prune:
 
 images:
 	@echo "Building images..."
-	@docker-compose build
+	@docker-compose build --parallel
 	@echo "Images build done!"
