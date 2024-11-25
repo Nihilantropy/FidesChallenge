@@ -72,6 +72,7 @@ const runMigrations = async () => {
         await dropTables();
 
         // Run migrations
+        console.log("Applying migrations...")
         await knex.migrate.latest();
         await knex.seed.run();
         console.log('Migrations have been successfully applied.');

@@ -6,7 +6,7 @@ export async function up(knex) {
 			table.integer('user_id').unsigned().notNullable(); // Foreign key to users table
 			table.integer('story_id').unsigned().notNullable(); // Foreign key to stories table
 			table.timestamp('created_at').defaultTo(knex.fn.now()); // Timestamp for when the like was added
-			table.timestamp('removed_at').nullable(); // Nullable timestamp for when the like was removed
+            table.timestamp('removed_at').nullable(); // Nullable timestamp for when the like was removed
 
 			// Add foreign key constraints
 			table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE');
@@ -24,5 +24,11 @@ export async function up(knex) {
 }
 
 export async function down(knex) {
-	await knex.schema.dropTableIfExists('likes'); // Rollback action
+    // Drop indexes if they exist
+    await knex.schema.table('likes', (table) => {
+        table.dropIndex(['story_id', 'removed_at'], 'idx_story_removed');
+    });
+
+    // Drop the table
+    await knex.schema.dropTableIfExists('likes');
 }

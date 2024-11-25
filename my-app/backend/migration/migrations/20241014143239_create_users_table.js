@@ -9,7 +9,8 @@ export async function up(knex) {
             table.string('email', 100).notNullable();
             table.string('password', 255).notNullable();
             table.integer('role_id').unsigned().notNullable().defaultTo(2);
-            table.foreign('role_id').references('id').inTable('roles');
+            table.foreign('role_id').references('id').inTable('roles').onDelete('CASCADE');
+            
             table.timestamp('created_at').defaultTo(knex.fn.now());
             table.timestamp('updated_at').nullable();
             table.timestamp('removed_at').nullable();
@@ -18,5 +19,11 @@ export async function up(knex) {
 }
 
 export async function down(knex) {
+    await knex.schema.alterTable('users', (table) => {
+        table.dropForeign('role_id'); // Drop foreign key to roles
+    });
+
+    // Drop the table
     await knex.schema.dropTableIfExists('users');
 }
+
