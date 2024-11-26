@@ -19,11 +19,5 @@ spec:
         ports:
         - containerPort: 8081
         env:
-        - name: EXPO_PUBLIC_URL_STORIES
-          value: "http://localhost:8000/stories/"
-        - name: EXPO_PUBLIC_URL_USERS
-          value: "http://localhost:8000/users/"
-        - name: EXPO_PUBLIC_URL_TTS
-          value: "http://localhost:8000/tts/"
-        - name: EXPO_PUBLIC_URL_AI
-          value: "http://localhost:8000/ai/"
+        - name: BACKEND_USERS_URL
+          value: users-backend-service.backend-ns.svc.cluster.local:3000

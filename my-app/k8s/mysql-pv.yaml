@@ -4,10 +4,9 @@ metadata:
   name: mysql-pv
 spec:
   capacity:
-    storage: 4Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/mnt/sergio-db-data"
+    path: /data/mysql-pv
   storageClassName: standard

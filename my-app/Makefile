@@ -42,6 +42,7 @@ kube-reset:
 	@echo "Cluster correctly reset"
 	@echo "Initializing MicroK8s and enabling add-ons..."
 	@make kube-init
+	@kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 
 kube-delete:
 	@echo "Deleting all PODS in the default namespace..."
@@ -50,6 +51,12 @@ kube-delete:
 	@kubectl delete pv mysql-pv
 	@echo "Done!"
 
+kube-rebuild:
+	@kubectl get deployments -n default -o name | \
+	while read deployment; do \
+		echo "Restarting $$deployment..."; \
+		kubectl rollout restart $$deployment -n default; \
+	done
 
 kube-init:
 	$(MICROK8S_CMD) start
@@ -58,6 +65,7 @@ kube-init:
 	$(MICROK8S_CMD) enable helm
 	$(MICROK8S_CMD) enable cert-manager
 	$(MICROK8S_CMD) enable observability
+	$(MICROK8S_CMD) enable ingress
 	@echo "MicroK8s setup complete."
 	@make apply
 	@echo "All Done!"

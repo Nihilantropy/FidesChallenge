@@ -10,7 +10,7 @@ spec:
         image: my-app_backend-migration:latest
         imagePullPolicy: Never
         envFrom:
-          - secretRef:
-              name: db-credentials
+        - secretRef:
+            name: db-credentials
       restartPolicy: Never
-  backoffLimit: 2
+  backoffLimit: 1

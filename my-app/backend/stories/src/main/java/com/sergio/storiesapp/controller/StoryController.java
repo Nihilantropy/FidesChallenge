@@ -3,6 +3,7 @@ package com.sergio.storiesapp.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
@@ -23,7 +24,6 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:8000", "http://backend-users:3000"})
 @RequestMapping("/stories")
 public class StoryController {
 
