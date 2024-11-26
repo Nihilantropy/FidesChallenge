@@ -25,6 +25,9 @@ import Delete from './app/pages/Utenti/Delete.js';
 import Accesso from './app/pages/Utenti/Accesso.js';
 import Profilo from './app/pages/Utenti/Profilo.js';
 
+/* ====== Globali ====== */
+import global from './app/global.js';
+
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./app/libreri/Storage/Web') : require('./app/libreri/Storage/Mobile');
 
 export default function App() {
@@ -38,7 +41,8 @@ export default function App() {
       try {
         const token = await getToken();
         if (token) {
-          fetch("http://localhost:8000/users/profile", {
+          const api_url = global.url_users + "profile";
+          fetch(api_url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,7 +53,7 @@ export default function App() {
               const status = response.status;
               if (status == 200) {
                 sJWTtoken(token);
-              } else if (status == 401){
+              } else{
                 removeToken();
               }
           })
@@ -111,7 +115,7 @@ export default function App() {
       {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} sShowErr={sShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 9 && <Delete gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 10 && <LeggiStory sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 10 && <LeggiStory sShowPopupES={sShowPopupES} sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
 
       { Platform.OS === 'web' && <FooterWeb /> }
 

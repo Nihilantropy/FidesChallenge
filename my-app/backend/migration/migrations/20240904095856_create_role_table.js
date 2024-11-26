@@ -15,6 +15,9 @@ export async function up(knex) {
 }
 
 export async function down(knex) {
+    await knex.schema.dropTableIfExists('stories'); // Stories depends on roles
+    await knex.schema.dropTableIfExists('users');   // Users depends on roles
+    await knex.schema.dropTableIfExists('admins');  // Admins depends on roles
     // Drop the roles table if it exists
     await knex.schema.dropTableIfExists('roles');
 }

@@ -1,8 +1,9 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
+import global from './../../global.js';
 
-const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
+const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr,sShowPopupES }) => {
     const [storia, setStoria] = useState('');
     useEffect(() => {
         if (gJWTtoken() == ''){
@@ -11,7 +12,8 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
         }
 
         async function get_story(){
-            fetch("http://localhost:8000/stories/"+gid(), {
+            const api_url = global.url_stories+gid();
+            fetch(api_url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -23,20 +25,21 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
             })
             .then(({ status, data }) => {
                 if (status !== 200) {
-                    showPage(1);
+                    showPage(7);
                 } else {
                     setStoria(data);
                 }
             })
             .catch(error => {
-                showPage(1);
+                showPage(7);
             });
         }
         get_story();
     }, [gJWTtoken, showPage]);
 
     async function notshow() {
-        fetch("http://localhost:8000/stories/"+gid(), {
+        const api_url = global.url_stories+gid();
+        fetch(api_url, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -61,8 +64,6 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
                         sShowErr(message || "Errore sconosciuto");
                     });
                 }
-            } else {
-              showPage(7);
             }
         })
         .catch(error => {
@@ -72,7 +73,8 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
     }
 
     async function show() {
-        fetch("http://localhost:8000/stories/"+gid(), {
+        const api_url = global.url_stories+gid();
+        fetch(api_url, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -97,8 +99,6 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
                         sShowErr(message || "Errore sconosciuto");
                     });
                 }
-            } else {
-              showPage(7);
             }
         })
         .catch(error => {

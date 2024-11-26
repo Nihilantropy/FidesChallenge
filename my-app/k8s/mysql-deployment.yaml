@@ -16,32 +16,23 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: my-app-db  # Assicurati che l'immagine sia presente
-        imagePullPolicy: IfNotPresent  # More flexible pull policy
+        image: my-app-db
+        imagePullPolicy: Never
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
         env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpassword
         - name: MYSQL_DATABASE
           value: myapp_db
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: root_password
         - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: username
+          value: mysql_user
         - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-credentials
-              key: password
-        volumeMounts:
-        - name: mysql-storage
-          mountPath: /var/lib/mysql
+          value: userpassword
       volumes:
-      - name: mysql-storage
+      - name: mysql-data
         persistentVolumeClaim:
           claimName: mysql-pvc

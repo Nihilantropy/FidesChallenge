@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-native';
 import styles from './../../assets/style/main.js';
+import global from './../../global.js';
 
 const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sShowErr }) => {
   if (azione === 'preferito' && gJWTtoken() === '') {
@@ -13,7 +14,8 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const [stori, setStori] = useState('');
   const [disponibili, setdisponibili] = useState(1);
   async function get_story(){
-    fetch("http://localhost:8000/stories/random", {
+    const api_url = global.url_stories+ "ramdom";
+    fetch(api_url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -55,7 +57,8 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const [statorip, setStato] = useState('unset');
   async function speakText(text,id) {
     try {
-      const response = await fetch("http://localhost:8000/speak", {
+      const api_url = global.url_tts + "speak";
+      const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -139,7 +142,8 @@ const Inventa = ({ sShowErr }) => {
       return;
     }
     setgenera(2);
-    fetch("http://localhost:8000/generatestory", {
+    const api_url = global.url_ia + "generatestory";
+    fetch(api_url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -173,7 +177,8 @@ const Inventa = ({ sShowErr }) => {
   const [statorip, setStato] = useState('unset');
   async function speakText(text,id) {
     try {
-      const response = await fetch("http://localhost:8000/speak", {
+      const api_url = global.url_tts + "speak";
+      const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -248,32 +253,30 @@ const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) 
   return (
     <View style={styles.stacca}>
       <ScrollView>
+        {Pupup == true && Page == '' && (
+          <View style={styles.centro}>
+            <View style={styles.box3}>
+              <Text style={styles.titoli}>Cosa vuoi che faccia?</Text>
+              <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
+              <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
+              <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
+              <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconto io una storia</Text></Pressable>
+            </View>
+          </View>
+        )}
         <View style={{ flexDirection: 'row' }}>
           <View style={styles.col1}>
             {Pupup == false && (<View style={{alignSelf: 'flex-start', marginLeft: 50, marginTop: 30}}><Pressable style={styles.bottoni} onPress={() => setPupup(true)}><Text style={styles.testi}> = </Text></Pressable></View>)}
-            {Pupup == true && Page == '' && (
-              <View style={styles.box3}>
-                <Text style={styles.titoli}>Cosa vuoi che faccia?</Text>
-                <View style={{alignSelf: 'flex-start'}}>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconti io una storia</Text></Pressable>
-                </View>
-              </View>
-            )}
             {Pupup == true && Page != '' && (
               <View style={styles.box3}>
                 <View style={[styles.rowpuro,{alignSelf: 'flex-start'}]}>
                   <Pressable onPress={() => setPupup(false)}><Text style={styles.titoli}> X</Text></Pressable>
                   <Text style={styles.titoli}>      Cosa vuoi che faccia?</Text>
                 </View>
-                <View style={{alignSelf: 'flex-start'}}>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
-                  <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconti io una storia</Text></Pressable>
-                </View>
+                <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
+                <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
+                <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
+                <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconto io una storia</Text></Pressable>
               </View>
             )}
           </View>

@@ -14,7 +14,7 @@ while [[ "$WAITFORIT" -lt "$TIMEOUT" ]]; do
   if nc -z "$MYSQL_HOST" "$MYSQL_PORT"; then
     echo "$MYSQL_HOST:$MYSQL_PORT is available."
     exec ./mvnw spring-boot:run
-    # exec java -jar ./target/stories-microservice-0.0.1-SNAPSHOT.jar # Execute the command as separate arguments
+   # exec java -jar /app/stories-microservice.jar # Execute the command as separate arguments
     exit 0
   fi
   WAITFORIT=$((WAITFORIT + 1))

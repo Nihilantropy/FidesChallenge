@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-backend-deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: migration-container
+        image: my-app-backend-migration:latest
+        imagePullPolicy: Never
+        envFrom:
+        - secretRef:
+            name: db-credentials
+      restartPolicy: Never
+  backoffLimit: 1

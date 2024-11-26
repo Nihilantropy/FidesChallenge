@@ -19,7 +19,7 @@ export function catchErrorTyped<T, E extends Error>(
             // Return a default Internal Server Error object and cast it to type E
             const fallbackError = {
                 code: 500,
-                message: 'Internal Server Error',
+                message: 'Errore interno',
                 name: 'InternalServerError'
             } as unknown as E;
 

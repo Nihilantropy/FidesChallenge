@@ -116,6 +116,8 @@ services:
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
+    env_file:
+      - ./frontend/.env
     build:
       context: ./frontend
       dockerfile: Dockerfile

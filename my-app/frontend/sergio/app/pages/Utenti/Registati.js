@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable, ScrollView, Platform } from 'react-na
 import styles from './../../assets/style/main.js';
 // import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
+import global from './../../global.js';
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -20,7 +21,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         /* ====== Basic Check ====== */
         setErrorText("");
         if (email === '' || nome === '' || cognome === '' || nickname === '' || password === '' || confpassword === '') {
-            setErrorText("Completa tutti i campi prima di proseguire");
+            setErrorText("Le credenzil sono richieste");
             return;
         }
         if (!validator.isEmail(email)) {
@@ -49,7 +50,8 @@ const Registati = ({ showPage,sJWTtoken }) => {
             return;
         }
         /* ====== Send post ====== */
-        fetch("http://localhost:8000/users/create", {
+        const api_url = global.url_users+"create";
+        fetch(api_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +85,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         <View style={styles.stacca}>
             <ScrollView>
                 <View style={styles.box}>
-                    <Text style={styles.titoli}>Registati a Sergio</Text>
+                    <Text style={styles.titoli}>Registrati a Sergio</Text>
                     <TextInput autoComplete="email" spellCheck={false} style={styles.credenziali} placeholder="Email" value={email} onChangeText={(text) => setEmail(text)}/>
                     <TextInput autoComplete="nome" spellCheck={false} style={styles.credenziali} placeholder="Nome" value={nome} onChangeText={(text) => setNome(text)}/>
                     <TextInput autoComplete="cognome" spellCheck={false} style={styles.credenziali} placeholder="Cognome" value={cognome} onChangeText={(text) => setCognome(text)}/>

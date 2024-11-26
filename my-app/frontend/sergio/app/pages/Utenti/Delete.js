@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { View,Text,Pressable,ScrollView,TextInput,Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+import global from './../../global.js';
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -25,7 +26,8 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
     };
 
     async function elimina() {
-        fetch("http://localhost:8000/users/delete", {
+        const api_url = global.url_stories+"delete";
+        fetch(api_url, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

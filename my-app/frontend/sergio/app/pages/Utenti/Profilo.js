@@ -1,6 +1,7 @@
 import React, {useEffect,useState} from "react";
 import { View, Text, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
+import global from './../../global.js';
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -17,7 +18,8 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
 
         /* Ricerca info */
         const getdata = async () => {
-            fetch("http://localhost:8000/users/profile", {
+            const api_url = global.url_users+"profile";
+            fetch(api_url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

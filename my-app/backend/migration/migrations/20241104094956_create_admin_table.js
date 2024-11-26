@@ -8,6 +8,7 @@ export async function up(knex) {
             table.string('password', 255).notNullable();  // Store hashed passwords only
             table.integer('role_id').unsigned().notNullable().defaultTo(1);  // Default to 'admin' role
             table.foreign('role_id').references('id').inTable('roles');
+            
             table.timestamp('created_at').defaultTo(knex.fn.now());
             table.timestamp('updated_at').nullable();
             table.timestamp('removed_at').nullable();
@@ -16,6 +17,10 @@ export async function up(knex) {
 }
 
 export async function down(knex) {
-    // Drop the admins table if it exists
+    await knex.schema.alterTable('admins', (table) => {
+        table.dropForeign('role_id'); // Drop foreign key to roles
+    });
+
+    // Drop the table
     await knex.schema.dropTableIfExists('admins');
 }

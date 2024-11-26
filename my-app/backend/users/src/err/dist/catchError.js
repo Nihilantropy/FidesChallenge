@@ -14,7 +14,7 @@ export function catchErrorTyped(promise, errorToCatch) {
         // Return a default Internal Server Error object and cast it to type E
         const fallbackError = {
             code: 500,
-            message: 'Internal Server Error',
+            message: 'Errore interno',
             name: 'InternalServerError'
         };
         return [fallbackError, undefined]; // Fallback to generic 500 error

@@ -16,7 +16,7 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         setErrorText("");
         /* ====== Basic Check ====== */
         if (email === '' || password === '') {
-            setErrorText("Completa tutti i campi prima di proseguire");
+            setErrorText("Le credenzil sono richieste");
             return;
         }
         if (!validator.isEmail(email)) {
@@ -33,7 +33,8 @@ const Accesso = ({ showPage,sJWTtoken }) => {
         }
         
         /* ====== Send post ====== */
-        fetch("http://localhost:8000/users/login", {
+        const api_url = global.url_users + "login";
+        fetch(api_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

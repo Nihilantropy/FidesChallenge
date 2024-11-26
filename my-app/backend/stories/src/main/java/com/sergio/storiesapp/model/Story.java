@@ -38,14 +38,13 @@ public class Story {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "updated_at", nullable = true)
-    private LocalDateTime updatedAt = null;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = createdAt;
 
     @Column(name = "removed_at", nullable = true)
     private LocalDateTime removedAt = null;
 
     // Getters and setters
-
     public Integer getId() {
         return id;
     }
@@ -119,7 +118,7 @@ public class Story {
     }
 
     public LocalDateTime getRemovedAt() {
-        return updatedAt;
+        return removedAt;
     }
 
     public void setRemovedAt(LocalDateTime removedAt) {
