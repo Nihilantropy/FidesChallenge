@@ -8,6 +8,9 @@ import com.sergio.storiesapp.exception.DeleteStoryException;
 import com.sergio.storiesapp.exception.InvalidInputException;
 import com.sergio.storiesapp.model.Story;
 import com.sergio.storiesapp.repository.StoryRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +66,23 @@ public class StoryService {
 	}
 
 	/**
+	 * Check if the title story exist on the db
+	 * 
+	 * @param title
+	 * 
+	 * @return The story if it exist, otherwise return null
+	 */
+	public Story checkIfStoryExist(String title) {
+		// Check for an existing story with the same title by this author
+		Story story = storyRepository.findByTitle(title);
+		if (story != null) {
+			return story;
+		}
+		else
+			return null;
+	}
+
+	/**
 	 * Helper method to map and validate the StoryData
 	 * @param storyData the Story object passed from the user request
 	 * 
@@ -77,6 +97,9 @@ public class StoryService {
 		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
 		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
 
+		logger.info("title is={}", title);
+		logger.info("content is={}", content);
+
 		
 		try {
 			validateStoryData(title, content, authorVisibleStr, flag);
@@ -84,8 +107,8 @@ public class StoryService {
 		catch (InvalidInputException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
-		logger.info("title is={}", title);
-		logger.info("content is={}", content); 
+
+		logger.info("Update story title and content succesfully validated");
 
 		// Set title and content in the map
 		storyMap.put("title", title);
@@ -124,11 +147,9 @@ public class StoryService {
 		Integer	authorId = (Integer) storyMap.get("author_id");
 		Integer	authorRoleId = (Integer) storyMap.get("author_role_id");
 
-
-		// Check for an existing story with the same title by this author
-		List<Story> existingStories = storyRepository.findByTitle(title);
-		if (!existingStories.isEmpty()) {
-			throw new IllegalArgumentException("There already is a story with this title.");
+		Story existingStory = checkIfStoryExist(title);
+		if (existingStory != null) {
+			throw new InvalidInputException("There's already a story with this title");
 		}
 
 		try {
@@ -136,8 +157,6 @@ public class StoryService {
 			story.setTitle(title);
 			story.setContent(content);
 			story.setAuthor(authorId, authorRoleId, authorName, authorVisible);
-			story.setUpdatedAt(null);
-			story.setRemovedAt(null);
 			
 			logger.info("Story details before saving: {}", story);
 			try {
@@ -164,33 +183,41 @@ public class StoryService {
 	 * 
 	 * @throws StoryUpdateException if the story with the given ID is not found
 	 */
+	@Transactional
 	public void updateStory(int storyId, Map<String, Object> storyInfoMap) {
 		String	title = (String) storyInfoMap.get("title");
 		String	content = (String) storyInfoMap.get("content");
 		Boolean	authorVisible = (Boolean) storyInfoMap.get("author_visible");
 		
-		// Check for an existing story with the same title by this author
-		List<Story> existingStories = storyRepository.findByTitle(title);
-		if (!existingStories.isEmpty()) {
-			throw new IllegalArgumentException("There already is a story with this title.");
+		// Check if the new title already exists and doesn't belong to the current story
+		if (title != null && !title.isEmpty()) {
+			Story existingStory = checkIfStoryExist(title);
+			if (existingStory != null && existingStory.getId() != storyId) {
+				throw new InvalidInputException("There's already a story with this title");
+			}
 		}
+	
+		logger.info("Story check passed");
+		logger.info("proceed updating...");
 
 		try {
 			Story story = storyRepository.findById(storyId)
 					.orElseThrow(() -> new StoryUpdateException("Story not found"));
-			// Updated title and content only if the request is not empty
-			if (title != "")
+			// Update fields if they are non-empty
+			if (title != null && !title.isEmpty()) {
 				story.setTitle(title);
-			if (content != "")
+			}
+			if (content != null && !content.isEmpty()) {
 				story.setContent(content);
-			story.setAuthorVisible(authorVisible);
+			}
+			// Always update author visibility if provided
+			if (authorVisible != null) {
+				story.setAuthorVisible(authorVisible);
+			}
 			story.setUpdatedAt(LocalDateTime.now());
 			
-			try {
-				storyRepository.save(story);
-			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(e.getMessage());
-			}
+			storyRepository.save(story);
+
 		}
 		catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException(e.getMessage());
@@ -356,7 +383,9 @@ public class StoryService {
 		return Map.of(
 			"id", story.getId(),
 			"title", story.getTitle(),
-			"created_at", story.getCreatedAt()
+			"created_at", story.getCreatedAt(),
+			"updated_at", story.getUpdatedAt(),
+			"author_visible", story.getAuthorVisible()
 		);
 	}
 
@@ -388,7 +417,8 @@ public class StoryService {
 			"author_role_id", story.getAuthorRoleId(),
 			"author_name", story.getAuthorName(),
 			"author_visible", story.getAuthorVisible(),
-			"created_at", story.getCreatedAt()
+			"created_at", story.getCreatedAt(),
+			"updated_at", story.getUpdatedAt()
 		);
 	}
 }

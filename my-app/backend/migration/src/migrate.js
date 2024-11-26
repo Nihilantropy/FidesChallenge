@@ -29,6 +29,24 @@ const backupDatabase = () => {
     });
 };
 
+
+/**
+ * Unlock the knex migration table to ensure it can be used again.
+ */
+const unlockMigrationTable = async () => {
+    try {
+        console.log('Attempting to forcibly unlock the migration table...');
+        
+        // Use Knex's built-in method to forcibly free the migration lock
+        await knex.migrate.forceFreeMigrationsLock();
+        
+        console.log('Migration table unlocked successfully.');
+    } catch (error) {
+        console.error('Error unlocking migration table:', error.message);
+        throw new Error('Failed to unlock migration table.');
+    }
+};
+
 /**
  * Run migrations after confirming the database is ready.
  */
@@ -43,6 +61,9 @@ const runMigrations = async () => {
         await backupDatabase();
         console.log('Backup completed, proceeding with migrations...');
 
+        console.log('Unlocking migration table...');
+        await unlockMigrationTable();
+
         console.log('Rolling back migrations...');
         // Rollback all migrations
         await knex.migrate.rollback();
@@ -51,6 +72,7 @@ const runMigrations = async () => {
         await dropTables();
 
         // Run migrations
+        console.log("Applying migrations...")
         await knex.migrate.latest();
         await knex.seed.run();
         console.log('Migrations have been successfully applied.');

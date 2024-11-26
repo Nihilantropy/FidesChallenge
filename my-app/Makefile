@@ -5,6 +5,7 @@ all: stop prune start show
 kube:
 	-kubectl apply -f ./k8s
 
+
 start:
 	clear
 	-./mvnw clean package

@@ -13,5 +13,6 @@
 /app/src/main/java/com/sergio/storiesapp/exception/UnauthorizedDeleteException.java
 /app/src/main/java/com/sergio/storiesapp/model/Story.java
 /app/src/main/java/com/sergio/storiesapp/repository/StoryRepository.java
+/app/src/main/java/com/sergio/storiesapp/service/Sanitizer.java
 /app/src/main/java/com/sergio/storiesapp/service/StoryService.java
 /app/src/main/java/com/sergio/storiesapp/service/UserService.java

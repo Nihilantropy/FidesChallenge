@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
+import '../../components/global.js'
 
 const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES }) => {
   const [storie, setStorie] = useState([{}]);
@@ -9,8 +10,8 @@ const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES }) => {
     if (gJWTtoken() == ''){
       showPage(1);
     }
-
-    fetch("http://localhost:8000/stories/user", {
+    const api_url = global.url_stories + "user";
+    fetch(api_url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable, ScrollView, Platform } from 'react-na
 import styles from './../../assets/style/main.js';
 // import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
+import '../../components/global.js'
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -48,8 +49,10 @@ const Registati = ({ showPage,sJWTtoken }) => {
             setErrorText("Errore interno");
             return;
         }
+
         /* ====== Send post ====== */
-        fetch("http://localhost:8000/users/create", {
+        const api_url = global.url_users + "create";
+        fetch(api_url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

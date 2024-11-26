@@ -3,6 +3,7 @@ package com.sergio.storiesapp.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
 import com.sergio.storiesapp.exception.StoryCreationException;
 import com.sergio.storiesapp.exception.DeleteStoryException;
@@ -23,7 +24,6 @@ import java.util.Optional;
 
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:8000", "http://backend-users:3000"})
 @RequestMapping("/stories")
 public class StoryController {
 
@@ -110,6 +110,8 @@ public class StoryController {
 			storyService.createStory(storyMap);
 			logger.info("Story created successfully");
 			return new ResponseEntity<>("Story created successfully", HttpStatus.CREATED);
+		} catch (InvalidInputException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		} catch (IllegalArgumentException e) {
 			logger.warn("Story creation failed: " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -158,8 +160,18 @@ public class StoryController {
 			logger.error("Invalid or missing Authorization header");
 			return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
 		}
-
 		logger.info("Received Authorization Token for updating story: {}", token);
+		logger.info("Attempting to authenticate user with token");
+
+		Map<String, Object>	authorMap = new HashMap<>(); 
+
+		authorMap = userService.authenticateUser(token);
+		if (authorMap == null) {
+			logger.error("Authentication failed: Invalid Authorization Token");
+			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
+		}
+
+		logger.info("User authenticated: {}", authorMap);
 
 		Map<String, Object>	storyInfoMap = new HashMap<>();
 
@@ -173,17 +185,6 @@ public class StoryController {
 
 		logger.info("Story info map is {}", storyInfoMap);
 
-		logger.info("Attempting to authenticate user with token");
-
-		Map<String, Object>	authorMap = new HashMap<>(); 
-
-		authorMap = userService.authenticateUser(token);
-		if (authorMap == null) {
-			logger.error("Authentication failed: Invalid Authorization Token");
-			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
-		}
-
-		logger.info("User authenticated: {}", authorMap);
 
 		try {
 			// Step 4: Check Story Ownership

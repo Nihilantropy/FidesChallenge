@@ -24,6 +24,8 @@ import Registati from './app/pages/Utenti/Registati.js';
 import Delete from './app/pages/Utenti/Delete.js';
 import Accesso from './app/pages/Utenti/Accesso.js';
 import Profilo from './app/pages/Utenti/Profilo.js';
+import './app/components/global.js'
+
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./app/libreri/Storage/Web') : require('./app/libreri/Storage/Mobile');
 
@@ -38,7 +40,8 @@ export default function App() {
       try {
         const token = await getToken();
         if (token) {
-          fetch("http://localhost:8000/users/profile", {
+          const api_url = global.url_users + "profile";
+          fetch(api_url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

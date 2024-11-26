@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
+import '../../components/global.js'
 
 const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
     const [storia, setStoria] = useState('');
@@ -11,7 +12,8 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
         }
 
         async function get_story(){
-            fetch("http://localhost:8000/stories/"+gid(), {
+            const api_url = global.url_stories + gid();
+            fetch(api_url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,7 +38,8 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
     }, [gJWTtoken, showPage]);
 
     async function notshow() {
-        fetch("http://localhost:8000/stories/"+gid(), {
+        const api_url = global.url_stories + gid();
+        fetch(api_url, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -72,7 +75,8 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr }) => {
     }
 
     async function show() {
-        fetch("http://localhost:8000/stories/"+gid(), {
+        const api_url = global.url_stories + gid();
+        fetch(api_url, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
