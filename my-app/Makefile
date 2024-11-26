@@ -160,6 +160,10 @@ debug:
 # Targets
 .PHONY: kube kube-start kube-stop kube-reset status namespaces policies apply debug
 
+mkube:
+	docker compose build
+	kubectl apply -f ./k8s
+
 ##################### Docker-compose ##################### 
 start:
 	-docker compose up --remove-orphans --build
