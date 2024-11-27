@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: expo-service-urls
+data:
+  # Expo Public Environment Variables
+  EXPO_PUBLIC_URL_USERS: "http://a7137f7654d1240ef91b595527466f53-1222310097.eu-central-1.elb.amazonaws.com:8000/users/"
+  EXPO_PUBLIC_URL_STORIES: "http://a7137f7654d1240ef91b595527466f53-1222310097.eu-central-1.elb.amazonaws.com:8000/stories/"
+  EXPO_PUBLIC_URL_TTS: "http://a7137f7654d1240ef91b595527466f53-1222310097.eu-central-1.elb.amazonaws.com:8000/speak"

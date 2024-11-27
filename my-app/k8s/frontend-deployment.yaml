@@ -14,10 +14,11 @@ spec:
     spec:
       containers:
       - name: expo-container
-        image: my-app_frontend-expo:latest 
-        imagePullPolicy: Never
+        image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_frontend-expo:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8081
         env:
-        - name: BACKEND_USERS_URL
-          value: users-backend-service.backend-ns.svc.cluster.local:3000
+        envFrom:
+        - configMapRef:
+            name: expo-service-urls

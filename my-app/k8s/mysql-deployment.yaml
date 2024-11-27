@@ -16,22 +16,16 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: my-app_db:latest
-        imagePullPolicy: Never
+        image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_db:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3306
         volumeMounts:
         - name: mysql-data
           mountPath: /var/lib/mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: rootpassword
-        - name: MYSQL_DATABASE
-          value: myapp_db
-        - name: MYSQL_USER
-          value: mysql_user
-        - name: MYSQL_PASSWORD
-          value: userpassword
+        envFrom:
+          - secretRef:
+              name: db-credentials
       volumes:
       - name: mysql-data
         persistentVolumeClaim:

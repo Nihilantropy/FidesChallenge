@@ -16,10 +16,7 @@ spec:
     spec:
       containers:
         - name: tts-container
-          image: my-app_backend-tts:latest
-          imagePullPolicy: Never
+          image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_backend-tts:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
-          envFrom:
-            - secretRef:
-                name: db-credentials
