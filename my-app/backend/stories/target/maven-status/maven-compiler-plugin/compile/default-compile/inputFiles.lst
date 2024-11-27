@@ -1,5 +1,6 @@
 /app/src/main/java/com/sergio/storiesapp/StoriesApplication.java
 /app/src/main/java/com/sergio/storiesapp/config/DatabaseConnectionManager.java
+/app/src/main/java/com/sergio/storiesapp/config/GlobalCorsConfig.java
 /app/src/main/java/com/sergio/storiesapp/config/HealthCheckSchedulerConfig.java
 /app/src/main/java/com/sergio/storiesapp/controller/HealthCheckController.java
 /app/src/main/java/com/sergio/storiesapp/controller/StoryController.java

@@ -112,7 +112,7 @@ export default function App() {
       {visiblePage === 4 && <Accesso showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 5 && <Registati showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 6 && <Profilo sJWTtoken={sJWTtoken} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} />}
-      {visiblePage === 7 && <HomeMyStory sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 7 && <HomeMyStory sShowErr={sShowErr} sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} sShowErr={sShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 9 && <Delete gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} sJWTtoken={sJWTtoken} />}
       {visiblePage === 10 && <LeggiStory sShowPopupES={sShowPopupES} sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}

@@ -20,7 +20,7 @@ services:
 
    # Database (MySQL) micro
   db:
-    container_name: db-service
+    container_name: mysql-service
     build:
       context: ./backend/db
       dockerfile: Dockerfile
