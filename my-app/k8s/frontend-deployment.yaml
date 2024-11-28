@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: expo-container
-        image: my-app-frontend-expo:latest 
+        image: my-app_frontend-expo:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8081

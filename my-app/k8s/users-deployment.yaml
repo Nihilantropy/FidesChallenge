@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: users-container
-          image: my-app-backend-users
+          image: my-app_backend-users
           imagePullPolicy: Never
           ports:
             - containerPort: 3000

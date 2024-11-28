@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: proxy-container
-        image: my-app-proxy:latest
+        image: my-app_proxy:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8000

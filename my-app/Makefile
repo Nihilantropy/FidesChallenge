@@ -5,6 +5,12 @@ all: stop prune start show
 kube:
 	-kubectl apply -f ./k8s
 
+kube-rebuild:
+	@kubectl get deployments -n default -o name | \
+	while read deployment; do \
+		echo "Restarting $$deployment..."; \
+		kubectl rollout restart $$deployment -n default; \
+	done
 
 start:
 	clear
