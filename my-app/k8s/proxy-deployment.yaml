@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: proxy-container
-        image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_proxy:latest
-        imagePullPolicy: Always
+        image: my-app_proxy:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 8000

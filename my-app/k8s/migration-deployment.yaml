@@ -7,8 +7,8 @@ spec:
     spec:
       containers:
       - name: migration-container
-        image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_backend-migration:latest
-        imagePullPolicy: Always  # Set to Always to pull the latest image from ECR
+        image: my-app_backend-migration:latest
+        imagePullPolicy: Never  # Set to Never to pull the latest image from ECR
         envFrom:
         - secretRef:
             name: db-credentials  # Ensure db-credentials secret exists

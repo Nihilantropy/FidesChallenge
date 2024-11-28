@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: users-container
-          image: 976193259173.dkr.ecr.eu-central-1.amazonaws.com/my-app_backend-users:latest
-          imagePullPolicy: Always
+          image: my-app_backend-users:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 3000
           envFrom:

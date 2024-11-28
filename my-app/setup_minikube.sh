@@ -1,21 +1,10 @@
 #!/bin/bash
 
-# Verifica se Minikube è installato
-if ! command -v minikube &> /dev/null
-then
-    echo "Minikube non è installato. Installalo prima di eseguire lo script."
-    exit 1
-fi
-
-# 1. Avvia Minikube (assicurati di avere i privilegi di amministratore per eseguire il tunnel)
-echo "Avvio di Minikube..."
-minikube start --driver=docker
-
 # 2. Cerca tutte le immagini che iniziano con "my-app-" e caricale su Minikube
-echo "Scaricamento e caricamento delle immagini Docker che iniziano con 'my-app-*'..."
+echo "Scaricamento e caricamento delle immagini Docker che iniziano con 'my-app_*'..."
 
 # Elenco tutte le immagini locali che iniziano con "my-app-" e le carico su Minikube
-for image in $(docker images --format '{{.Repository}}' | grep '^my-app-'); do
+for image in $(docker images --format '{{.Repository}}' | grep '^my-app_'); do
   echo "Pullo l'immagine: $image"
   docker pull $image
   minikube image load $image

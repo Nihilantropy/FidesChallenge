@@ -13,6 +13,9 @@ COPY ./initdb.d/ /docker-entrypoint-initdb.d/
 # Ensure the correct permissions for SQL scripts
 RUN chmod -R 755 /docker-entrypoint-initdb.d/
 
+# Copy the custom my.cnf file into the container
+COPY my.cnf /etc/mysql/mysql.conf.d/mysqld.cnf
+
 # Expose the MySQL default port
 EXPOSE 3306
 
