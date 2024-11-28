@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
 
-const LeggiStoryU = ({ showPage,sid,gid,sShowErr,sShowPopupES }) => {
+const LeggiStoryU = ({ showPage,gid,sShowErr }) => {
     const [storia, setStoria] = useState('');
     useEffect(() => {
         async function get_story(){
@@ -19,17 +19,19 @@ const LeggiStoryU = ({ showPage,sid,gid,sShowErr,sShowPopupES }) => {
             })
             .then(({ status, data }) => {
                 if (status !== 200) {
-                    showPage(7);
+                    showPage(2);
+                    sShowErr("Scusami sono stanco 🥱");
                 } else {
                     setStoria(data);
                 }
             })
             .catch(error => {
-                showPage(7);
+                showPage(2);
+                sShowErr("Scusami sono stanco 🥱");
             });
         }
         get_story();
-    }, [gJWTtoken, showPage]);
+    }, [gJWTtoken, showPage, sShowErr]);
 
     return (
         <View style={styles.stacca}>
