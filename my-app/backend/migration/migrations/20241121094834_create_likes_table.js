@@ -16,18 +16,18 @@ export async function up(knex) {
 			table.unique(['user_id', 'story_id']);
 		});
 
-		// // Add composite index for efficient querying
-		// await knex.schema.table('likes', (table) => {
-		// 	table.index(['story_id', 'removed_at'], 'idx_story_removed');
-		// });
+		// Add composite index for efficient querying
+		await knex.schema.table('likes', (table) => {
+			table.index(['story_id', 'removed_at'], 'idx_story_removed');
+		});
 	}
 }
 
 export async function down(knex) {
-    // // Drop indexes if they exist
-    // await knex.schema.table('likes', (table) => {
-    //     table.dropIndex(['story_id', 'removed_at'], 'idx_story_removed');
-    // });
+    // Drop indexes if they exist
+    await knex.schema.table('likes', (table) => {
+        table.dropIndex(['story_id', 'removed_at'], 'idx_story_removed');
+    });
 
     // Drop the table
     await knex.schema.dropTableIfExists('likes');
