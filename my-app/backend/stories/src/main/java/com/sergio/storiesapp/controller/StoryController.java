@@ -13,6 +13,7 @@ import com.sergio.storiesapp.exception.UnauthorizedDeleteException;
 import com.sergio.storiesapp.service.Sanitizer;
 import com.sergio.storiesapp.service.StoryService;
 import com.sergio.storiesapp.service.UserService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/stories")
+@CrossOrigin(origins = {"http://localhost:8000", "https://my-self-signed-domain.com", "http://my-self-signed-domain.com"}, allowedHeaders = {"Content-Type", "Authorization"}, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE}, allowCredentials = "true")
 public class StoryController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
