@@ -1,5 +1,5 @@
 export async function notshow(id, token, sShowErr) {
-    const api_url = global.url_stories+id;
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES+id;
     fetch(api_url, {
         method: 'PUT',
         headers: {
@@ -34,7 +34,7 @@ export async function notshow(id, token, sShowErr) {
 }
 
 export async function show(id, token, sShowErr) {
-    const api_url = global.url_stories+id;
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES+id;
     fetch(api_url, {
         method: 'PUT',
         headers: {

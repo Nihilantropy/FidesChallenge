@@ -8,7 +8,7 @@ const Qrcode = () => {
   return (
     <View style={styles.box}>
       <Text style={styles.testi}>
-        Preferisci utilizzare l'app? Scansiona il QRcode. O premi {' '}
+        Preferisci parlarmi dall'app? Scansiona il QRcode. O premi {' '}
         <Pressable onPress={() => Linking.openURL(route)}><Text style={styles.link}>Qui</Text></Pressable>
       </Text>
       <Text style={styles.testi}>{"\n"}</Text>
@@ -29,9 +29,10 @@ const Home = ({ showPage }) => {
     <View style={styles.stacca}>
       <ScrollView>
         <View style={styles.box}>
-          <Text style={styles.titoli}>Sergio è una piattaforma che permette di narrare e leggere storie da tutto il mondo</Text>
+          <Text style={[styles.titoli, {alignSelf: 'flex-start'}]}>Ciao 👋{"\n"}Sono Sergio 🤗, il tuo narrastore tascabile ✨</Text>
+          <Text style={[styles.testi, {alignSelf: 'flex-start'}]}>Con me puoi scoprire storie emozionanti da ogni angolo del mondo o crearne di nuove insieme a me!</Text>
           <Text style={styles.titoli}>{"\n"}</Text>
-          <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Inizia a leggere, qui</Text></Pressable>
+          <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Inizia qui</Text></Pressable>
         </View>
         { Platform.OS === 'web' && <Qrcode /> }
       </ScrollView>

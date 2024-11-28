@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
-import global from './../../global.js';
 import {notshow,show} from './zz_LibStory.js';
 
 const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr,sShowPopupES }) => {
@@ -13,7 +12,7 @@ const LeggiStory = ({ showPage,gJWTtoken,sid,gid,sShowErr,sShowPopupES }) => {
         }
 
         async function get_story(){
-            const api_url = global.url_stories+gid();
+            const api_url = process.env.EXPO_PUBLIC_URL_STORIES+gid();
             fetch(api_url, {
                 method: 'GET',
                 headers: {

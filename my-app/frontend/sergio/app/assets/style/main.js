@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-const background={backgroundColor: 'rgba(85, 32, 15, 0.65)'};
+const background={backgroundColor: 'rgba(85, 32, 15, 0.70)'};
 const backgroundbody={backgroundColor: 'rgb(255, 240, 201)'};
 const colortesti={color: 'white'};
 const testiunder={textDecorationLine: 'underline',...colortesti};
@@ -24,18 +24,18 @@ tendina: {flexDirection: 'row'},
 testi: {...colortesti},
 testidestra: {textAlign: 'rigth',alignSelf: 'flex-end',...colortesti},
 link: {...testiunder},
-box: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase,...centro},
-box2: {padding: 20,marginTop: 30,width: width/1.2,...background,...bordbase},
-box3: {padding: 15,marginTop: 30,...background,...bordbase},
+box: {padding: 20,marginTop: 30,borderRadius: 12,width: width/1.2,...background,...bordbase,...centro},
+box2: {padding: 20,marginTop: 30,borderRadius: 12,width: width/1.2,...background,...bordbase},
+box3: {padding: 15,marginTop: 30,borderRadius: 12,...background,...bordbase},
 centro: {...centro},
 stacca: {width: '100%'},
 row: {flexDirection: 'row',marginVertical: 10,},
 row2: {flexDirection: 'row',marginVertical: 10,marginLeft: 60},
-popup: {width: 'auto',position: 'absolute',padding: 15,...bordbase,...background},
+popup: {width: 'auto',position: 'absolute',padding: 15,borderRadius: 12,...bordbase,...background},
 fondonero: {zIndex: 40,backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absolute',top: 0,left: 0,width: '100%',height: '100%'},
 credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
 textarea: {textAlignVertical: 'top',padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
-bottoni: {borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background},
+bottoni: {borderRadius: 10,borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background},
 col1: {width: 'auto',margin: 10},
 col2: {width: 'auto'},
 homestoryele: {},
@@ -51,6 +51,7 @@ if(width > 600){
     regole.tornaallahome={...regole.tornaallahome,fontSize: 25};
     regole.credenziali={...regole.credenziali,fontSize: 25};
     regole.textarea={...regole.textarea,fontSize: 25};
+    regole.testidestra={...regole.testidestra,fontSize: 25};
     regole.titoli={...regole.titoli,fontSize: 30};
     regole.footerweb={...regole.footerweb,padding: 20};
     regole.popup={...regole.popup,top: '20%',left: '30%'};
@@ -66,6 +67,7 @@ if(width > 600){
     regole.tornaallahome={...regole.tornaallahome,fontSize: 20};
     regole.credenziali={...regole.credenziali,fontSize: 20};
     regole.textarea={...regole.textarea,fontSize: 20};
+    regole.testidestra={...regole.testidestra,fontSize: 20};
     regole.titoli={...regole.titoli,fontSize: 25};
     regole.footerweb={...regole.footerweb,padding: 10};
     regole.popup={...regole.popup,top: '7%',left: 0};

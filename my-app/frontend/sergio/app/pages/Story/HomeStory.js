@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-native';
 import styles from './../../assets/style/main.js';
-import global from './../../global.js';
 
 const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sShowErr }) => {
   if (azione === 'preferito' && gJWTtoken() === '') {
@@ -14,7 +13,7 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const [stori, setStori] = useState('');
   const [disponibili, setdisponibili] = useState(1);
   async function get_story(){
-    const api_url = global.url_stories+ "ramdom";
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES+ "random";
     fetch(api_url, {
       method: 'GET',
       headers: {
@@ -30,14 +29,14 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       } else if (status == 204){
         setdisponibili(0);
       } else {
-        sShowErr("Scusami sono stanco");
+        sShowErr("Scusami sono stanco 🥱");
         setPupup(true);
         setPage('');
       }
     })
     .catch(error => {
       console.log(error);
-      sShowErr("Scusami sono stanco");
+      sShowErr("Scusami sono stanco 🥱");
       setPupup(true);
       setPage('');
     });
@@ -53,11 +52,11 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
   const remPref = () => setPreferiti(false);
 
   // Funzioni per audio
-  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../Suond/Web') : require('./../Suond/Mobile');
+  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../../libreri/Suond/Web') : require('./../../libreri/Suond/Mobile');
   const [statorip, setStato] = useState('unset');
   async function speakText(text,id,mod) {
     try {
-      const api_url = global.url_tts + "speak";
+      const api_url = process.env.EXPO_PUBLIC_URL_TTS + "speak";
       const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -143,7 +142,7 @@ const Inventa = ({ sShowErr }) => {
       return;
     }
     setgenera(2);
-    const api_url = global.url_ia + "generatestory";
+    const api_url = process.env.EXPO_PUBLIC_URL_AI + "generatestory";
     fetch(api_url, {
       method: 'POST',
       headers: {
@@ -159,7 +158,7 @@ const Inventa = ({ sShowErr }) => {
     })
     .then(({ status, data }) => {
       if (status !== 200){
-        sShowErr("Scusa ma sono stanco");
+        sShowErr("Scusa sono stanco 🥱");
         setgenera(1);
         console.log(data.error);
       }else{
@@ -169,16 +168,16 @@ const Inventa = ({ sShowErr }) => {
     })
     .catch(error => {
       setgenera(1);
-      sShowErr("Scusa ma sono stanco");
+      sShowErr("Scusa sono stanco 🥱");
     });
   }
 
   // Funzioni per audio
-  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../Suond/Web') : require('./../Suond/Mobile');
+  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../../libreri/Suond/Web') : require('./../../libreri/Suond/Mobile');
   const [statorip, setStato] = useState('unset');
   async function speakText(text,id) {
     try {
-      const api_url = global.url_tts + "speak";
+      const api_url = process.env.EXPO_PUBLIC_URL_TTS + "speak";
       const response = await fetch(api_url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -198,14 +197,15 @@ const Inventa = ({ sShowErr }) => {
     }
   }
   const [Velocita, setVelocita] = useState('x1');
+
   return (
     <View style={styles.box}>
       {Storia == '' && genera==1 && (
         <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
           <Text style={[styles.titoli, {alignSelf: 'center'}]}>Dimmi come vorresti la storia</Text>
-          <Text>{"\n"}{"\n"}</Text>
-          <View style={styles.rowpuro}>
-            <View style={[{width: '80%'}]}>
+          <Text>{"\n"}</Text>
+          <View style={[styles.rowpuro, {width: '100%'}]}>
+            <View style={{width: '100%'}}>
               <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} value={prompt} style={[styles.textarea, { minHeight: 50, height: height, width: '100%' }]} placeholder="Scrivi qui la tua richiesta" onChangeText={handleTextChange} />
               <Text style={styles.testidestra}>{prompt.length}/150</Text>
             </View>
@@ -215,13 +215,13 @@ const Inventa = ({ sShowErr }) => {
         </View>
       )}
       {Storia == '' && genera==2 && (
-        <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
-          <Text style={[styles.titoli, {alignSelf: 'center'}]}>Un attimo, sto pensando alla tua storia</Text>
+        <View style={[{width: '100%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
+          <Text style={[styles.titoli, {alignSelf: 'center'}]}>Un attimo, sto pensando alla tua storia 🤔</Text>
           <Text>{"\n"}{"\n"}</Text>
         </View>
       )}
       {Storia != '' && genera==3 && (
-        <View style={[{width: '80%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
+        <View style={[{width: '100%',justifyContent: 'center',alignItems: 'center',alignSelf: 'center'}]}>
           <Text style={[styles.titoli, {alignSelf: 'center'}]}>Ecco la tua storia...</Text>
           <Text>{"\n"}</Text>
           <Text style={styles.testi}>{Storia}</Text>
@@ -247,7 +247,69 @@ const Inventa = ({ sShowErr }) => {
   );
 };
 
-const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) => {
+const LastStory = ({ showPage,sid }) => {
+  const [storie, setStorie] = useState([{}]);
+  const [disponibili, setdisponibili] = useState(1);
+
+  async function get_story(){
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES+ "latest";
+    fetch(api_url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      const status = response.status;
+      if (status == 200) {
+        return response.json().then(data => {
+          setStorie(data);
+        });
+      } else if (status == 204) {
+        setdisponibili(0);
+      } else {
+        setdisponibili(2);
+      }
+    })
+    .catch(error => {
+      setdisponibili(2);
+    });
+  }
+  useEffect(() => {
+    get_story();
+  }, []);
+  return (
+    <View>
+      { disponibili == 0 && (
+        <View style={styles.box}>
+          <Text style={styles.titoli}>Ecco le ultime storie che ho sentito</Text>
+          <Text style={styles.testi}>Scusa non conosco nessuna storia</Text>
+        </View>
+      )}
+      <Text>{"\n"}</Text>
+      { disponibili == 1 && (
+        <View style={styles.box}>
+          <Text style={styles.titoli}>Ecco le ultime storie che ho sentito</Text>
+          <Text>{"\n"}</Text>
+          {storie.map((item, index) => (
+            <View key={index}>
+              <Pressable onPress={() => {sid(item.id); showPage(11) }}><Text style={[styles.testi,styles.link]}>{item.title}</Text></Pressable>
+            </View>
+          ))}
+        </View>
+      )}
+      { disponibili == 2 && (
+        <View style={styles.box}>
+          <Text style={styles.titoli}>Ecco le ultime storie che ho sentito</Text>
+          <Text>{"\n"}</Text>
+          <Text style={styles.testi}>Scusami sono stanco 🥱</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,sShowErr,sid }) => {
   const [Page, setPage] = useState('');
   const [Pupup, setPupup] = useState(true);
 
@@ -257,14 +319,16 @@ const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) 
         {Pupup == true && Page == '' && (
           <View style={styles.centro}>
             <View style={styles.box3}>
-              <Text style={styles.titoli}>Cosa vuoi che faccia?</Text>
+              <Text style={[styles.titoli, {alignSelf: 'center'}]}>Cosa vuoi che faccia?</Text>
               <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
               <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
-              <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
-              <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconto io una storia</Text></Pressable>
+              <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Creami una storia</Text></Pressable>
+              <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ascolta una mia storia</Text></Pressable>
             </View>
           </View>
         )}
+
+        {Pupup == true && Page == '' && <LastStory showPage={showPage} sid={sid} />}
         <View style={{ flexDirection: 'row' }}>
           <View style={styles.col1}>
             {Pupup == false && (<View style={{alignSelf: 'flex-start', marginLeft: 50, marginTop: 30}}><Pressable style={styles.bottoni} onPress={() => setPupup(true)}><Text style={styles.testi}> = </Text></Pressable></View>)}
@@ -276,8 +340,8 @@ const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,gShowPopupErr,sShowErr }) 
                 </View>
                 <Pressable style={styles.bottoni} onPress={() => {setPage('Racconta'), setPupup(false)}}><Text style={styles.testi}>Raccontami una storia</Text></Pressable>
                 <Pressable style={styles.bottoni} onPress={() => {setPage('Preferiti'), setPupup(false)}}><Text style={styles.testi}>Raccontami una delle mie preferite</Text></Pressable>
-                <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Inventane una nuova</Text></Pressable>
-                <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ti racconto io una storia</Text></Pressable>
+                <Pressable style={styles.bottoni} onPress={() => {setPage('Inventa'), setPupup(false)}}><Text style={styles.testi}>Creami una storia</Text></Pressable>
+                <Pressable style={styles.bottoni} onPress={() => {showPage(3), setPupup(false)}}><Text style={styles.testi}>Ascolta una mia storia</Text></Pressable>
               </View>
             )}
           </View>

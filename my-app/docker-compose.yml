@@ -39,19 +39,19 @@ services:
       timeout: 5s
   
   # migration service for db
-  backend-migration:
-    container_name: migration-service
-    build:
-      context: ./backend/migration
-      dockerfile: Dockerfile
-    env_file:
-      - ./backend/migration/.env
-    networks:
-      - server-db
-    #volumes:
-    #  - ./backend/migration/backup_data:/backup
-    depends_on:
-        - db
+  # backend-migration:
+  #   container_name: migration-service
+  #   build:
+  #     context: ./backend/migration
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - ./backend/migration/.env
+  #   networks:
+  #     - server-db
+  #   volumes:
+  #     - ./backend/migration/backup_data:/backup
+  #   depends_on:
+  #       - db
     
   # Backend users micro
   backend-users:
@@ -98,8 +98,6 @@ services:
       - frontend-tts
     depends_on:
       - frontend-expo
-    volumes:
-      - tts_server_vol:/app
 
   # IA micro
   backend-ia:
@@ -116,8 +114,6 @@ services:
   # Frontend expo micro
   frontend-expo:
     container_name: expo-service
-    env_file:
-      - ./frontend/.env
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -152,13 +148,5 @@ volumes:
     driver: local
     driver_opts:
       device: ./proxy/log
-      o: bind
-      type: none
-
-  tts_server_vol:
-    name: tts_server_vol
-    driver: local
-    driver_opts:
-      device: ./backend/tts
       o: bind
       type: none

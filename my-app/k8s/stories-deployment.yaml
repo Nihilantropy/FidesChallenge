@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: stories-container
-        image: my-app-backend-stories:latest
+        image: my-app_backend-stories:latest
         imagePullPolicy: Never
         ports:
         - containerPort: 8080

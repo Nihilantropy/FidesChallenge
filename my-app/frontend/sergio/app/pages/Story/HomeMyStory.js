@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { View, Text, Pressable, ScrollView, Image } from 'react-native';
 import styles from './../../assets/style/main.js';
-import global from './../../global.js';
 import {notshow,show} from './zz_LibStory.js';
 
 const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES,sShowErr }) => {
@@ -13,7 +12,7 @@ const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES,sShowErr }) => {
     }
 
     async function my_story(){
-      const api_url = global.url_stories + "user";
+      const api_url = process.env.EXPO_PUBLIC_URL_STORIES + "user";
       fetch(api_url, {
         method: 'GET',
         headers: {
@@ -53,7 +52,7 @@ const HomeMyStory = ({ showPage,gJWTtoken,sid,sShowPopupES,sShowErr }) => {
       )}
       { disponibili == 1 && (
         <ScrollView>
-          <View style={styles.box}><Text style={styles.testi}>Le storie che hai raccontato a Sergio</Text></View>
+          <View style={styles.box}><Text style={styles.testi}>Le storie che mi hai raccontato</Text></View>
           {storie.map((item, index) => (
             <View key={index} style={[styles.box]}>
               <Pressable onPress={() => {sid(item.id); showPage(10) }}><Text style={[styles.titoli,styles.link]}>{item.title}</Text></Pressable>

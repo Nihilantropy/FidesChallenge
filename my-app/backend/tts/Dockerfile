@@ -4,8 +4,8 @@ FROM python:3.9-slim
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia tutti i file
-COPY . /app
+# Copia il requirements.txt
+COPY requirements.txt ./requirements.txt
 
 RUN apt-get update && \
     apt-get install -y cron dos2unix && \
@@ -13,8 +13,12 @@ RUN apt-get update && \
     echo "" >> /etc/cron.d/your-cron-job && \
     chmod 0644 /etc/cron.d/your-cron-job && \
     service cron start && \
-    dos2unix /app/pulizia.sh && chmod +x /app/pulizia.sh && \
     pip install -r requirements.txt
+
+# Copia tutti i file
+COPY . /app
+
+RUN dos2unix /app/pulizia.sh && chmod +x /app/pulizia.sh
 
 # Espone la porta 5000 per Flask
 EXPOSE 5000

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: tts-container
-          image: my-app-backend-tts
+          image: my-app_backend-tts:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 5000

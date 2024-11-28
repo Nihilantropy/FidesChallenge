@@ -15,7 +15,7 @@ def generatestory():
         co = cohere.Client('B8tX61HuJFEFFANVAaKzq5EVe5EN1xOrl8iOR7F4')
         response = co.generate(
             model='c4ai-aya-expanse-32b',
-            prompt=data["prompt"]+" perfavare in italiano e di massimo 3000 carattiri. rispondemi con solo la storia e null'altro",
+            prompt=data["prompt"]+" perfavare in italiano e di massimo 2000 carattiri. rispondemi con solo la storia e null'altro",
             max_tokens=3000,
             temperature=1,
             k=0,
