@@ -8,8 +8,8 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-    origin: ['http://localhost', 'https://localhost', 'http://localhost:8000', 'http://backend-users:3000'], // Add Nginx proxy origin
-    methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
+    origin: ['https://my-self-signed-domain.com','http://my-self-signed-domain.com', 'http://frontend-expo.default.svc.cluster.local:8081', 'http://backend-stories'], // Add Nginx proxy origin
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed
 };

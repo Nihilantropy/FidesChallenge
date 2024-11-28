@@ -18,8 +18,8 @@ import { CustomError } from './err/dist/CustomError.js';
 
 // CORS options
 const routeCorsOptions = {
-    origin: ['https://localhost', 'http://localhost', 'http://localhost:8000', 'http://frontend-expo:8081', 'http://backend-stories:8080'], // Add Nginx proxy origin
-    methods: ['GET', 'POST', 'DELETE'], // Allowed HTTP methods
+    origin: ['https://my-self-signed-domain.com','http://my-self-signed-domain.com', 'http://frontend-expo.default.svc.cluster.local:8081', 'http://backend-stories'], // Add Nginx proxy origin
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed
 };

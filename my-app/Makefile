@@ -1,5 +1,45 @@
 ##################### Kubernetes ##################### 
 
+############# minikube #############
+
+mini-init:
+	@make mini-start
+	@make mini-ingress
+	@make mini-tls-secret
+
+mini-start:
+	@echo "Starting minikube cluster..."
+	@minikube start
+	@echo "minikube cluster started!"
+
+mini-ingress:
+	@echo "Enebling minikube ingress addon..."
+	@minikube addons enable ingress
+	@echo "ingress enabled!"
+
+mini-tls-secret:
+	@echo "Creating tls secret..."
+	@kubectl create secret tls self-signed-tls \
+		--cert=self-signed-tls/self-signed-tls.crt \
+		--key=self-signed-tls/self-signed-tls.key
+	@echo "Secret created!"
+
+mini-images:
+	@echo "Building docker images..."
+	@docker-compose build --parallel
+	@echo "Done!"
+	@make mini-import
+	
+mini-import:
+	@echo "Importing docker images into minikube repository..."
+	@sh setup_minikube.sh
+	@echo "All images imported correctly!"
+
+mini-status:
+	@kubectl get pod -A
+
+############# microk8s #############
+
 # Variables
 MICROK8S_CMD = sudo microk8s
 KUBECTL_CMD = kubectl
@@ -131,8 +171,6 @@ apply:
 
 # Check cluster and pod status
 status:
-	@echo "Checking cluster and pod status..."
-	$(MICROK8S_CMD) status
 	$(KUBECTL_CMD) get nodes
 	$(KUBECTL_CMD) get pods --all-namespaces
 

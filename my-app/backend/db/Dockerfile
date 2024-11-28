@@ -30,4 +30,4 @@ EXPOSE 3306
 
 # Start the MySQL service
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["mysqld"]
+RUN ["mysqld"]

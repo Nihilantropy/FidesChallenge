@@ -1,11 +1,10 @@
 import React from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import styles from './../assets/style/main.js';
-import './global.js'
 
 const PupupDelStory = ({ sShowPopupES,sShowErr,gid,gJWTtoken }) => {
   function elimina() {
-    const api_url = global.url_stories + gid();
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES + gid();
     fetch(api_url, {
       method: 'DELETE',
       headers: {

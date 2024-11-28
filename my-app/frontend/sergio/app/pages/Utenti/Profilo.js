@@ -1,7 +1,6 @@
 import React, {useEffect,useState} from "react";
 import { View, Text, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
-import '../../components/global.js'
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -19,7 +18,7 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
 
         /* Ricerca info */
         const getdata = async () => {
-            const api_url = global.url_users + "profile";
+            const api_url = process.env.EXPO_PUBLIC_URL_USERS + "profile";
             fetch(api_url, {
                 method: 'GET',
                 headers: {
@@ -61,9 +60,9 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
                                 <Text style={styles.testi}>Nickname: {jsonData.username}</Text>
                             </View>
                             <Text style={styles.titoli}>{"\n"}</Text>
-                            <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Mostra le mie storie</Text></Pressable>
-                            <Pressable onPress={() => showPage(9)}><Text style={styles.link}>Elimina il mio account</Text></Pressable>
-                            <Pressable onPress={() => {removeToken(),sJWTtoken(''),showPage(1)}}><Text style={styles.link}>Esci</Text></Pressable>
+                            <Pressable onPress={() => showPage(7)}><Text style={styles.link}>📚Mostra le mie storie</Text></Pressable>
+                            <Pressable onPress={() => showPage(9)}><Text style={styles.link}>💔Elimina il mio account</Text></Pressable>
+                            <Pressable onPress={() => {removeToken(),sJWTtoken(''),showPage(1)}}><Text style={styles.link}>🚪Esci</Text></Pressable>
                         </View>
                     </View>
                 </ScrollView>

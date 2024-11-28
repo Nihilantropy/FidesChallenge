@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, ScrollView, Platform } from 'react-native';
 import styles from './../../assets/style/main.js';
-// import stylec from './../../assets/style/main.css';
 import hashPassword from './zz_LibUtenti.js';
-import '../../components/global.js'
 
 const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('./../../libreri/Storage/Web.js') : require('./../../libreri/Storage/Mobile.js');
 
@@ -51,7 +49,7 @@ const Registati = ({ showPage,sJWTtoken }) => {
         }
 
         /* ====== Send post ====== */
-        const api_url = global.url_users + "create";
+        const api_url = process.env.EXPO_PUBLIC_URL_USERS + "create";
         fetch(api_url, {
             method: 'POST',
             headers: {
