@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/stories")
-@CrossOrigin(origins = { "http://localhost:8000", "http://frontend-expo.default.svc.cluster.local:8081", "https://my-self-signed-domain.com", "http://my-self-signed-domain.com" }, allowedHeaders = {"Content-Type", "Authorization"}, methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8000", "https://localhost:8000", "http://frontend-expo.default.svc.cluster.local:8081", "https://my-self-signed-domain.com", "http://my-self-signed-domain.com" }, allowedHeaders = {"Content-Type", "Authorization"}, methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
 public class StoryController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StoryController.class);

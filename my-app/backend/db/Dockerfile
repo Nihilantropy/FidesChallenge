@@ -5,7 +5,6 @@ FROM mysql:8.0.27
 # LABEL maintainer="youremail@example.com"
 
 # Ensure the /etc/mysql/mysql.conf.d directory exists
-
 RUN mkdir -p /etc/mysql/mysql.conf.d
 
 # Copy custom SQL scripts to the Docker image (for first-time database setup)
@@ -27,7 +26,3 @@ RUN chmod 644 /etc/mysql/conf.d/my.cnf
 
 # Expose the MySQL default port
 EXPOSE 3306
-
-# Start the MySQL service
-ENTRYPOINT ["docker-entrypoint.sh"]
-RUN ["mysqld"]

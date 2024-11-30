@@ -17,12 +17,6 @@ spec:
       containers:
       - name: mysql
         image: my-app_db:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3306
-        volumeMounts:
-        - name: mysql-data
-          mountPath: /var/lib/mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: rootpassword
@@ -32,7 +26,9 @@ spec:
           value: mysql_user
         - name: MYSQL_PASSWORD
           value: userpassword
+        ports:
+        - containerPort: 3306
       volumes:
-      - name: mysql-data
+      - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pvc

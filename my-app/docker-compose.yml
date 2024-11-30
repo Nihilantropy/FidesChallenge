@@ -30,7 +30,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql  # Persist database data
     networks:
-      - server-db
+      - backend-db
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -47,7 +47,7 @@ services:
     env_file:
       - ./backend/migration/.env
     networks:
-      - server-db
+      - backend-db
     volumes:
       - ./backend/migration/backup_data:/backup
     depends_on:
@@ -66,7 +66,7 @@ services:
       - ./backend/users/src:/code/src:rw
       - back-notused:/opt/app/node_modules
     networks:
-      - server-db
+      - backend-db
       - proxy
     depends_on:
       - db
@@ -82,7 +82,7 @@ services:
     volumes:
       - ./backend/stories:/app:rw
     networks:
-       - server-db
+       - backend-db
        - proxy
     depends_on:
       - db
@@ -102,16 +102,16 @@ services:
       - tts_server_vol:/app
 
   # IA micro
-  # backend-ia:
-  #  container_name: ia-service
-  #  build:
-  #    context: ./backend/ia
-  #    dockerfile: Dockerfile
-  #  networks:
-  #    - proxy
-  #    - frontend-ia
-  #  depends_on:
-  #    - frontend-expo
+  backend-ia:
+   container_name: ia-service
+   build:
+     context: ./backend/ia
+     dockerfile: Dockerfile
+   networks:
+     - proxy
+     - frontend-ia
+   depends_on:
+     - frontend-expo
 
   # Frontend expo micro
   frontend-expo:
@@ -132,7 +132,7 @@ services:
 
 # Networks configuration
 networks:
-  server-db:
+  backend-db:
     driver: bridge
   frontend-tts:
     driver: bridge
