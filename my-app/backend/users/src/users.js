@@ -18,7 +18,7 @@ import { CustomError } from './err/dist/CustomError.js';
 
 // CORS options
 const routeCorsOptions = {
-    origin: ['http://localhost','https://localhost','https://my-self-signed-domain.com','http://my-self-signed-domain.com', 'http://frontend-expo.default.svc.cluster.local:8081', 'http://backend-stories'], // Add Nginx proxy origin
+    origin: ['http://localhost:8000', 'https://localhost:8000', 'http://backend-stories:8081'], // Add Nginx proxy origin
     methods: ['GET', 'POST', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
     credentials: true, // Allow credentials (like cookies or authorization headers) if needed
@@ -27,6 +27,7 @@ const routeCorsOptions = {
 
 // User creation route
 router.post('/create', cors(routeCorsOptions), async (req, res) => {
+	console.log("User creation requested...")
 	const userData = req.body;
 	const [err, token] = await catchErrorTyped(createUser(userData), [CustomError]);
 
@@ -36,25 +37,24 @@ router.post('/create', cors(routeCorsOptions), async (req, res) => {
 		return res.status(err.code).json({ message: err.message });
 	}
 
-	console.log(token);
+	console.log("User created succefully!")
 	return res.status(201).json({ token });
 });
 
 // User login route
 router.post('/login', cors(routeCorsOptions), async (req, res) => {
+	console.log("Login requested...")
 	const { email, password } = req.body;
 
-	console.log(email, password);
 	const [err, token] = await catchErrorTyped(loginUser(email, password), [CustomError]);
 
 	// Check for errors
 	if (err) {
 		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
-		console.log(err.message);
 		return res.status(statusCode).json({ message: err.message });
 	}
+	console.log("User logged in succesfully!")
 	// If the token is returned successfully
-	console.log(token);
 	return res.status(200).json({ token });
 });
 
@@ -62,17 +62,14 @@ router.post('/login', cors(routeCorsOptions), async (req, res) => {
 router.post('/login-admin', cors(routeCorsOptions), async (req, res) => {
 	const { email, password } = req.body;
 
-	console.log(email, password);
 	const [err, token] = await catchErrorTyped(loginAdmin(email, password), [CustomError]);
 
 	// Check for errors
 	if (err) {
 		const statusCode = err.code || 500; // Fallback to 500 if err.code is undefined
-		console.log(err.message);
 		return res.status(statusCode).json({ message: err.message });
 	}
 	// If the token is returned successfully
-	console.log(token);
 	return res.status(200).json({ token });
 });
 
@@ -89,17 +86,13 @@ router.get('/profile', cors(routeCorsOptions), async (req, res) => {
 
 	console.log("Authentication passed!");
 
-	console.log("payload after profile auth is: ", payload)
 	const userId = payload.id
-	const username = payload.username
-	console.log(userId, username)
 	const [err, profile] = await catchErrorTyped(getProfile(userId), [CustomError]);
 
 	if (err) {
 		return res.status(err.code).json({ message: err.message });
 	}
-
-	console.log("profile infos are: ", profile);
+	console.log("User profile retrived succesfully! Ready to return info...");
 	res.status(200).json(profile);
 });
 

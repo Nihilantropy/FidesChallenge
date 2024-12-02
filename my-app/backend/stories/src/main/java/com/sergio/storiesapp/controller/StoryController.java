@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/stories")
-@CrossOrigin(origins = { "http://localhost","https://localhost", "http://localhost:8000", "https://localhost:8000", "http://frontend-expo.default.svc.cluster.local:8081", "https://my-self-signed-domain.com", "http://my-self-signed-domain.com" }, allowedHeaders = {"Content-Type", "Authorization"}, methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8000", "https://localhost:8000", "http://frontend-expo.default.svc.cluster.local:8081", "https://my-self-signed-domain.com", "http://my-self-signed-domain.com" }, allowedHeaders = {"Content-Type", "Authorization"}, methods = {RequestMethod.GET, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS}, allowCredentials = "true")
 public class StoryController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
@@ -65,8 +65,6 @@ public class StoryController {
 			 return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
 		}
 	
-		logger.info("Received Authorization Token: {}", token);
-	
 		Map<String, Object>	storyInfoMap = new HashMap<>();
 
 		try {
@@ -103,8 +101,6 @@ public class StoryController {
 		catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		logger.info("full story map is {}", storyMap);
 
 		try {
 			// Create the story
@@ -154,15 +150,12 @@ public class StoryController {
 		}
 		int	storyId = storyIdL.intValue();
 
-		logger.debug("Starting updateStory method for storyId: {}", storyId);
-
 		// Step 1: Validate and Extract Token
 		String token = userService.isValidToken(authHeader);
 		if (token == null) {
 			logger.error("Invalid or missing Authorization header");
 			return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
 		}
-		logger.info("Received Authorization Token for updating story: {}", token);
 		logger.info("Attempting to authenticate user with token");
 
 		Map<String, Object>	authorMap = new HashMap<>(); 
@@ -184,9 +177,6 @@ public class StoryController {
 		catch (StoryUpdateException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-
-		logger.info("Story info map is {}", storyInfoMap);
-
 
 		try {
 			// Step 4: Check Story Ownership
@@ -239,8 +229,6 @@ public class StoryController {
             return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
         }
 
-		logger.info("Received Authorization Token for retrieving user stories: {}", token);
-
 		// Authenticate user
 		Map<String, Object> authorMap = userService.authenticateUser(token);
 		if (authorMap == null) {
@@ -251,8 +239,7 @@ public class StoryController {
 		try {
 			Integer authorId = (Integer) authorMap.get("author_id");
 			List<Map<String, Object>> userStories = storyService.getUserStoriesByAuthorId(authorId);
-	
-			logger.info("Stories retrieved for authorId {}: {}", authorId, userStories);
+
 			if (userStories.isEmpty()) {
 				return new ResponseEntity<>("No stories found for this user", HttpStatus.NO_CONTENT);
 			}
@@ -339,7 +326,6 @@ public class StoryController {
 		Optional<Map<String, Object>> storyData = storyService.getStoryById(storyId);
 		
 		if (storyData.isPresent()) {
-			logger.info("Story retrieved by ID {}: {}", storyId, storyData.get());
 			return new ResponseEntity<>(storyData.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("Story not found", HttpStatus.NOT_FOUND); // Story not found
@@ -366,15 +352,15 @@ public class StoryController {
 			logger.error("Invalid or missing Authorization header");
 			return new ResponseEntity<>("Authorization header is missing or invalid", HttpStatus.UNAUTHORIZED);
 		}
-
-		logger.info("Received Authorization Token for retrieving user stories: {}", token);
-
+		logger.info("Attempting to authenticate user with token");
 		// Authenticate user
 		Map<String, Object> authorMap = userService.authenticateUser(token);
 		if (authorMap == null) {
 			logger.error("Authentication failed: Invalid Authorization Token");
 			return new ResponseEntity<>("Invalid Authorization Token", HttpStatus.UNAUTHORIZED);
 		}
+		logger.info("Authentication passed");
+		logger.info("Proceed deleting story...");
 
 		try {
 			storyService.deleteStory(storyId, authorMap);

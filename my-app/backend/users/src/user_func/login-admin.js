@@ -9,8 +9,6 @@ async function loginAdmin(email, password) {
         throw new NoCredentialError(); // Throw NoCredentialError if either is missing
     }
 
-	console.log("Attempting to login admin:", email);  // Debug log
-
 	let admin;
 
 	// Handle fetch query error
@@ -26,8 +24,6 @@ async function loginAdmin(email, password) {
 	if (!admin) {
 		throw new InvalidCredentialsError(); // Use the custom error
 	}
-	
-	console.log("admin found:", admin);  // Debug log
 
 	const passwordMatch = await bcrypt.compare(password, admin.password); // Use bcrypt.compare here
 

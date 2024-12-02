@@ -4,7 +4,6 @@ import { ValidationError, ConflictError, DBFetchQueryError, InternalServerError 
 import { genToken } from '../middleware/genToken.js';
 
 async function createUser(userData) {
-	console.log(userData);
 	const { first_name, last_name, username, email, password } = userData;
 
 	// Validate required fields
@@ -53,14 +52,12 @@ async function createUser(userData) {
 		console.error("Error adding user:", e); // Log the actual error for debugging
 		throw new DBFetchQueryError('Error adding user to the database'); // Throw a custom error
 	}
-	console.log("user id is: ", userId)
 
 	console.log("creating user token for direct authentication");
 
 	// Generate a token
 	const payload = { id: userId, username: username, role_id: 2 };
 
-	const token = await genToken(payload);
 	if (!token) {
 		throw new InternalServerError();
 	}

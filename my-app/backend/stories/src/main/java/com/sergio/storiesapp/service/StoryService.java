@@ -96,10 +96,6 @@ public class StoryService {
 		String title = Optional.ofNullable(storyData.get("title")).orElse(null);
 		String content = Optional.ofNullable(storyData.get("content")).orElse(null);
 		String authorVisibleStr = Optional.ofNullable(storyData.get("author_visible")).orElse("false");
-
-		logger.info("title is={}", title);
-		logger.info("content is={}", content);
-
 		
 		try {
 			validateStoryData(title, content, authorVisibleStr, flag);
@@ -116,7 +112,6 @@ public class StoryService {
 
 		// Set authorVisible based on role and request data
 		Boolean authorVisible = Boolean.parseBoolean(authorVisibleStr);
-		logger.info("authorVisible as boolean is: {}", authorVisible);
 
 		// Set author_visible in the map
 		storyMap.put("author_visible", authorVisible);
@@ -158,14 +153,11 @@ public class StoryService {
 			story.setContent(content);
 			story.setAuthor(authorId, authorRoleId, authorName, authorVisible);
 			
-			logger.info("Story details before saving: {}", story);
 			try {
 				storyRepository.save(story);
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException(e.getMessage());
 			}
-
-			logger.info("Story saved successfully: ID={}, Title={}", story.getId(), title);
 			return true;
 		} catch (Exception e) {
 			logger.error("Failed to save story: {}", e.getMessage(), e);
@@ -254,7 +246,6 @@ public class StoryService {
 			if (story.getAuthorId() != authorId) {
 				throw new UnauthorizedDeleteException("This user is not the author of the story. Delete request rejected");
 			}
-			logger.info("requesting user and story author match. Proceeding delete story={}", storyId);
 
 			story.setRemovedAt(LocalDateTime.now());
 			storyRepository.save(story);

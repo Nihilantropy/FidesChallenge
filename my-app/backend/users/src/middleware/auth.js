@@ -34,8 +34,6 @@ export async function authenticate(req) {
 	if (!token) {
 		throw new TokenNotFound();
 	}
-
-	console.log("token sent by user is: ", token)
 	const payload = await verifyToken(token)
 	console.log("token verified!")
 	return payload.payload

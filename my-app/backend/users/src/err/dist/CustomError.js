@@ -22,7 +22,7 @@ export class UserNotFoundError extends CustomError {
 }
 export class InvalidCredentialsError extends CustomError {
     constructor() {
-        super('Credenziali errrate', 401);
+        super('Credenziali errate', 401);
     }
 }
 export class NoCredentialError extends CustomError {
@@ -31,7 +31,7 @@ export class NoCredentialError extends CustomError {
     }
 }
 export class TokenCreationError extends CustomError {
-    constructor(message = 'Fallita la creazione del token') {
+    constructor(message = 'Creazione del token fallita') {
         super(message, 500);
     }
 }
@@ -41,12 +41,12 @@ export class InvalidTokenError extends CustomError {
     }
 }
 export class TokenNotFound extends CustomError {
-    constructor(message = 'E richiesto un token') {
+    constructor(message = 'è richiesto un token') {
         super(message, 400);
     }
 }
 export class AuthHeaderNotFound extends CustomError {
-    constructor(message = 'E richiesto un token') {
+    constructor(message = 'è richiesto un token') {
         super(message, 401);
     }
 }
