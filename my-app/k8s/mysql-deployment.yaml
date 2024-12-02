@@ -17,11 +17,16 @@ spec:
       containers:
       - name: mysql
         image: my-app_db:latest
-        envFrom:
-          - secretRef:
-              name: db-credentials
-          - secretRef:
-              name: db-credentials-root
+        imagePullPolicy: Never
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: rootpassword
+        - name: MYSQL_DATABASE
+          value: myapp_db
+        - name: MYSQL_USER
+          value: mysql_user
+        - name: MYSQL_PASSWORD
+          value: userpassword
         ports:
         - containerPort: 3306
       volumes:

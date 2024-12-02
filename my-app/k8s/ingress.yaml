@@ -46,3 +46,11 @@ spec:
             name: backend-tts
             port:
               number: 5000
+      # Backend AI service
+      - path: /ai
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-ai
+            port:
+              number: 5001

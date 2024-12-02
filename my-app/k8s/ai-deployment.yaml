@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ia-backend-deployment
+  labels:
+    app: ia-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ia-app
+  template:
+    metadata:
+      labels:
+        app: ia-app
+    spec:
+      containers:
+      - name: ia-container
+        image: my-app_backend-ia:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5001
+        resources:
+          requests:
+            cpu: 400m   
+            memory: 512Mi  
+          limits:
+            cpu: 1000m   
+            memory: 1024Mi  
