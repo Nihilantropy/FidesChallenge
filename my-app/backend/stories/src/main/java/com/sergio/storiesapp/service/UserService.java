@@ -35,7 +35,6 @@ public class UserService {
 
 		// Extract the token part after "Bearer "
 		String token = authHeader.substring(7).trim();
-		logger.info("token is= {}", token);
 		return token.isEmpty() ? null : token;
 	}
 
