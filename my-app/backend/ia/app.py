@@ -3,7 +3,7 @@ from flask_cors import CORS
 import cohere
 
 app = Flask(__name__)
-CORS(app, origins=['http://localhost','https://localhost','https://my-self-signed-domain.com','http://my-self-signed-domain.com', 'http://frontend-expo.default.svc.cluster.local:8081', 'http://backend-stories'])  # Allow only requests from http://expo-service:8081
+CORS(app, origins=['http://localhost:8000','https://localhost:8000','https://my-self-signed-domain.com','http://my-self-signed-domain.com'])  # Allow only requests from http://expo-service:8081
 
 @app.route('/generatestory', methods=['POST'])
 def generatestory():
@@ -15,7 +15,7 @@ def generatestory():
         co = cohere.Client('B8tX61HuJFEFFANVAaKzq5EVe5EN1xOrl8iOR7F4')
         response = co.generate(
             model='c4ai-aya-expanse-32b',
-            prompt=data["prompt"]+" perfavare in italiano e di massimo 2000 carattiri. rispondemi con solo la storia e null'altro",
+            prompt="Sei il miglior di storie del mondo. Non su termini inappropriati. Non racconti storie razziste, omofobe, a carattere d'odio. Raccontami una storia basata sulla seguente richesta: " + data["prompt"] + ". Scrivi in italiano, massimo 2000 carattiri. rispondi solo con la storia e nient'altro.",
             max_tokens=3000,
             temperature=1,
             k=0,

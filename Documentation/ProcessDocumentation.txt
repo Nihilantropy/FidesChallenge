@@ -27,24 +27,35 @@ Backend-side:
 	5 - adding a /login-admin route to secure access to admins
 
 Adding nginx reverse-proxy to secure client-server communication
-	1 - downloading the latest image
-	2 - set up an nginx.conf file to work with the different microservices
-	3 - users will now only have to connect to the localhost default port 8000 to be redirected
+	1 - set up an nginx.conf file to work with the different microservices
+	2 - users will now only have to connect to the localhost default port 8000 to be redirected
 		to the frontend service
+	3 - implemented CORS, Header security, request security timeout and length
 
-Adding stories-service (4):
+Adding stories-service:
 	1 - using springboot, maven project for modularity, scalability and performances
 	2 - make the service connect to the db
 	3 - create basic and protected routes. the protected routes will have to authenticate the user to post or update stories.
 		The authentication will pass through the backend-users /profile route
 	
-Adding migration service (5):
+Adding migration service:
 	1 - migration ensure modular expantion of the database thanks to knex migrations
 	2 - seeds provide initial configuration over specific tables 
-	3 - the migration-service starts, try to connect to the db, when it connect run a db backup, then the migration scripts, updating
-		the db with the latest migration, then exit (0)
+	3 - the migration-service starts, try to connect to the db, when it connect run a db backup
 
 Fontend:
 	1 - creating a fast, and user frendly app layout
-	2 - ensure that the http request are made to teh correct routes
+	2 - ensure that the http request are made to the correct routes
+
+Adding TTS service:
+    1 - A text-to-speech AI model to translate written stories into speech.
+    2 - Secure user input handling, file management, storage, and removal.
+
+Adding AI service:
+	1 - An api call to an external ai model to automatically generate a story
+
+Importing the app on kubernetes (local development):
+	1 - Develop microk8s and minikube cluster for our application
+	2 - Work with ingress-controller to ensure a single-loadbalancer entrypoint
+	3 - setup sicrets for db credential, db-root credentials and users keys
 

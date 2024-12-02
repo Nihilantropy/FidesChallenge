@@ -212,4 +212,28 @@
 - **Response**:
   - none
 - **Return Status + JSON `{message}`**:
-  - ?
+  - **200 OK** - Success
+
+<=============================================================================================================>
+
+## ai Service (ai to generate stories)
+
+### CORS:
+  - **Allowed origin**: `http://expo-service:8081`, `http://localhost:8000`
+  - **Allowed methods**: `POST`
+  - **Allowed headers**: `Content-Type`
+
+### All requests must be sent to => `http://localhost:8000/generatestory`
+
+## Endpoints:
+
+### `/generatestory`(Create Story)
+- **Request Type**: `POST`
+- **Expected Info**:
+  - JSON `{ text }`
+- **Response**:
+  - none
+- **Return Status + JSON `{message}`**:
+  - **200 OK** - Success
+  - **400 BAD_REQUEST** - Prompt non fornito
+  - **500 INTERNAL_SERVER_ERROR** - errore interno

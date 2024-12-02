@@ -1,4 +1,6 @@
 Per far partire l'applicazione in docker compose:
--eseguire sul terminale: docker compose up --build
+-eseguire sul terminale:
 
-L'applicazione sara disponibile su: https://localhost:8000/
+** docker compose up --build **
+
+L'applicazione sara disponibile su: `https://localhost:8000/'

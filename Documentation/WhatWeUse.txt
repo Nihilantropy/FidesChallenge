@@ -1,0 +1,23 @@
+Infrastructure:
+	Kubernetes, Docker
+
+Frontend:
+	Nodejs:22-alpine3.19, expo:52.0.11, react-native:0.76.3
+
+Backend-db:
+	MySQL:8.0.27
+
+Backend-migration:
+	node:22-alpine3.19 knex:3.1.0
+
+Backend-users:
+	Nodejs:22-alpine3.19,  knex:3.1.0, Express:4.21.1
+	
+Backend-story:
+	Springboot:3.3.4, java:17.0.12
+
+Backend-tts:
+	python:3.9-slim
+
+Backend-ai:
+	python:3.9-slim

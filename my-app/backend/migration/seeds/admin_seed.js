@@ -11,7 +11,7 @@ export async function seed(knex) {
     let hashedPassword;
 
     try {
-      console.log("hashing password...", adminPassword)
+      console.log("hashing password...")
       hashedPassword = bcrypt.hashSync(adminPassword, 10);
       console.log("password hashed!")
 

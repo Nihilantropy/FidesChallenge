@@ -1,6 +1,3 @@
--- Create database
-CREATE DATABASE IF NOT EXISTS myapp_db;
-
 -- Create MySQL user with limited privileges (excluding `admins` table)
 CREATE USER 'mysql_user'@'%' IDENTIFIED BY 'userpassword';
 -- ALTER USER 'mysql_user'@'%' IDENTIFIED WITH mysql_native_password BY 'userpassword';

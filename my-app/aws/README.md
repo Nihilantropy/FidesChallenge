@@ -1,0 +1,1 @@
+This repo is to import local docker images into aws eks cloud registry.

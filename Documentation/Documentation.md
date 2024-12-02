@@ -32,7 +32,11 @@ https://umbraco.com/knowledge-base/http-status-codes/
 
 ### Kubernetes docs:
 
+**cluster development** https://kubernetes.io/docs/setup/
 **ingress nginx** https://kubernetes.github.io/ingress-nginx/deploy/#microk8s
+
+**AWS EKS deployment** https://docs.aws.amazon.com/eks/latest/userguide/eks-deployment-options.html
+
 
 
 

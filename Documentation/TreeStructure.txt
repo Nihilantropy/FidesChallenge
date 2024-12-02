@@ -1,0 +1,259 @@
+.
+├── aws
+│   ├── Makefile
+│   └── README.md
+├── backend
+│   ├── db
+│   │   ├── Dockerfile
+│   │   ├── initdb.d
+│   │   │   ├── 1_init_myapp_db.sql
+│   │   │   ├── 2_create_role_table.sql
+│   │   │   ├── 3_create_users_table.sql
+│   │   │   ├── 4_create_stories_table.sql
+│   │   │   ├── 5_create_admin_table.sql
+│   │   │   └── 6_create_mysql_user.sql
+│   │   └── my.cnf
+│   ├── ia
+│   │   ├── app.py
+│   │   ├── Dockerfile
+│   │   └── requirements.txt
+│   ├── migration
+│   │   ├── backup_data
+│   │   ├── backup.sh
+│   │   ├── Dockerfile
+│   │   ├── knexfile.js
+│   │   ├── migrations
+│   │   │   ├── 20240904095856_create_role_table.js
+│   │   │   ├── 20241014143239_create_users_table.js
+│   │   │   ├── 20241030181115_create_stories_table.js
+│   │   │   └──20241104094956_create_admin_table.js
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   ├── README.md
+│   │   ├── seeds
+│   │   │   └── admin_seed.js
+│   │   ├── src
+│   │   │   ├── database.js
+│   │   │   ├── destroyTable.js
+│   │   │   ├── healthcheck.js
+│   │   │   └── migrate.js
+│   │   └── TODO
+│   ├── stories
+│   │   ├── Dockerfile
+│   │   ├── mvnw
+│   │   ├── mvnw.cmd
+│   │   ├── pom.xml
+│   │   ├── README.md
+│   │   ├── src
+│   │   │   ├── main
+│   │   │   │   ├── java
+│   │   │   │   │   └── com
+│   │   │   │   │       └── sergio
+│   │   │   │   │           └── storiesapp
+│   │   │   │   │               ├── config
+│   │   │   │   │               │   ├── DatabaseConnectionManager.java
+│   │   │   │   │               │   └── HealthCheckSchedulerConfig.java
+│   │   │   │   │               ├── controller
+│   │   │   │   │               │   ├── HealthCheckController.java
+│   │   │   │   │               │   └── StoryController.java
+│   │   │   │   │               ├── exception
+│   │   │   │   │               │   ├── DatabaseException.java
+│   │   │   │   │               │   ├── DeleteStoryException.java
+│   │   │   │   │               │   ├── GlobalExceptionHandler.java
+│   │   │   │   │               │   ├── InvalidInputException.java
+│   │   │   │   │               │   ├── StoryCreationException.java
+│   │   │   │   │               │   ├── StoryNotFoundException.java
+│   │   │   │   │               │   ├── StoryUpdateException.java
+│   │   │   │   │               │   └── UnauthorizedDeleteException.java
+│   │   │   │   │               ├── model
+│   │   │   │   │               │   └── Story.java
+│   │   │   │   │               ├── repository
+│   │   │   │   │               │   └── StoryRepository.java
+│   │   │   │   │               ├── service
+│   │   │   │   │               │   ├── Sanitizer.java
+│   │   │   │   │               │   ├── StoryService.java
+│   │   │   │   │               │   └── UserService.java
+│   │   │   │   │               └── StoriesApplication.java
+│   │   │   │   └── resources
+│   │   │   │       └── application.properties
+│   │   │   └── test
+│   │   │       └── java
+│   │   │           └── com
+│   │   │               └── sergio
+│   │   │                   └── storiesapp
+│   │   │                       ├── resources
+│   │   │                       │   └── application-test.properties
+│   │   │                       └── StoryControllerTest.java
+│   │   ├── target
+│   │   │   ├── classes
+│   │   │   │   ├── application.properties
+│   │   │   │   └── com
+│   │   │   │       └── sergio
+│   │   │   │           └── storiesapp
+│   │   │   │               ├── config
+│   │   │   │               │   ├── DatabaseConnectionManager.class
+│   │   │   │               │   └── HealthCheckSchedulerConfig.class
+│   │   │   │               ├── controller
+│   │   │   │               │   ├── HealthCheckController.class
+│   │   │   │               │   └── StoryController.class
+│   │   │   │               ├── exception
+│   │   │   │               │   ├── DatabaseException.class
+│   │   │   │               │   ├── DeleteStoryException.class
+│   │   │   │               │   ├── GlobalExceptionHandler.class
+│   │   │   │               │   ├── InvalidInputException.class
+│   │   │   │               │   ├── StoryCreationException.class
+│   │   │   │               │   ├── StoryNotFoundException.class
+│   │   │   │               │   ├── StoryUpdateException.class
+│   │   │   │               │   └── UnauthorizedDeleteException.class
+│   │   │   │               ├── model
+│   │   │   │               │   └── Story.class
+│   │   │   │               ├── repository
+│   │   │   │               │   └── StoryRepository.class
+│   │   │   │               ├── service
+│   │   │   │               │   ├── Sanitizer.class
+│   │   │   │               │   ├── StoryService.class
+│   │   │   │               │   ├── UserService$1.class
+│   │   │   │               │   └── UserService.class
+│   │   │   │               └── StoriesApplication.class
+│   │   │   ├── generated-sources
+│   │   │   │   └── annotations
+│   │   │   ├── generated-test-sources
+│   │   │   │   └── test-annotations
+│   │   │   ├── maven-archiver
+│   │   │   │   └── pom.properties
+│   │   │   ├── maven-status
+│   │   │   │   └── maven-compiler-plugin
+│   │   │   │       ├── compile
+│   │   │   │       │   └── default-compile
+│   │   │   │       │       ├── createdFiles.lst
+│   │   │   │       │       └── inputFiles.lst
+│   │   │   │       └── testCompile
+│   │   │   │           └── default-testCompile
+│   │   │   │               ├── createdFiles.lst
+│   │   │   │               └── inputFiles.lst
+│   │   │   ├── stories-microservice-0.0.1-SNAPSHOT.jar
+│   │   │   ├── stories-microservice-0.0.1-SNAPSHOT.jar.original
+│   │   │   └── test-classes
+│   │   │       └── com
+│   │   │           └── sergio
+│   │   │               └── storiesapp
+│   │   │                   └── resources
+│   │   │                       └── application-test.properties
+│   │   ├── TODO
+│   │   └── wait-for-it.sh
+│   ├── tts
+│   │   ├── Dockerfile
+│   │   ├── pulizia.sh
+│   │   ├── requirements.txt
+│   │   └── tts_server.py
+│   └── users
+│       ├── Dockerfile
+│       ├── generateKeys.js
+│       ├── package.json
+│       ├── package-lock.json
+│       ├── README.md
+│       ├── src
+│       │   ├── app.js
+│       │   ├── database.js
+│       │   ├── err
+│       │   │   ├── catchError.ts
+│       │   │   ├── CustomError.ts
+│       │   │   └── dist
+│       │   │       ├── catchError.js
+│       │   │       └── CustomError.js
+│       │   ├── healthcheck.js
+│       │   ├── index.js
+│       │   ├── knexfile.js
+│       │   ├── middleware
+│       │   │   ├── auth.js
+│       │   │   └── genToken.js
+│       │   ├── user_func
+│       │   │   ├── createUser.js
+│       │   │   ├── deleteUser.js
+│       │   │   ├── getProfile.js
+│       │   │   ├── login-admin.js
+│       │   │   └── login.js
+│       │   └── users.js
+│       ├── TODO
+│       └── tsconfig.json
+├── docker-compose.yml
+├── frontend
+│   ├── Dockerfile
+│   └── sergio
+│       ├── app
+│       │   ├── assets
+│       │   │   ├── img
+│       │   │   │   └── favicon.png
+│       │   │   └── style
+│       │   │       └── main.js
+│       │   ├── components
+│       │   │   ├── FooterApp.js
+│       │   │   ├── FooterWeb.js
+│       │   │   ├── Navbar.js
+│       │   │   ├── PupupDelStory.js
+│       │   │   ├── PupupErr.js
+│       │   │   └── PupupFunBlock.js
+│       │   ├── libreri
+│       │   │   ├── Storage
+│       │   │   │   ├── Mobile.js
+│       │   │   │   └── Web.js
+│       │   │   └── Suond
+│       │   │       ├── Mobile.js
+│       │   │       └── Web.js
+│       │   └── pages
+│       │       ├── Home.js
+│       │       ├── Story
+│       │       │   ├── HomeMyStory.js
+│       │       │   ├── HomeStory.js
+│       │       │   ├── LeggiStory.js
+│       │       │   ├── LeggiStoryU.js
+│       │       │   ├── ModStory.js
+│       │       │   ├── NewStory.js
+│       │       │   └── zz_LibStory.js
+│       │       └── Utenti
+│       │           ├── Accesso.js
+│       │           ├── Delete.js
+│       │           ├── Profilo.js
+│       │           ├── Registati.js
+│       │           └── zz_LibUtenti.js
+│       ├── App.js
+│       ├── app.json
+│       ├── babel.config.js
+│       ├── package.json
+│       └── package-lock.json
+├── k8s
+│   ├── db-credentials-root-secret.yaml
+│   ├── db-credentials-secret.yaml
+│   ├── frontend-configmap.yaml
+│   ├── frontend-deployment.yaml
+│   ├── frontend-service.yaml
+│   ├── ingress.yaml
+│   ├── migration-deployment.yaml
+│   ├── mysql-deployment.yaml
+│   ├── mysql-pvc.yaml
+│   ├── mysql-pv.yaml
+│   ├── mysql-service.yaml
+│   ├── proxy-deployment.yaml
+│   ├── proxy-service.yaml
+│   ├── README.md
+│   ├── stories-deployment.yaml
+│   ├── stories-service.yaml
+│   ├── tts-deployment.yaml
+│   ├── tts-service.yaml
+│   ├── users-deployment.yaml
+│   ├── users-secret.yaml
+│   └── users-service.yaml
+├── Makefile
+├── proxy
+│   ├── Dockerfile
+│   ├── log
+│   ├── nginx
+│   │   └── nginx.conf
+│   └── REAMDE.md
+├── README.md
+├── self-signed-tls
+│   ├── self-signed-tls.crt
+│   └── self-signed-tls.key
+└── setup_minikube.sh
+
+83 directories, 175 files
