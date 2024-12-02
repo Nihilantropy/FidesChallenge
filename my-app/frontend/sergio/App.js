@@ -98,6 +98,12 @@ export default function App() {
   const modificaFunction = useRef(null);
   const setModificaFunction = (fn) => { modificaFunction.current = fn; };
 
+  /* ====== Ferma audio ====== */
+  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./app/libreri/Suond/Web.js') : require('./app/libreri/Suond/Mobile.js');
+  useEffect(() => {
+    pauseAudio();
+  }, [visiblePage]);
+  
   return (
     <View style={styles.body}>
       { Platform.OS === 'web' && <Navbar showPage={showPage} gshowPage={gshowPage} /> }

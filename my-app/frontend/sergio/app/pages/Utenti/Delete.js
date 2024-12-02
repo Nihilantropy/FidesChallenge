@@ -12,7 +12,6 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         return ;
     }
 
-
     const [Motivo, setMotivo] = useState('');
     const [height, setHeight] = useState(100);
     const handleTextChange = (text) => {
@@ -25,7 +24,13 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         else if (Motivo.length === 0) setHeight(100);
     };
 
+    const [abilitato, setabilitato] = useState(true);
+
     async function elimina() {
+        if(abilitato==false)
+            return;
+        setabilitato(false);
+
         const api_url = process.env.EXPO_PUBLIC_URL_USERS + "delete";
         fetch(api_url, {
             method: 'DELETE',
@@ -58,7 +63,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         <View style={styles.stacca}>
             <ScrollView>
                 <View style={styles.box}>
-                    <View><Text style={styles.titoli}>Sei sicuro, mi devo dimenticare di te? 😨</Text></View>
+                    <View><Text style={styles.titoli}>Sei sicuro? Mi devo dimenticare di te 😨</Text></View>
                     <View><Text style={styles.testi}>L'operazione non e reversibile</Text></View>
                     <Text>{"\n"}</Text>
                     <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 100, height: height, width: '50%' }]} placeholder="Raccontami cos'e successo? *Opzionale" value={Motivo} onChangeText={handleTextChange} />

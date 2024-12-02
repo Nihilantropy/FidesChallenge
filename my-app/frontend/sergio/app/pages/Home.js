@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View,Text,Pressable,ScrollView,Platform,Linking } from 'react-native';
 import styles from './../assets/style/main.js';
 import QRCode from 'react-native-qrcode-svg';

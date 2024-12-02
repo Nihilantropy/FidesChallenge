@@ -15,7 +15,14 @@ const Registati = ({ showPage,sJWTtoken }) => {
     const [confpassword, setConfpassword] = useState('');
     const [errorText, setErrorText] = useState('');
 
+    
+    const [abilitato, setabilitato] = useState(true);
+
     const registati = async () => {
+        if(abilitato==false)
+            return;
+        setabilitato(false);
+
         /* ====== Basic Check ====== */
         setErrorText("");
         if (email === '' || nome === '' || cognome === '' || nickname === '' || password === '' || confpassword === '') {

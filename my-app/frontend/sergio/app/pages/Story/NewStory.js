@@ -80,7 +80,13 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
   const [titolo, settitolo] = useState('');
   const gtitolo = (page) => { return titolo; };
   
+  const [abilitato, setabilitato] = useState(true);
+
   function crea_storia() {
+    if(abilitato==false)
+      return;
+    setabilitato(false);
+
     /* ====== Basic Check ====== */
     if (story === '' || titolo === '') {
       sShowErr("Completa tutti i campi prima di proseguire");

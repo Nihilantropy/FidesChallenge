@@ -1,17 +1,12 @@
 import React, {useState,useEffect} from 'react';
-import { View,Text,Pressable,ScrollView,Image,Platform,TextInput } from 'react-native';
+import { View,Text,Pressable,ScrollView,Image,TextInput,Platform } from 'react-native';
+import SuondCtl from './../../libreri/Suond/SuondCtl.js';
 import styles from './../../assets/style/main.js';
 
 const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sShowErr }) => {
-  if (azione === 'preferito' && gJWTtoken() === '') {
-    setPage('');
-    setPupup(true);
-    sShowPopupFB(true);
-    return;
-  }
-
   const [stori, setStori] = useState('');
   const [disponibili, setdisponibili] = useState(1);
+
   async function get_story(){
     const api_url = process.env.EXPO_PUBLIC_URL_STORIES+ "random";
     fetch(api_url, {
@@ -29,13 +24,13 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       } else if (status == 204){
         setdisponibili(0);
       } else {
-        sShowErr("Scusami sono stanco 🥱"+status);
+        sShowErr("Scusami sono stanco 🥱");
         setPupup(true);
         setPage('');
       }
     })
     .catch(error => {
-      sShowErr("Scusami sono stanco 🥱"+error);
+      sShowErr("Scusami sono stanco 🥱");
       setPupup(true);
       setPage('');
     });
@@ -44,35 +39,6 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
     get_story();
   }, []);
 
-  const [Preferiti, setPreferiti] = useState(false);
-
-  // Funzioni per audio
-  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../../libreri/Suond/Web') : require('./../../libreri/Suond/Mobile');
-  const [statorip, setStato] = useState('unset');
-  async function speakText(text,id,mod) {
-    try {
-      const api_url = process.env.EXPO_PUBLIC_URL_TTS + "speak";
-      const response = await fetch(api_url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: text,
-          modify: mod,
-          language: 'it',
-          id: id
-        })
-      });
-      if (!response.ok){throw new Error(response.statusText);}
-      await setupPlayer(await response.blob(), setStato);
-      setStato('play');
-      playAudio();
-    } catch (error) {
-      console.log(error);
-      sShowErr("Errore nella lettura");
-      setStato('unset');
-    }
-  }
-  const [Velocita, setVelocita] = useState('x1');
   return (
     <View>
       { disponibili == 0 && (
@@ -85,20 +51,7 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
           <Text style={[styles.testi, styles.sinistra]}>{stori.content}</Text>
           { stori.author_visible == true && (<View style={{ alignSelf: 'flex-end' }}><Text style={styles.testi}>Storia by {stori.author_name}</Text></View>) }
           <Text>{"\n\n"}</Text>
-          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),get_story(),setVelocita('x1')}}><Text style={styles.testi}>Raccontami un'altra storia</Text></Pressable>
-          <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-            {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(stori.content,stori.id,stori.updated_at)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-            {statorip == 'play' && (
-              <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-                <Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXklEQVR4nO3SoRHAMAwEQRmmqfTflUO+AIN30O6MoIBGNwMAP3rWu0/m1n6NQ8JH2qQV0mqTVkirTVohrTZphbTapBXSapNWSKtNWiGtNmmFtNqkFdJqk1ZICwDmng90pWTGMlhjngAAAABJRU5ErkJggg==' }} /></Pressable>
-                {Velocita == 'x1' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1.5),setVelocita('x1.5')}}><Text style={styles.testi}>x1</Text></Pressable>)}
-                {Velocita == 'x1.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(2),setVelocita('x2')}}><Text style={styles.testi}>x1.5</Text></Pressable>)}
-                {Velocita == 'x2' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(0.5),setVelocita('x0.5')}}><Text style={styles.testi}>x2</Text></Pressable>)}
-                {Velocita == 'x0.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1),setVelocita('x1')}}><Text style={styles.testi}>x0.5</Text></Pressable>)}
-              </View>
-            )}
-            {statorip == 'pause' && (<Pressable style={styles.testi} onPress={() => {playAudio(),setStato('play')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-          </View>
+          <SuondCtl sShowErr={sShowErr} get_story={get_story} inventa={false} storie={true} testo={stori.content} id={stori.id} modificato={stori.updated_at} />
         </View>
       )}
     </View>
@@ -163,32 +116,6 @@ const Inventa = ({ sShowErr }) => {
     });
   }
 
-  // Funzioni per audio
-  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../../libreri/Suond/Web') : require('./../../libreri/Suond/Mobile');
-  const [statorip, setStato] = useState('unset');
-  async function speakText(text,id) {
-    try {
-      const api_url = process.env.EXPO_PUBLIC_URL_TTS + "speak";
-      const response = await fetch(api_url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: text,
-          language: 'it',
-          id: id
-        })
-      });
-      if (!response.ok){throw new Error(response.statusText);}
-      await setupPlayer(await response.blob(), setStato);
-      setStato('play');
-      playAudio();
-    } catch (error) {
-      sShowErr("Errore nella lettura");
-      setStato('unset');
-    }
-  }
-  const [Velocita, setVelocita] = useState('x1');
-
   return (
     <View style={styles.box}>
       {Storia == '' && genera==1 && (
@@ -217,21 +144,7 @@ const Inventa = ({ sShowErr }) => {
           <Text>{"\n"}</Text>
           <Text style={styles.testi}>{Storia}</Text>
           <Text>{"\n"}{"\n"}</Text>
-          <Pressable style={styles.bottoni} onPress={() => {pauseAudio(),setStato('unset'),setStoria(''),setgenera(1);}}><Text style={styles.testi}>Voglio un'altra storia</Text></Pressable>
-          <Text>{"\n"}</Text>
-          <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-            {statorip == 'unset' && (<Pressable style={styles.testi} onPress={() => speakText(Storia,-1)}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-            {statorip == 'play' && (
-              <View style={[styles.rowpuro, {justifyContent: 'space-between',alignSelf: 'flex-start'}]}>
-                <Pressable style={styles.testi} onPress={() => {pauseAudio(),setStato('pause')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAXklEQVR4nO3SoRHAMAwEQRmmqfTflUO+AIN30O6MoIBGNwMAP3rWu0/m1n6NQ8JH2qQV0mqTVkirTVohrTZphbTapBXSapNWSKtNWiGtNmmFtNqkFdJqk1ZICwDmng90pWTGMlhjngAAAABJRU5ErkJggg==' }} /></Pressable>
-                {Velocita == 'x1' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1.5),setVelocita('x1.5')}}><Text style={styles.testi}>x1</Text></Pressable>)}
-                {Velocita == 'x1.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(2),setVelocita('x2')}}><Text style={styles.testi}>x1.5</Text></Pressable>)}
-                {Velocita == 'x2' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(0.5),setVelocita('x0.5')}}><Text style={styles.testi}>x2</Text></Pressable>)}
-                {Velocita == 'x0.5' && (<Pressable style={styles.testi} onPress={() => {setPlaybackRate(1),setVelocita('x1')}}><Text style={styles.testi}>x0.5</Text></Pressable>)}
-              </View>
-            )}
-            {statorip == 'pause' && (<Pressable style={styles.testi} onPress={() => {playAudio(),setStato('play')}}><Image style={styles.foto} source={{ uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO2ZoU4EQQyG/4bAtXA4LAaJwOBg27MEj+UVEPAAvAISi8TyAvcC8ABoLA6zIdyQsEcODTOz26VfUrvJl91O/+kCQRAEP2HoFbC/Ae8IWRLS503YKfyL2Fcx2cMEzR68i0hXLZPeAEfbcC6SurejLww7B0DwLCKrmm+hOcAIRJKQfQjp3RSzHTgXScvD4FVgF8DZGjyLyKp/nhjNMbyLSFcLIb1n6C6ci6TlMH0T6DVwMnEuYmkQ6UCyifScDiSzSG/pQMqI1E8HUlCkajqQOiJJSN+Z9LZYOqgnYmXTQW0RKZUO+hKR3OkgROjPvfLo+tNi/82uozh+564H4hgiStuFxtm0uMA3BZrZe4xX7xcrdX/VXbhfPnDuqZyDf7ag07JTuZKI7yU2j+C3Qlt9KudgEFM5B4OYyjlg2CVwuJ7lYUEQBPglnzPzXbO9BvL7AAAAAElFTkSuQmCC' }} /></Pressable>)}
-          </View>
+          <SuondCtl sShowErr={sShowErr} setStoria={setStoria} setgenera={setgenera} inventa={true} storie={false} testo={Storia} id={-1} modificato={"-"} />
         </View>
       )}
     </View>
@@ -303,6 +216,12 @@ const LastStory = ({ showPage,sid }) => {
 const HomeStory = ({ showPage, gJWTtoken,sShowPopupFB,sShowErr,sid }) => {
   const [Page, setPage] = useState('');
   const [Pupup, setPupup] = useState(true);
+
+  /* ====== Ferma audio ====== */
+  const { setupPlayer, playAudio, pauseAudio, setPlaybackRate } = Platform.OS === 'web' ? require('./../../libreri/Suond/Web.js') : require('./../../libreri/Suond/Mobile.js');
+  useEffect(() => {
+    pauseAudio();
+  }, [Page]);
 
   return (
     <View style={styles.stacca}>

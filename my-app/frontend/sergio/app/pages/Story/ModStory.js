@@ -99,7 +99,13 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     fetchData();
   }, []);
 
+  const [abilitato, setabilitato] = useState(true);
+
   function modifica_storia() {
+    if(abilitato==false)
+      return;
+    setabilitato(false);
+
     /* ====== Basic Check ====== */
     if (story === '' || titolo === '') {
       sShowErr("Completa tutti i campi prima di proseguire");

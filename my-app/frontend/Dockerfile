@@ -8,7 +8,7 @@ WORKDIR /opt/my-app/sergio
 COPY ./sergio /opt/my-app/sergio
 
 # Install dependencies in /opt/my-app/sergio
-RUN npm install
+# RUN npm install
 
 # Expose necessary ports
 EXPOSE 8081 19000 19001 19002
