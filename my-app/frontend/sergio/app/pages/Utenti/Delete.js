@@ -12,6 +12,7 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         return ;
     }
 
+
     const [Motivo, setMotivo] = useState('');
     const [height, setHeight] = useState(100);
     const handleTextChange = (text) => {
@@ -25,7 +26,8 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
     };
 
     async function elimina() {
-        fetch("http://localhost:8000/users/delete", {
+        const api_url = process.env.EXPO_PUBLIC_URL_USERS + "delete";
+        fetch(api_url, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,15 +58,15 @@ const Delete = ({ showPage,sJWTtoken,gJWTtoken,sShowErr }) => {
         <View style={styles.stacca}>
             <ScrollView>
                 <View style={styles.box}>
-                    <View><Text style={styles.titoli}>Vuoi davvero cancellare il tuo profilo?</Text></View>
+                    <View><Text style={styles.titoli}>Sei sicuro, mi devo dimenticare di te? 😨</Text></View>
                     <View><Text style={styles.testi}>L'operazione non e reversibile</Text></View>
                     <Text>{"\n"}</Text>
-                    <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 100, height: height, width: '50%' }]} placeholder="Raccontarci cosa sia successo? *Opzionale" value={Motivo} onChangeText={handleTextChange} />
+                    <TextInput onContentSizeChange={handleContentSizeChange} multiline={true} spellCheck={false} style={[styles.textarea, { minHeight: 100, height: height, width: '50%' }]} placeholder="Raccontami cos'e successo? *Opzionale" value={Motivo} onChangeText={handleTextChange} />
                     <Text>{"\n"}</Text>
                     <View style={styles.rowpuro}>
-                        <Pressable onPress={() => { showPage(6) }}><Text style={styles.link}>Annulla</Text></Pressable>
+                        <Pressable onPress={() => { showPage(6) }}><Text style={styles.link}>❤️ Annulla</Text></Pressable>
                         <Text>                  </Text>
-                        <Pressable onPress={() => { elimina(); }}><Text style={styles.link}>Procedi</Text></Pressable>
+                        <Pressable onPress={() => { elimina(); }}><Text style={styles.link}>Procedi 💔</Text></Pressable>
                     </View>
                 </View>
             </ScrollView>

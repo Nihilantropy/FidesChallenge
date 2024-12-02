@@ -7,6 +7,7 @@ const { storeToken, getToken, removeToken } = Platform.OS === 'web' ? require('.
 const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
     const [jsonData, setJsonData] = useState([{email: '', first_name: '', last_name: '', username: ''}]);
     const [disponibili, setdisponibili] = useState(1);
+
     useEffect(() => {
         /* Fuori se non loggato */
         if (gJWTtoken() == ''){
@@ -17,7 +18,8 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
 
         /* Ricerca info */
         const getdata = async () => {
-            fetch("http://localhost:8000/users/profile", {
+            const api_url = process.env.EXPO_PUBLIC_URL_USERS + "profile";
+            fetch(api_url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,9 +60,9 @@ const Profilo = ({ showPage,sJWTtoken,gJWTtoken, sShowPopupFB }) => {
                                 <Text style={styles.testi}>Nickname: {jsonData.username}</Text>
                             </View>
                             <Text style={styles.titoli}>{"\n"}</Text>
-                            <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Mostra le mie storie</Text></Pressable>
-                            <Pressable onPress={() => showPage(9)}><Text style={styles.link}>Elimina il mio account</Text></Pressable>
-                            <Pressable onPress={() => {removeToken(),sJWTtoken(''),showPage(1)}}><Text style={styles.link}>Esci</Text></Pressable>
+                            <Pressable onPress={() => showPage(7)}><Text style={styles.link}>📚Mostra le mie storie</Text></Pressable>
+                            <Pressable onPress={() => showPage(9)}><Text style={styles.link}>💔Elimina il mio account</Text></Pressable>
+                            <Pressable onPress={() => {removeToken(),sJWTtoken(''),showPage(1)}}><Text style={styles.link}>🚪Esci</Text></Pressable>
                         </View>
                     </View>
                 </ScrollView>

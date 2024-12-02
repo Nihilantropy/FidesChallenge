@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tts-app
+  name: tts-backend-deployment
   labels:
     app: tts-app
 spec:
@@ -16,10 +16,7 @@ spec:
     spec:
       containers:
         - name: tts-container
-          image: my-app-backend-tts
+          image: my-app_backend-tts:latest
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
-          env:
-            - name: FLASK_ENV
-              value: "production"  # Imposta il livello di ambiente, se necessario

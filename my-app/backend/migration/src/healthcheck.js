@@ -18,7 +18,7 @@ export async function checkDatabaseConnection() {
 
 /**
  * Start the health check process.
- * The service attempts to reconnect to the database every second for 60 seconds.
+ * The service attempts to reconnect to the database every second for * seconds.
  */
 export async function healthCheck() {
     const dbIsUp = await checkDatabaseConnection();
@@ -27,7 +27,7 @@ export async function healthCheck() {
         let attempts = 0;
 
         // Attempt to reconnect every second for up to 60 seconds
-        while (attempts < 300) {
+        while (attempts < 3000) {
             if (await checkDatabaseConnection()) {
                 console.log('Database is now up!');
                 return; // Exit if connected

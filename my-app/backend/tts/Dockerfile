@@ -1,22 +1,18 @@
 # Usa un'immagine Python come base
-FROM python:3.9
+FROM python:3.9-slim
 
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia tutti i file
-COPY . /app
+# Copia i file di requirements e installa le dipendenze
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-RUN apt-get update && \
-    apt-get install -y cron dos2unix && \
-    echo "*/0 0 * * * sh /app/pulizia.sh >> /var/log/cron.log 2>&1" > /etc/cron.d/your-cron-job && \
-    echo "" >> /etc/cron.d/your-cron-job && \
-    chmod 0644 /etc/cron.d/your-cron-job && \
-    dos2unix /app/pulizia.sh && chmod +x /app/pulizia.sh && \
-    pip install gtts flask flask_cors
+# Copia il file tts_server.py nell'immagine
+COPY tts_server.py .
 
 # Espone la porta 5000 per Flask
-EXPOSE 5000
+EXPOSE 5001
 
-# Comando per avviare l'app e il cron job
-CMD service cron start && python3 tts_server.py
+# Comando per avviare l'app
+CMD ["python", "tts_server.py"]

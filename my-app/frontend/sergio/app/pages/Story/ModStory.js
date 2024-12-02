@@ -18,7 +18,7 @@ const Content_web = ({ showPage,modifica_storia,setStory,story,gtitolo,settitolo
       <View style={styles.box}>
         <View style={{alignSelf: 'flex-start'}}><Text style={styles.titoli}>Modifica Storia</Text></View>
         <View style={[styles.rowpuro, {alignSelf: 'flex-end'}]}>
-          <Pressable onPress={() => showPage(2)}><Text style={styles.link}>Annulla</Text></Pressable>
+          <Pressable onPress={() => showPage(7)}><Text style={styles.link}>Annulla</Text></Pressable>
           <Text style={styles.testi}> | </Text>
           <Pressable onPress={modifica_storia}><Text style={styles.link}>Racconta</Text></Pressable>
         </View>
@@ -71,7 +71,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
 
   useEffect(() => {
     const fetchData = async () => {
-      fetch("http://localhost:8000/stories/"+gid(), {
+      const api_url = process.env.EXPO_PUBLIC_URL_STORIES + gid();
+      fetch(api_url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +116,8 @@ const ModStory = ({ gid,showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowEr
     }
     
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/"+gid(), {
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES + gid();
+    fetch(api_url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

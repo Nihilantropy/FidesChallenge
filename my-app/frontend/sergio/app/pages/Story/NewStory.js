@@ -96,8 +96,10 @@ const NewStory = ({ showPage,gJWTtoken,sShowPopupFB,setInviaFunction,sShowErr })
       return;
     }
 
+
     /* ====== Send post ====== */
-    fetch("http://localhost:8000/stories/", {
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES;
+    fetch(api_url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

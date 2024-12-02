@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: stories-microservice
+  name: backend-stories
+  labels:
+    app: stories-app
 spec:
   selector:
-    app: stories-microservice
+    app: stories-app
   ports:
-  - protocol: TCP
-    port: 8080  # Porta su cui il servizio sarà accessibile
-    targetPort: 8080  # Porta sul container
-  type: ClusterIP  # Modifica se desideri un altro tipo di servizio, come NodePort o LoadBalancer
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  type: ClusterIP

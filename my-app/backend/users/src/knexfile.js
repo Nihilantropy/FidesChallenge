@@ -11,12 +11,5 @@ export default {
       database: process.env.MYSQL_DATABASE,
       port: process.env.MYSQL_PORT
     },
-    pool: { min: 0, max: 7 },
-    migrations: {
-      directory: './migrations/'
-    },
-    seeds: {
-      directory: './seeds/'
-    }
   }
 };

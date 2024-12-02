@@ -21,9 +21,9 @@ public interface StoryRepository extends JpaRepository<Story, Integer> {
      * Finds all stories by a specific story title.
      * 
      * @param title the title of the story
-     * @return a list of stories by the given title
+     * @return the story with the given title
      */
-    List<Story> findByTitle(String title);
+    Story findByTitle(String title);
 
     /**
      * Finds all stories ordered by creation date in descending order.

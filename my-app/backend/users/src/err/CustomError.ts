@@ -22,54 +22,54 @@ export class ConflictError extends CustomError {
 
 export class UserNotFoundError extends CustomError {
 	constructor() {
-		super('User not found', 404);
+		super('Utente non trovato', 404);
 	}
 }
 
 export class InvalidCredentialsError extends CustomError {
 	constructor() {
-		super('Invalid email or password', 401);
+		super('Credenziali errrate', 401);
 	}
 }
 
 export class NoCredentialError extends CustomError {
     constructor() {
-        super('No credentials provided', 400);
+        super('Le credenzil sono richieste', 400);
     }
 }
 
 export class TokenCreationError extends CustomError {
-	constructor(message: string = 'Error creating login token') {
+	constructor(message: string = 'Fallita la creazione del token') {
 		super(message, 500);
 	}
 }
 
 export class InvalidTokenError extends CustomError {
-	constructor(message: string = 'Invalid or expired token') {
+	constructor(message: string = 'Token invalido o scaduto') {
 		super(message, 401);
 	}
 }
 
 export class TokenNotFound extends CustomError {
-	constructor(message: string = 'Error: no token provided') {
+	constructor(message: string = 'E richiesto un token') {
 		super(message, 400);
 	}
 }
 
 export class AuthHeaderNotFound extends CustomError {
-	constructor(message: string = 'Protected routes require authorization header with token') {
+	constructor(message: string = 'E richiesto un token') {
 		super(message, 401);
 	}
 }
 
 export class DBFetchQueryError extends CustomError {
-	constructor(message: string = 'Database fetch query error') {
+	constructor(message: string = 'Errore nella query nel db') {
 		super(message, 500);
 	}
 }
 
 export class InternalServerError extends CustomError {
-	constructor(message: string = 'Internal server error') {
+	constructor(message: string = 'Errore interno') {
 		super(message, 500);
 	}
 }

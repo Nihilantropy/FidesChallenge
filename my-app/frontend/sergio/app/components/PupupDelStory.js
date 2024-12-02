@@ -4,7 +4,8 @@ import styles from './../assets/style/main.js';
 
 const PupupDelStory = ({ sShowPopupES,sShowErr,gid,gJWTtoken }) => {
   function elimina() {
-    fetch("http://localhost:8000/stories/"+gid(), {
+    const api_url = process.env.EXPO_PUBLIC_URL_STORIES + gid();
+    fetch(api_url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
