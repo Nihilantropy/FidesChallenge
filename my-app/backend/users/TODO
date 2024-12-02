@@ -64,3 +64,5 @@
 ---
 
 This TODO list outlines the current implementation of the Users Service with **mandatory routes** focused on essential user management functionalities, while the **plus routes** offer potential enhancements for user experience and admin capabilities if time permits. This organized approach will help ensure a systematic implementation process.
+
+Handle the **Why are you deleting your account** reason in a dedicated db place
