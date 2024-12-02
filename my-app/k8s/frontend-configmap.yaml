@@ -7,3 +7,5 @@ data:
   EXPO_PUBLIC_URL_USERS: "https://my-self-signed-domain.com/users/"
   EXPO_PUBLIC_URL_STORIES: "https://my-self-signed-domain.com/stories/"
   EXPO_PUBLIC_URL_TTS: "https://my-self-signed-domain.com/"
+  EXPO_PUBLIC_URL_AI: "https://my-self-signed-domain.com/"
+

@@ -18,7 +18,6 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 8081
-        env:
         envFrom:
         - configMapRef:
             name: expo-service-urls
