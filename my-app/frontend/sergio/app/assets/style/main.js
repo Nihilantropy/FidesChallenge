@@ -36,8 +36,8 @@ fondonero: {zIndex: 40,backgroundColor: 'rgba(10, 10, 10, 0.7)',position: 'absol
 credenziali: {padding: 5,borderBottomWidth: 3,borderBottomColor: 'white',marginTop: 10,width: '100%',...colortesti},
 textarea: {textAlignVertical: 'top',padding: 5,width: '100%',marginTop: 10,...bordbase,...colortesti},
 bottoni: {borderRadius: 10,borderWidth: 3,borderColor: 'white',marginTop: 10,padding: 10,...background},
-col1: {width: 'auto',margin: 10},
-col2: {width: 'auto'},
+col1: {margin: 10},
+col2: {},
 homestoryele: {},
 foto: {},
 foto2: {},
@@ -60,6 +60,8 @@ if(width > 600){
     regole.foto3={width: 70,height: 70};
     regole.box3={...regole.box3,marginLeft: 20,width: width/2.5};
     regole.homestoryele={...regole.homestoryele,flexDirection: 'row'};
+    regole.col1={...regole.col1,width: 'auto'}
+    regole.col2={...regole.col2,width: 'auto'}
 }else{
     /* ===== Piccoli schermi ===== */
     regole.testi={...regole.testi,fontSize: 20};
@@ -78,6 +80,8 @@ if(width > 600){
     regole.box2={...regole.box2,width: width-10};
     regole.box3={...regole.box3,marginLeft: 5,width: width-10};
     regole.homestoryele={...regole.homestoryele};
+    regole.col1={...regole.col1,width: width-10}
+    regole.col2={...regole.col2,width: width-10}
 }
 
 if(Platform.OS === 'web'){

@@ -1,14 +1,48 @@
 ##################### Kubernetes ##################### 
 
+############# minikube #############
 
-d: 
-	docker compose build --parallel
-	docker compose up
+mini-init:
+	@make mini-start
+	@make mini-ingress
+	@make mini-tls-secret
 
+mini-start:
+	@echo "Starting minikube cluster..."
+	@minikube start
+	@echo "minikube cluster started!"
+
+mini-ingress:
+	@echo "Enebling minikube ingress addon..."
+	@minikube addons enable ingress
+	@echo "ingress enabled!"
+
+mini-tls-secret:
+	@echo "Creating tls secret..."
+	@kubectl create secret tls self-signed-tls \
+		--cert=self-signed-tls/self-signed-tls.crt \
+		--key=self-signed-tls/self-signed-tls.key
+	@echo "Secret created!"
+
+mini-images:
+	@echo "Building docker images..."
+	@docker-compose build --parallel
+	@echo "Done!"
+	@make mini-import
+	
+mini-import:
+	@echo "Importing docker images into minikube repository..."
+	@sh setup_minikube.sh
+	@echo "All images imported correctly!"
+
+mini-status:
+	@kubectl get pod -A
+
+############# microk8s #############
 
 # Variables
 MICROK8S_CMD = sudo microk8s
-KUBECTL_CMD = sudo microk8s kubectl
+KUBECTL_CMD = kubectl
 K8S_NAMESPACES_DIR = k8s/namespaces
 K8S_POLICY_DIR = k8s/policy
 K8S_ISSUER_DIR = k8s/issuer
@@ -48,7 +82,7 @@ kube-reset:
 	@echo "Cluster correctly reset"
 	@echo "Initializing MicroK8s and enabling add-ons..."
 	@make kube-init
-	@kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+	# @kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 
 kube-delete:
 	@echo "Deleting all PODS in the default namespace..."
@@ -109,21 +143,7 @@ kube-import:
 
 # ignoring --- using custom proxy-service instead
 ingress:
-	@echo "Setup for nginx-ingress controller..."
-	@mkdir -p ${NGINX_INGRESS_PATH}/manifests
-	@helm template ingress-nginx ingress-nginx \
-		--repo https://kubernetes.github.io/ingress-nginx \
-		--version ${NGINX_INGRESS_CHART_VERSION} \
-		--namespace ingress-nginx \
-		> ${NGINX_INGRESS_PATH}/manifests/nginx-ingress.${NGINX_INGRESS_APP_VERSION}.yaml
-	@helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
-		--namespace ingress-nginx \
-  		--set controller.admissionWebhooks.certManager=false
-	@kubectl create namespace ingress-nginx --dry-run=client -o yaml | kubectl apply -f -
-	@kubectl apply -f ${NGINX_INGRESS_PATH}/manifests/nginx-ingress.${NGINX_INGRESS_APP_VERSION}.yaml
-	@echo "Applying routing-by-domain"
-	@kubectl apply -f ${NGINX_INGRESS_PATH}/features/routing-by-domain.yaml
-	@echo "Setup completed!"
+	@microk8s kubectl port-forward -n ingress-nginx service/ingress-nginx-controller 8000:80
 
 # Apply namespace definitions
 namespaces:
@@ -151,8 +171,6 @@ apply:
 
 # Check cluster and pod status
 status:
-	@echo "Checking cluster and pod status..."
-	$(MICROK8S_CMD) status
 	$(KUBECTL_CMD) get nodes
 	$(KUBECTL_CMD) get pods --all-namespaces
 

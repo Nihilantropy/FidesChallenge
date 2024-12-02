@@ -8,9 +8,9 @@ spec:
       containers:
       - name: migration-container
         image: my-app_backend-migration:latest
-        imagePullPolicy: Never
+        imagePullPolicy: Never  # Set to Never to pull the latest image from ECR
         envFrom:
         - secretRef:
-            name: db-credentials
+            name: db-credentials  # Ensure db-credentials secret exists
       restartPolicy: Never
   backoffLimit: 1

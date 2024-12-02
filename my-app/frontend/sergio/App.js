@@ -113,8 +113,12 @@ export default function App() {
       {visiblePage === 7 && <HomeMyStory sShowErr={sShowErr} sShowPopupES={sShowPopupES} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 8 && <ModStory gid={gid} sShowErr={sShowErr} showPage={showPage} sShowPopupFB={sShowPopupFB} gJWTtoken={gJWTtoken} setInviaFunction={setInviaFunction} />}
       {visiblePage === 9 && <Delete gJWTtoken={gJWTtoken} sShowErr={sShowErr} showPage={showPage} sJWTtoken={sJWTtoken} />}
-      {visiblePage === 10 && <LeggiStory sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
+      {visiblePage === 10 && <LeggiStory sShowPopupES={sShowPopupES} sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} gJWTtoken={gJWTtoken} />}
       {visiblePage === 11 && <LeggiStoryU sShowErr={sShowErr} gid={gid} sid={sid} showPage={showPage} />}
+
+      {/* ===== Aggiorna Pagine ====== */}
+      {visiblePage === 98 && showPage(10)}
+      {visiblePage === 99 && showPage(7)}
 
       { Platform.OS === 'web' && <FooterWeb /> }
 

@@ -53,6 +53,7 @@ const FooterApp = ({ showPage, gshowPage, invia,modifica }) => {
       case 5:
       case 4:
       case 10:
+      case 11:
         return <Footer1 showPage={showPage} />;
       case 7:
       case 2:

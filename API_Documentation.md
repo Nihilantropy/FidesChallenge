@@ -141,7 +141,7 @@
 - **Expected Info**:
   - Header `Authorization: Bearer <token>`
 - **Response**:
-  - JSON `{ title, id, created_at }`
+  - JSON `{ id, title, created_at, updated_at }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - A list of user stories for the authenticated user.
   - **400 Bad Request** - Invalid author information (e.g., missing or invalid user ID).
@@ -164,7 +164,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ title, id, content, created_at, author_id, author_role_id, author_name, author_visible }`
+  - JSON `{ id, title, content, created_at, updated_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - Random story fetched succesfully
   - **204 No Content** - No stories available
@@ -175,7 +175,7 @@
 - **Expected Info**:
   - None
 - **Response**:
-  - JSON `{ title, id, content, created_at, author_id, author_role_id, author_name, author_visible }`
+  - JSON `{ id, title, content, created_at, updated_at, author_id, author_role_id, author_name, author_visible }`
 - **Return Status + JSON `{message}`**:
   - **200 OK** - Story fetched succesfully
   - **204 No Content** - No stories available

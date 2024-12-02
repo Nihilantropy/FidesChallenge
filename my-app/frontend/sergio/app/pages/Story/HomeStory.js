@@ -29,14 +29,13 @@ const RaccontaPreferito = ({ setPupup,azione,gJWTtoken,sShowPopupFB,setPage,sSho
       } else if (status == 204){
         setdisponibili(0);
       } else {
-        sShowErr("Scusami sono stanco 🥱");
+        sShowErr("Scusami sono stanco 🥱"+status);
         setPupup(true);
         setPage('');
       }
     })
     .catch(error => {
-      console.log(error);
-      sShowErr("Scusami sono stanco 🥱");
+      sShowErr("Scusami sono stanco 🥱"+error);
       setPupup(true);
       setPage('');
     });

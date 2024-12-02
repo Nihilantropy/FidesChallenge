@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: expo-service-urls
+data:
+  # Expo Public Environment Variables
+  EXPO_PUBLIC_URL_USERS: "https://my-self-signed-domain.com/users/"
+  EXPO_PUBLIC_URL_STORIES: "https://my-self-signed-domain.com/stories/"
+  EXPO_PUBLIC_URL_TTS: "https://my-self-signed-domain.com/"

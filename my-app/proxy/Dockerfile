@@ -1,4 +1,5 @@
 # proxy/Dockerfile
+
 FROM nginx:alpine
 
 # Copy the custom Nginx configuration file

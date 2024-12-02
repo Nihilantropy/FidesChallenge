@@ -58,23 +58,23 @@ const runMigrations = async () => {
         console.log('Database is ready, proceeding with backup...');
 
         // Backup the database
-        // await backupDatabase();
-        // console.log('Backup completed, proceeding with migrations...');
+        await backupDatabase();
+        console.log('Backup completed, proceeding with migrations...');
 
-        // console.log('Unlocking migration table...');
-        // await unlockMigrationTable();
+        console.log('Unlocking migration table...');
+        await unlockMigrationTable();
 
-        // console.log('Rolling back migrations...');
-        // // Rollback all migrations
-        // await knex.migrate.rollback();
+        console.log('Rolling back migrations...');
+        // Rollback all migrations
+        await knex.migrate.rollback();
         
-        // // comment this to prevent table destruction before creation
-        // await dropTables();
+        // comment this to prevent table destruction before creation
+        await dropTables();
 
-        // // Run migrations
-        // console.log("Applying migrations...")
-        // await knex.migrate.latest();
-        // await knex.seed.run();
+        // Run migrations
+        console.log("Applying migrations...")
+        await knex.migrate.latest();
+        await knex.seed.run();
         console.log('Migrations have been successfully applied.');
     } catch (error) {
         console.error('Error during migrations:', error.message);

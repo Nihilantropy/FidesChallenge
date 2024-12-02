@@ -3,7 +3,7 @@ from flask_cors import CORS
 import cohere
 
 app = Flask(__name__)
-CORS(app, origins=["http://expo-service:8081", "http://localhost:8000"])  # Allow only requests from http://expo-service:8081
+CORS(app, origins=['http://localhost','https://localhost','https://my-self-signed-domain.com','http://my-self-signed-domain.com', 'http://frontend-expo.default.svc.cluster.local:8081', 'http://backend-stories'])  # Allow only requests from http://expo-service:8081
 
 @app.route('/generatestory', methods=['POST'])
 def generatestory():

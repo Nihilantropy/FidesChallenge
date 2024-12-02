@@ -20,6 +20,3 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 5000
-          envFrom:
-            - secretRef:
-                name: db-credentials

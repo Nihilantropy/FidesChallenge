@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://my-self-signed-domain.com"
+spec:
+  tls:
+  - hosts:
+    - my-self-signed-domain.com
+    secretName: self-signed-tls
+  rules:
+  - host: my-self-signed-domain.com
+    http:
+      paths:
+      # Frontend service
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-expo
+            port:
+              number: 8081
+      # Backend Users service
+      - path: /users
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-users
+            port:
+              number: 3000
+      # Backend Stories service
+      - path: /stories
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-stories
+            port:
+              number: 8080
+      # Backend TTS service
+      - path: /tts
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-tts
+            port:
+              number: 5000
